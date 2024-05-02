@@ -12,7 +12,7 @@ Additional files:
 - `splice-events-rmats-pbta.tsv.gz`: rmats subsetted by PBTA cohort
 - `unipLocCytopl.hg38.col.txt`: uniprot cytoplasm protein domain annotation in bed format
 - `unipLocExtra.hg38.col.txt`: uniprot extracellular protein domain annotation in bed format
-- `unipLocTransMemb.hg38.col.txt`: uniprot transmemberan protein domain annotation in bed format
+- `unipLocTransMemb.hg38.col.txt`: uniprot transmembrane protein domain annotation in bed format
 
 ```
 v1
