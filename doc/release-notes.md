@@ -2,7 +2,7 @@
 
 ## current release (v1)
 - Data release data: 2024-05-02
-- OpenPedCan data release date: 2024-04-23 (v15)
+- OpenPedCan data release date: 2024-03-01 (v15)
 - status: available
 
 Additional files:
