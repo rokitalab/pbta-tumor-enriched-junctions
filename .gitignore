@@ -50,3 +50,20 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+
+# ignore
+.DS_Store
+.Rhistory
+.Rproj.user
+.snakemake
+ 
+# tmp files
+scratch/
+*tmp
+tmp*
+*tmp*
+
+# Result of running docker image locally. Should not be tracked
+.rstudio/
+
+
