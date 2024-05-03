@@ -42,20 +42,13 @@ RUN R -e "BiocManager::install(version = '3.19')"
 # Install packages
 RUN R -e 'BiocManager::install(c( \
   "biomaRt", \
-  "circlize", \
-  "ComplexHeatmap", \
+  "BSgenome.Hsapiens.UCSC.hg38", \
   "data.table", \
   "GenomicRanges", \
-  "ggalluvial", \
   "ggthemes", \
   "optparse", \
-  "pheatmap", \
   "RColorBrewer", \
-  "survival", \
-  "survMisc", \
-  "survminer", \
-  "tidytext", \
-  "openxlsx" \
+  "tidytext" \
 ))'
   
 	
