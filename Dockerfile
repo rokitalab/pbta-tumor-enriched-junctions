@@ -2,7 +2,6 @@ FROM rocker/tidyverse:4.4.0
 
 LABEL maintainer = "Ammar Naqvi (naqvia@chop.edu)"
 
-
 #########################################
 RUN apt-get update && apt-get install -y --no-install-recommends apt-utils dialog
 
@@ -48,6 +47,7 @@ RUN R -e 'BiocManager::install(c( \
   "ggthemes", \
   "optparse", \
   "RColorBrewer", \
+  "R.utils", \
   "tidytext" \
 ))'
   
@@ -60,6 +60,7 @@ RUN R -e "remotes::install_github('thomasp85/patchwork', ref = '1cb732b129ed6a65
 RUN apt-get -y --no-install-recommends install \
     python3-pip  python3-dev
 RUN ln -s /usr/bin/python3 /usr/bin/python 
+RUN python3 -m pip install --upgrade pip
 
 RUN pip3 install \
     "rpg==2.0.3"
