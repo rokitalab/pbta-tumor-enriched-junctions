@@ -1,3 +1,11 @@
+---
+name: Request a feature
+about: Use this issue template to request a feature or analysis
+title: 'Feature request:'
+labels: enhancement
+assignees: ''
+
+---
 <!--Hi there! Please take a moment to fill out the template below.-->
 
 #### What are the scientific goals of the analysis?
