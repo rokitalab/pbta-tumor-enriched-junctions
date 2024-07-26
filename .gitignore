@@ -66,4 +66,7 @@ tmp*
 # Result of running docker image locally. Should not be tracked
 .rstudio/
 
+# bed files for domains
+analyses/01-tumor-specific-variants/output/*/*unip*bed
+analyses/01-tumor-specific-variants/output/*/*cds.bed
 
