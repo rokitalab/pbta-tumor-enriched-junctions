@@ -1,3 +1,9 @@
+<<<<<<< HEAD
+=======
+# DS_Store
+.DS_Store
+
+>>>>>>> new-main
 # History files
 .Rhistory
 .Rapp.history
@@ -47,3 +53,26 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+<<<<<<< HEAD
+=======
+
+# ignore
+.DS_Store
+.Rhistory
+.Rproj.user
+.snakemake
+ 
+# tmp files
+scratch/
+*tmp
+tmp*
+*tmp*
+
+# Result of running docker image locally. Should not be tracked
+.rstudio/
+
+# bed files for domains
+analyses/01-tumor-specific-variants/output/*/*unip*bed
+analyses/01-tumor-specific-variants/output/*/*cds.bed
+
+>>>>>>> new-main
