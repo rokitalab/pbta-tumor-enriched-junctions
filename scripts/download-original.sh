@@ -7,13 +7,6 @@ set -o pipefail
 URL="https://d3b-openaccess-us-east-1-prd-pbta.s3.amazonaws.com/splicing-neoepitopes"
 RELEASE="v4"
 
-# Set the working directory to the directory of this file
-cd "$(dirname "${BASH_SOURCE[0]}")"
-
-# If RUN_LOCAL is used, the time-intensive steps are skipped because they cannot
-# be run on a local computer -- the idea is that setting RUN_LOCAL=1 will allow for
-# local testing running/testing of all other steps
-RUN_LOCAL=${RUN_LOCAL:-0}
 
 # Get base directory of project
 cd ..
@@ -24,7 +17,7 @@ cd -
 [ ! -d "$BASEDIR/data/$RELEASE/" ] && mkdir $BASEDIR/data/$RELEASE/
 
 # The md5sum file provides our single point of truth for which files are in a release.
-curl -k --create-dirs $URL/$RELEASE/original-md5sum.txt -o data/$RELEASE/original-md5sum.txt -z data/$RELEASE/original-md5sum.txt
+curl -k --create-dirs $URL/$RELEASE/original-md5sum.txt -o  $BASEDIR/data/$RELEASE/original-md5sum.txt -z  $BASEDIR/data/$RELEASE/original-md5sum.txt
 
 # Consider the filenames in the md5sum file and the release notes
 FILES=(`tr -s ' ' < $BASEDIR/data/$RELEASE/original-md5sum.txt | cut -d ' ' -f 2` release-notes.md)
