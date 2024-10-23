@@ -29,6 +29,7 @@ RUN mkdir -p /usr/local/ucsc-tools && \
     chmod +x /usr/local/ucsc-tools/bigBedToBed
 
 # install perl packages
+RUN cpanm install DBI
 RUN cpanm install Statistics::Lite
 
 # Set the Bioconductor repository as the primary repository
