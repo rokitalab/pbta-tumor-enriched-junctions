@@ -44,10 +44,12 @@ RUN R -e 'BiocManager::install(c( \
   "biomaRt", \
   "BSgenome.Hsapiens.UCSC.hg38", \
   "data.table", \
+  "DBI", \
   "GenomicRanges", \
   "ggthemes", \
   "optparse", \
   "RColorBrewer", \
+  "RSQLite", \
   "R.utils", \
   "tidytext" \
 ))'

@@ -1,6 +1,45 @@
 # release notes
 
-## current release (v4)
+## current release (v5)
+- Data release data: 2024-09-19
+- OpenPedCan data release date: 2024-03-01 (v15)
+- status: available
+
+Additional files:
+- evodevo-harmonized.splice-events-rmats.SE.tsv.gz
+- gtex-brain-under40-harmonized-splice-events-rmats.SE.tsv.gz
+- gtex-harmonized-gene-expression-rsem-tpm-collapsed.brain-under40.rds
+- gtex-harmonized-splice-events-rmats.SE.tsv.gz
+- md5sum-subset.txt
+- pbta-splice-events-rmats.SE.tsv.gz
+- pbta_gene-expression-rsem-tpm-collapsed.rds
+
+```
+v5
+├── GSE243682_normal_gene-expression-rsem-tpm-collapsed.rds
+├── GSE243682_normal_rna-isoform-expression-rsem-tpm.rds
+├── GSE243682_normal_splice-events-rmats.tsv.gz
+├── evodevo-harmonized.splice-events-rmats.SE.tsv.gz
+├── evodevo-histologies.tsv
+├── evodevo_gene-expression-rsem-tpm-collapsed.all.rds
+├── evodevo_rna-isoform-expression-rsem-tpm.rds
+├── gtex-brain-under40-harmonized-splice-events-rmats.SE.tsv.gz
+├── gtex-harmonized-gene-expression-rsem-tpm-collapsed.brain-under40.rds
+├── gtex-harmonized-isoform-expression-rsem-tpm.rds
+├── gtex-harmonized-splice-events-rmats.SE.tsv.gz
+├── histologies.tsv
+├── md5sum.txt
+├── pbta-splice-events-rmats.SE.tsv.gz
+├── pbta_gene-expression-rsem-tpm-collapsed.rds
+├── ped-normal-brain-histologies.tsv
+├── release-notes.md
+├── rna-isoform-expression-rsem-tpm.rds
+├── unipLocCytopl.hg38.col.txt
+├── unipLocExtra.hg38.col.txt
+└── unipLocTransMemb.hg38.col.txt
+```
+
+## archived release (v4)
 - Data release data: 2024-09-11
 - OpenPedCan data release date: 2024-03-01 (v15)
 - status: available
@@ -20,23 +59,16 @@ v4
 ├── GSE243682_normal_rna-isoform-expression-rsem-expected-counts.rds
 ├── GSE243682_normal_rna-isoform-expression-rsem-tpm.rds
 ├── GSE243682_normal_splice-events-rmats.tsv.gz
-├── evodevo-harmonized.splice-events-rmats.SE.tsv.gz
 ├── evodevo_gene-counts-rsem-expected_count-collapsed.all.rds
 ├── evodevo_gene-expression-rsem-tpm-collapsed.all.rds
 ├── evodevo_rna-isoform-expression-rsem-expected_count.rds
 ├── evodevo_rna-isoform-expression-rsem-tpm.rds
-├── evodevo_splice-events-rmats.tsv.gz
-├── gene-expression-rsem-tpm-collapsed.rds
-├── gtex-brain-under40-harmonized-splice-events-rmats.SE.tsv.gz
 ├── gtex-harmonized-gene-counts-rsem-expected_count-collapsed.all.rds
 ├── gtex-harmonized-gene-expression-rsem-tpm-collapsed.all.rds
 ├── gtex-harmonized-isoform-expression-rsem-expected_count.rds
 ├── gtex-harmonized-isoform-expression-rsem-tpm.rds
-├── gtex-harmonized-splice-events-rmats.SE.tsv.gz
 ├── histologies.tsv
 ├── md5sum.txt
-├── pbta-splice-events-rmats.splice-events-rmats.SE.tsv.gz
-├── pbta-splice-events-rmats.tsv.gz
 ├── ped-normal-brain-histologies.tsv
 ├── release-notes.md
 ├── rna-isoform-expression-rsem-tpm.rds
@@ -45,7 +77,7 @@ v4
 └── unipLocTransMemb.hg38.col.txt
 ```
 
-## current release (v3)
+## archived release (v3)
 - Data release data: 2024-06-24
 - OpenPedCan data release date: 2024-03-01 (v15)
 - status: available
@@ -83,8 +115,7 @@ v3
 └── unipLocTransMemb.hg38.col.txt
 ```
 
-
-## current release (v2)
+## archived release (v2)
 - Data release data: 2024-06-24
 - OpenPedCan data release date: 2024-03-01 (v15)
 - status: available
