@@ -1,6 +1,6 @@
 FROM rocker/tidyverse:4.4.0
 
-LABEL maintainer = "Ammar Naqvi (naqvia@chop.edu)"
+LABEL maintainer="Ammar Naqvi (naqvia@chop.edu)"
 
 #########################################
 RUN apt-get update && apt-get install -y --no-install-recommends apt-utils dialog
@@ -29,6 +29,7 @@ RUN mkdir -p /usr/local/ucsc-tools && \
     chmod +x /usr/local/ucsc-tools/bigBedToBed
 
 # install perl packages
+RUN cpanm install DBI
 RUN cpanm install Statistics::Lite
 
 # Set the Bioconductor repository as the primary repository
