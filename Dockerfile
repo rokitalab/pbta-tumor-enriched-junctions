@@ -1,6 +1,6 @@
 FROM rocker/tidyverse:4.4.0
 
-LABEL maintainer = "Ammar Naqvi (naqvia@chop.edu)"
+LABEL maintainer="Ammar Naqvi (naqvia@chop.edu)"
 
 #########################################
 RUN apt-get update && apt-get install -y --no-install-recommends apt-utils dialog
