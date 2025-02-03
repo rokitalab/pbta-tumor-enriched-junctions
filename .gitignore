@@ -69,4 +69,4 @@ analyses/01-tumor-specific-variants/output/*/*unip*bed
 analyses/01-tumor-specific-variants/output/*/*cds.bed
 
 # control variant psi and stats
-analyses/process-ctrls-variants/output/*tsv
+analyses/process-ctrls-variants/output/*metrics.tsv
