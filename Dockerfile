@@ -53,17 +53,16 @@ RUN R -e 'BiocManager::install(c( \
   "R.utils", \
   "tidytext" \
 ))'
-  
-	
+
 RUN R -e "remotes::install_github('clauswilke/colorblindr', ref = '1ac3d4d62dad047b68bb66c06cee927a4517d678', dependencies = TRUE)"
 RUN R -e "remotes::install_github('thomasp85/patchwork', ref = '1cb732b129ed6a65774796dc1f618558c7498b66')"
 RUN R -e "remotes::install_github('d3b-center/annoFuseData', ref = '321bc4f6db6e9a21358f0d09297142f6029ac7aa', dependencies = TRUE)"
-	
+
 # Install python and python packages
 # Install pip3 and low-level python installation reqs
 RUN apt-get -y --no-install-recommends install \
     python3-pip  python3-dev
-RUN ln -s /usr/bin/python3 /usr/bin/python 
+RUN ln -s /usr/bin/python3 /usr/bin/python
 RUN python3 -m pip install --upgrade pip
 
 RUN pip3 install \
@@ -71,5 +70,4 @@ RUN pip3 install \
 
 WORKDIR /rocker-build/
 
-ADD Dockerfile . 
-
+ADD Dockerfile .

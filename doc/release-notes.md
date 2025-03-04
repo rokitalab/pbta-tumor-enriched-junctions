@@ -1,6 +1,44 @@
 # release notes
 
-## current release (v5)
+## current release (v6)
+- Data release data: 2025-01-29
+- OpenPedCan data release date: 2024-03-01 (v15)
+- status: available
+
+Additional files (from [RNA-seq study](https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GSE73721) of human astrocytes and other purified CNS cell types): 
+- GSE73721-normal-histologies.tsv
+- GSE73721-normal-rna-isoform-expression-rsem-tpm.rds
+- GSE73721-normal-splice-events-rmats.tsv.gz
+
+```
+v6
+├── GSE243682_normal_gene-expression-rsem-tpm-collapsed.rds
+├── GSE243682_normal_rna-isoform-expression-rsem-tpm.rds
+├── GSE243682_normal_splice-events-rmats.tsv.gz
+├── GSE73721-normal-histologies.tsv
+├── GSE73721-normal-rna-isoform-expression-rsem-tpm.rds
+├── GSE73721-normal-splice-events-rmats.tsv.gz
+├── evodevo-harmonized.splice-events-rmats.SE.tsv.gz
+├── evodevo-histologies.tsv
+├── evodevo_gene-expression-rsem-tpm-collapsed.all.rds
+├── evodevo_rna-isoform-expression-rsem-tpm.rds
+├── gtex-brain-under40-harmonized-splice-events-rmats.SE.tsv.gz
+├── gtex-harmonized-gene-expression-rsem-tpm-collapsed.brain-under40.rds
+├── gtex-harmonized-isoform-expression-rsem-tpm.rds
+├── gtex-harmonized-splice-events-rmats.SE.tsv.gz
+├── histologies.tsv
+├── md5sum.txt
+├── pbta-splice-events-rmats.SE.tsv.gz
+├── pbta_gene-expression-rsem-tpm-collapsed.rds
+├── ped-normal-brain-histologies.tsv
+├── release-notes.md
+├── rna-isoform-expression-rsem-tpm.rds
+├── unipLocCytopl.hg38.col.txt
+├── unipLocExtra.hg38.col.txt
+└── unipLocTransMemb.hg38.col.txt
+```
+
+## archived release (v5)
 - Data release data: 2024-09-19
 - OpenPedCan data release date: 2024-03-01 (v15)
 - status: available
