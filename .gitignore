@@ -74,3 +74,6 @@ analyses/process-ctrls-variants/output/*metrics.tsv
 # histology tumor-specific splicing files
 analyses/01-tumor-specific-variants/output/*splice-variants.tsv
 analyses/01-tumor-specific-variants/output/*splice-variants.bed
+
+# full processed rmats file
+analyses/01-tumor-specific-variants/output/pbta-splice-events-rmats.SE.processed.tsv.gz
