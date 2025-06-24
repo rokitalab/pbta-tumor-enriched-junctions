@@ -70,11 +70,14 @@ analyses/01-tumor-specific-variants/output/*/*cds.bed
 
 # control variant psi and stats
 analyses/process-ctrls-variants/output/*metrics.tsv
+analyses/tumor-specific-alt-splice-sites/output/*metrics.tsv
 
 # histology tumor-specific splicing files
 analyses/01-tumor-specific-variants/output/*splice-variants.tsv
 analyses/01-tumor-specific-variants/output/*splice-variants.bed
 analyses/01-tumor-specific-variants/output/tumor-specific-oncofetal-splice-variants-merged.bed
+analyses/tumor-specific-alt-splice-sites/output/*splice-variants.tsv
+analyses/tumor-specific-alt-splice-sites/output/*splice-variants.bed
 
 # full processed rmats file
 analyses/01-tumor-specific-variants/output/pbta-splice-events-rmats.SE.processed.tsv.gz
