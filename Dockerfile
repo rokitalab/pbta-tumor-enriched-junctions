@@ -45,12 +45,19 @@ RUN R -e 'BiocManager::install(c( \
   "BSgenome.Hsapiens.UCSC.hg38", \
   "data.table", \
   "DBI", \
+  "GenomicFeatures", \
   "GenomicRanges", \
+  "ggpattern", \
+  "ggsci", \
   "ggthemes", \
+  "GSVA", \
+  "msigdbr", \
   "optparse", \
   "RColorBrewer", \
   "RSQLite", \
   "R.utils", \
+  "survival", \
+  "survminer", \
   "tidytext" \
 ))'
 
@@ -60,8 +67,15 @@ RUN R -e "remotes::install_github('d3b-center/annoFuseData', ref = '321bc4f6db6e
 
 # Install python and python packages
 # Install pip3 and low-level python installation reqs
-RUN apt-get -y --no-install-recommends install \
-    python3-pip  python3-dev
+#RUN apt-get -y --no-install-recommends install \
+#    python3-pip  python3-dev
+#RUN ln -s /usr/bin/python3 /usr/bin/python
+#RUN python3 -m pip install --upgrade pip
+
+RUN apt-get update && apt-get -y --no-install-recommends install \
+    python3-pip python3-dev \
+    && rm -rf /var/lib/apt/lists/*
+
 RUN ln -s /usr/bin/python3 /usr/bin/python
 RUN python3 -m pip install --upgrade pip
 
