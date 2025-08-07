@@ -43,6 +43,8 @@ RUN R -e "BiocManager::install(version = '3.19', ask = FALSE)"
 RUN R -e 'BiocManager::install(c( \
   "biomaRt", \
   "BSgenome.Hsapiens.UCSC.hg38", \
+  "circlize", \
+  "ComplexHeatmap", \
   "data.table", \
   "DBI", \
   "GenomicFeatures", \
