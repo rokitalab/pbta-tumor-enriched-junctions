@@ -83,6 +83,15 @@ analyses/tumor-specific-retained-introns/output/*splice-variants.bed
 
 # full processed rmats file
 analyses/01-tumor-specific-variants/output/pbta-splice-events-rmats.SE.processed.tsv.gz
+analyses/pepMLM-preprocessing/results/annotated_splice_events.tsv
+
+# Don’t commit downloaded reference data
+data/
+data/raw/
+
+# Don’t commit old scratch paths
+scratch/
+
 
 # merged TESE file
 analyses/summarize-tumor-enriched-splicing/results/merged-tumor-enriched-splice-events.tsv.gz
