@@ -91,3 +91,7 @@ data/raw/
 
 # Don’t commit old scratch paths
 scratch/
+
+
+# merged TESE file
+analyses/summarize-tumor-enriched-splicing/results/merged-tumor-enriched-splice-events.tsv.gz
