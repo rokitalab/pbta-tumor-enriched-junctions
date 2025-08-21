@@ -1,6 +1,6 @@
 FROM rocker/tidyverse:4.4.0
 
-LABEL maintainer="Ammar Naqvi (naqvia@chop.edu)"
+LABEL maintainer="Ryan Corbett (rcorbett@childrensnational.org)"
 
 #########################################
 RUN apt-get update && apt-get install -y --no-install-recommends apt-utils dialog
@@ -52,6 +52,7 @@ RUN R -e 'BiocManager::install(c( \
   "ggpattern", \
   "ggsci", \
   "ggthemes", \
+  "gtools", \
   "GSVA", \
   "msigdbr", \
   "optparse", \
