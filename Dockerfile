@@ -49,6 +49,10 @@ RUN R -e 'BiocManager::install(c( \
   "DBI", \
   "GenomicFeatures", \
   "GenomicRanges", \
+  "ggbeeswarm", \
+  "ggdist", \
+  "ggforce", \
+  "gghalves", \
   "ggpattern", \
   "ggsci", \
   "ggthemes", \
