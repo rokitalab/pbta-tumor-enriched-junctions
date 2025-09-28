@@ -41,6 +41,7 @@ RUN R -e "BiocManager::install(version = '3.19', ask = FALSE)"
 
 # Install packages
 RUN R -e 'BiocManager::install(c( \
+  "AnnotationHub", \
   "biomaRt", \
   "BSgenome.Hsapiens.UCSC.hg38", \
   "circlize", \
