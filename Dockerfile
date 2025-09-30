@@ -48,6 +48,7 @@ RUN R -e 'BiocManager::install(c( \
   "ComplexHeatmap", \
   "data.table", \
   "DBI", \
+  "ensembldb", \
   "GenomicFeatures", \
   "GenomicRanges", \
   "ggbeeswarm", \
