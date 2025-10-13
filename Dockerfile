@@ -67,7 +67,8 @@ RUN R -e 'BiocManager::install(c( \
   "R.utils", \
   "survival", \
   "survminer", \
-  "tidytext" \
+  "tidytext", \
+  "UpSetR" \
 ))'
 
 RUN R -e "remotes::install_github('clauswilke/colorblindr', ref = '1ac3d4d62dad047b68bb66c06cee927a4517d678', dependencies = TRUE)"
