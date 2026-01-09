@@ -1,6 +1,130 @@
 # release notes
 
-## current release (v8)
+## current release (v9)
+- Data release date: 2026-01-09
+- OpenPedCan data release date: 2024-03-01 (v15)
+- status:available
+
+This data release adds rMATS-turbo v4.3 output by splicing case for PBTA, GTEx, Evo-Devo, and pediatric brain and brain cell type cohorts. 
+
+New files: 
+`brain_cell_type-rmats_merged_raw_A3SS.qs2`
+`brain_cell_type-rmats_merged_raw_A5SS.qs2`
+`brain_cell_type-rmats_merged_raw_RI.qs2`
+`brain_cell_type-rmats_merged_raw_SE.qs2`
+`brain_cell_type_input_read_counts.tsv`
+`evodevo-rmats_merged_raw_A3SS.qs2`
+`evodevo-rmats_merged_raw_A5SS.qs2`
+`evodevo-rmats_merged_raw_RI.qs2`
+`evodevo-rmats_merged_raw_SE.qs2`
+`evodevo_input_read_counts.tsv`
+`gtex-rmats_merged_raw_A3SS.qs2`
+`gtex-rmats_merged_raw_A5SS.qs2`
+`gtex-rmats_merged_raw_RI.qs2`
+`gtex-rmats_merged_raw_SE.qs2`
+`gtex_input_read_counts.tsv`
+`normal_ped_brain-rmats_merged_raw_A3SS.qs2`
+`normal_ped_brain-rmats_merged_raw_A5SS.qs2`
+`normal_ped_brain-rmats_merged_raw_RI.qs2`
+`normal_ped_brain-rmats_merged_raw_SE.qs2`
+`normal_ped_brain_input_read_counts.tsv`
+`pbta-rmats_merged_raw_A3SS.qs2`
+`pbta-rmats_merged_raw_A5SS.qs2`
+`pbta-rmats_merged_raw_RI.qs2`
+`pbta-rmats_merged_raw_SE.qs2`
+`pbta_input_read_counts.tsv`
+
+```
+v9
+.
+├── GSE73721-normal-histologies.tsv
+├── GSE73721-normal-rna-isoform-expression-rsem-tpm.rds
+├── brain_cell_type-rmats_merged_raw_A3SS.qs2
+├── brain_cell_type-rmats_merged_raw_A5SS.qs2
+├── brain_cell_type-rmats_merged_raw_RI.qs2
+├── brain_cell_type-rmats_merged_raw_SE.qs2
+├── brain_cell_type_input_read_counts.tsv
+├── cptac-protein-imputed-phospho-expression-log2-ratio.tsv.gz
+├── cptac-protein-imputed-prot-expression-abundance.tsv.gz
+├── evodevo-histologies.tsv
+├── evodevo-rmats_merged_raw_A3SS.qs2
+├── evodevo-rmats_merged_raw_A5SS.qs2
+├── evodevo-rmats_merged_raw_RI.qs2
+├── evodevo-rmats_merged_raw_SE.qs2
+├── evodevo_gene-expression-rsem-tpm-collapsed.all.rds
+├── evodevo_input_read_counts.tsv
+├── evodevo_rna-isoform-expression-rsem-tpm.rds
+├── gbm-protein-imputed-phospho-expression-abundance.tsv.gz
+├── gbm-protein-imputed-prot-expression-abundance.tsv.gz
+├── gtex-harmonized-gene-expression-rsem-tpm-collapsed.brain-under40.rds
+├── gtex-harmonized-isoform-expression-rsem-tpm.rds
+├── gtex-rmats_merged_raw_A3SS.qs2
+├── gtex-rmats_merged_raw_A5SS.qs2
+├── gtex-rmats_merged_raw_RI.qs2
+├── gtex-rmats_merged_raw_SE.qs2
+├── gtex_input_read_counts.tsv
+├── histologies.tsv
+├── hope-protein-imputed-phospho-expression-abundance.tsv.gz
+├── hope-protein-imputed-prot-expression-abundance.tsv.gz
+├── independent-specimens.methyl.primary-plus.eachcohort.tsv
+├── independent-specimens.methyl.primary-plus.tsv
+├── independent-specimens.methyl.primary.eachcohort.tsv
+├── independent-specimens.methyl.primary.tsv
+├── independent-specimens.methyl.relapse.eachcohort.tsv
+├── independent-specimens.methyl.relapse.tsv
+├── independent-specimens.rnaseq.primary-plus-pre-release.tsv
+├── independent-specimens.rnaseq.primary-pre-release.tsv
+├── independent-specimens.rnaseq.relapse-pre-release.tsv
+├── independent-specimens.rnaseqpanel.primary-plus.eachcohort.tsv
+├── independent-specimens.rnaseqpanel.primary-plus.tsv
+├── independent-specimens.rnaseqpanel.primary.eachcohort.tsv
+├── independent-specimens.rnaseqpanel.primary.tsv
+├── independent-specimens.rnaseqpanel.relapse.eachcohort.tsv
+├── independent-specimens.rnaseqpanel.relapse.tsv
+├── independent-specimens.wgs.primary-plus.eachcohort.tsv
+├── independent-specimens.wgs.primary-plus.tsv
+├── independent-specimens.wgs.primary.eachcohort.tsv
+├── independent-specimens.wgs.primary.tsv
+├── independent-specimens.wgs.relapse.eachcohort.tsv
+├── independent-specimens.wgs.relapse.tsv
+├── independent-specimens.wgswxspanel.primary-plus.eachcohort.prefer.wgs.tsv
+├── independent-specimens.wgswxspanel.primary-plus.eachcohort.prefer.wxs.tsv
+├── independent-specimens.wgswxspanel.primary-plus.prefer.wgs.tsv
+├── independent-specimens.wgswxspanel.primary-plus.prefer.wxs.tsv
+├── independent-specimens.wgswxspanel.primary.eachcohort.prefer.wgs.tsv
+├── independent-specimens.wgswxspanel.primary.eachcohort.prefer.wxs.tsv
+├── independent-specimens.wgswxspanel.primary.prefer.wgs.tsv
+├── independent-specimens.wgswxspanel.primary.prefer.wxs.tsv
+├── independent-specimens.wgswxspanel.relapse.eachcohort.prefer.wgs.tsv
+├── independent-specimens.wgswxspanel.relapse.eachcohort.prefer.wxs.tsv
+├── independent-specimens.wgswxspanel.relapse.prefer.wgs.tsv
+├── independent-specimens.wgswxspanel.relapse.prefer.wxs.tsv
+├── normal_ped_brain-rmats_merged_raw_A3SS.qs2
+├── normal_ped_brain-rmats_merged_raw_A5SS.qs2
+├── normal_ped_brain-rmats_merged_raw_RI.qs2
+├── normal_ped_brain-rmats_merged_raw_SE.qs2
+├── normal_ped_brain_input_read_counts.tsv
+├── pbta-rmats_merged_raw_A3SS.qs2
+├── pbta-rmats_merged_raw_A5SS.qs2
+├── pbta-rmats_merged_raw_RI.qs2
+├── pbta-rmats_merged_raw_SE.qs2
+├── pbta_gene-expression-rsem-tpm-collapsed.rds
+├── pbta_input_read_counts.tsv
+├── ped-normal-brain-gene-expression-rsem-tpm.all.rds
+├── ped-normal-brain-histologies.tsv
+├── ped-normal-brain-isoform-expression-rsem-tpm.rds
+├── release-notes.md
+├── rna-isoform-expression-rsem-tpm.rds
+├── snv-consensus-plus-hotspots.maf.tsv.gz
+├── snv-mutation-tmb-all.tsv
+├── snv-mutation-tmb-coding.tsv
+├── snv-mutect2-tumor-only-plus-hotspots.maf.tsv.gz
+├── unipLocCytopl.hg38.col.txt
+├── unipLocExtra.hg38.col.txt
+└── unipLocTransMemb.hg38.col.txt
+```
+
+## archived release (v8)
 - Data release date: 2025-04-03
 - OpenPedCan data release date: 2024-03-01 (v15)
 - status: available
