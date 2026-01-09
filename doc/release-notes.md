@@ -5,7 +5,7 @@
 - OpenPedCan data release date: 2024-03-01 (v15)
 - status:available
 
-This data release adds rMATS-turbo v4.3 output by splicing case for PBTA, GTEx, Evo-Devo, and pediatric brain and brain cell type cohorts. 
+This data release adds rMATS-turbo v4.3 output by splicing case for PBTA, GTEx, Evo-Devo, and pediatric brain and brain cell type cohorts. Each cohort contains an `*input_read_counts.tsv` indicating the number of input reads used by rMATS-turbo.  
 
 New files: 
 `brain_cell_type-rmats_merged_raw_A3SS.qs2`
