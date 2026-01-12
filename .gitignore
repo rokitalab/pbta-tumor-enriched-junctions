@@ -95,3 +95,6 @@ scratch/
 
 # merged TESE file
 analyses/summarize-tumor-enriched-splicing/results/merged-tumor-enriched-splice-events.tsv.gz
+
+# survival analyses folder
+analyses/hgg-enriched-splicing/results/survival/
