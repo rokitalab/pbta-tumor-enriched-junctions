@@ -1,13 +1,13 @@
-## GTEx splice event junction & target count matrix generation 
+## Pediatric brain splice event junction & target count matrix generation 
 ##
 ## Ryan Corbett
 ##
 ## Jan 2026
 
 # This script performs the following:
-# - loads GTEx rMATS files and filters for brain regions in participants <40 years old
+# - loads pediatric brain rMATS files 
 # - pulls splice event junction and target coordinates and normalizes against rMATS input reads
-# - calculates mean junction/target normalized counts per GTEx subgroup
+# - calculates mean junction/target normalized counts per brain region
 
 library(tidyverse)
 library(qs2)
@@ -24,55 +24,31 @@ results_dir <- file.path(analysis_dir, "results")
 source(file.path(analysis_dir, "util", "rmats-processing-functions.R"))
 
 # Set file paths
-gtex_se_file <- file.path(data_dir,
-                          "gtex-rmats_merged_raw_SE.qs2")
-gtex_ri_file <- file.path(data_dir,
-                          "gtex-rmats_merged_raw_RI.qs2")
-gtex_a3ss_file <- file.path(data_dir,
-                            "gtex-rmats_merged_raw_A3SS.qs2")
-gtex_a5ss_file <- file.path(data_dir,
-                            "gtex-rmats_merged_raw_A5SS.qs2")
-gtex_read_file <- file.path(data_dir,
-                            "gtex_input_read_counts.tsv")
+se_file <- file.path(data_dir,
+                     "normal_ped_brain-rmats_merged_raw_SE.qs2")
+ri_file <- file.path(data_dir,
+                     "normal_ped_brain-rmats_merged_raw_RI.qs2")
+a3ss_file <- file.path(data_dir,
+                       "normal_ped_brain-rmats_merged_raw_A3SS.qs2")
+a5ss_file <- file.path(data_dir,
+                       "normal_ped_brain-rmats_merged_raw_A5SS.qs2")
+read_file <- file.path(data_dir,
+                       "normal_ped_brain_input_read_counts.tsv")
 
-# GTEx metadata
 hist_file <- file.path(data_dir,
-                       "histologies.tsv")
-gtex_meta_file <- file.path(input_dir, 
-                            "GTEx_Analysis_v8_Annotations_SubjectPhenotypesDS.txt")
-gtex_v10_rm_file <- file.path(input_dir,
-                              "gtex-v10-removed-samples.tsv")
+                       "ped-normal-brain-histologies.tsv")
 
-# Wrangle data
-gtex_meta_df <- read_tsv(gtex_meta_file)
-
-# load metadata file and filter for participants <40 years old
-pts_under40 <- gtex_meta_df %>%
-  dplyr::filter(AGE %in% c("20-29",
-                           "30-39")) %>%
-  pull(SUBJID)
-
-# Load file containing samples removed in v10, and get IDs
-gtex_v10_rm_samples <- read_tsv(gtex_v10_rm_file) %>%
-  pull(SAMPID)
-
-# Load OPC hist and filter for GTEx RNA-seq
-gtex_brain_under40_hist <- read_tsv(hist_file) %>%
-  dplyr::filter(cohort == "GTEx",
-                experimental_strategy == "RNA-Seq",
-                grepl("Brain", gtex_subgroup)) %>%
-  dplyr::mutate(id = unlist(lapply(strsplit(Kids_First_Biospecimen_ID, "-"), function(x) x[2]))) %>%
-  dplyr::mutate(id = glue::glue("GTEX-{id}")) %>%
-  # filter for pts under 40yo, filter out samples removed in v10
-  dplyr::filter(id %in% pts_under40,
-                !id %in% gtex_v10_rm_samples) %>%
-  # only need BS ID, subgroup columns
-  dplyr::select(Kids_First_Biospecimen_ID, id, gtex_subgroup)
+# Load hist
+hist <- read_tsv(hist_file) %>%
+  # filter out tumor-infiltrated pons
+  dplyr::filter(sample_id != "7316-7585") %>%
+  # only need sample ID, primary_site columns
+  dplyr::select(sample_id, primary_site)
 
 # Load rMATS SE results
-se_df <- qs2::qs_read(gtex_se_file) %>%
+se_df <- qs2::qs_read(se_file) %>%
   dplyr::mutate(sample_id = sub("_.*", "", sample_id)) %>%
-  dplyr::filter(sample_id %in% gtex_brain_under40_hist$Kids_First_Biospecimen_ID)
+  dplyr::filter(sample_id %in% hist$sample_id)
 
 # Define SE junction and target IDs, and select relevant columns 
 se_df <- define_junctions_targets(se_df,
@@ -85,10 +61,10 @@ se_target_df <- create_target_df(se_df)
 se_junction_df <- create_junction_df(se_df, 
                                      event_type = "SE")
 
-# Load retained intron (RI) rMATS results, update sample ID, and filter for brain under40
-ri_df <- qs2::qs_read(gtex_ri_file) %>%
+# Load retained intron (RI) rMATS results, update sample ID
+ri_df <- qs2::qs_read(ri_file) %>%
   dplyr::mutate(sample_id = sub("_.*", "", sample_id)) %>%
-  dplyr::filter(sample_id %in% gtex_brain_under40_hist$Kids_First_Biospecimen_ID)
+  dplyr::filter(sample_id %in% hist$sample_id)
 
 # define columns specifying junction coordinates and retain only relevant columns
 ri_df <- define_junctions_targets(ri_df,
@@ -105,9 +81,9 @@ ri_junction_df <- create_junction_df(ri_df,
                                      event_type = "RI")
 
 # A3SS events, modify sample ID and filter out cell samples 
-a3ss_df <- qs2::qs_read(gtex_a3ss_file) %>%
+a3ss_df <- qs2::qs_read(a3ss_file) %>%
   dplyr::mutate(sample_id = sub("_.*", "", sample_id)) %>%
-  dplyr::filter(sample_id %in% gtex_brain_under40_hist$Kids_First_Biospecimen_ID)
+  dplyr::filter(sample_id %in% hist$sample_id)
 
 # define junction coordinates and filter for relevant columns
 a3ss_df <- define_junctions_targets(a3ss_df,
@@ -118,9 +94,9 @@ a3ss_junction_df <- create_junction_df(a3ss_df,
                                        event_type = "A3SS")
 
 # A5SS events
-a5ss_df <- qs2::qs_read(gtex_a5ss_file) %>%
+a5ss_df <- qs2::qs_read(a5ss_file) %>%
   dplyr::mutate(sample_id = sub("_.*", "", sample_id)) %>%
-  dplyr::filter(sample_id %in% gtex_brain_under40_hist$Kids_First_Biospecimen_ID)
+  dplyr::filter(sample_id %in% hist$sample_id)
 
 # define junction coordinates and filter for relevant columns 
 a5ss_df <- define_junctions_targets(a5ss_df,
@@ -140,9 +116,9 @@ junction_list <- list("se" = se_junction_df,
                       "a5ss" = a5ss_junction_df)
 
 # convert read cts and hist to data tables
-gtex_hist_dt <- as.data.table(gtex_brain_under40_hist)
+hist_dt <- as.data.table(hist)
 
-gtex_read_cts <- read_tsv(gtex_read_file) %>%
+read_cts <- read_tsv(read_file) %>%
   dplyr::mutate(sample_id = sub("_.*", "", sample_id))
 
 # Loops through target lists to generate matrices
@@ -150,18 +126,18 @@ for (event in names(target_list)){
   
   # get current df
   target_df <- target_list[[event]]
-
+  
   # run `generate_norm_target_mat` funtion to obtain desired matrix
   norm_target_mat <- generate_norm_target_mat(target_df, 
-                                              gtex_read_cts,
-                                              gtex_hist_dt,
-                                              group_col = "gtex_subgroup",
-                                              id_col = "Kids_First_Biospecimen_ID")
+                                              read_cts,
+                                              hist_dt,
+                                              group_col = "primary_site",
+                                              id_col = "sample_id")
   
   # save mat
   qs2::qs_save(norm_target_mat,
                file.path(results_dir, 
-                         glue::glue("gtex-{event}-norm-target-ct-mat.qs2")))
+                         glue::glue("normal-pedbrain-{event}-norm-target-ct-mat.qs2")))
   
 }
 
@@ -176,15 +152,15 @@ for (event in names(junction_list)){
   
   # run `generate_norm_junction_mat` to obtain desired normalized mean cpm matrix
   junction_mat_list[[event]] <- generate_norm_junction_mat(junction_df, 
-                                                         gtex_read_cts,
-                                                         gtex_hist_dt,
-                                                         group_col = "gtex_subgroup",
-                                                         id_col = "Kids_First_Biospecimen_ID")
+                                                           read_cts,
+                                                           hist_dt,
+                                                           group_col = "primary_site",
+                                                           id_col = "sample_id")
   
   # save mat
   qs2::qs_save(junction_mat_list[[event]],
                file.path(results_dir, 
-                         glue::glue("gtex-{event}-norm-junction-ct-mat.qs2")))
+                         glue::glue("normal-pedbrain-{event}-norm-junction-ct-mat.qs2")))
   
 }
 
@@ -194,11 +170,11 @@ merged_norm_junction_mat <- junction_mat_list[["se"]] %>%
             junction_mat_list[["a3ss"]],
             junction_mat_list[["a5ss"]]) %>%
   distinct(junction, .keep_all = TRUE)
-  
+
 # Save merged junction output
 qs2::qs_save(merged_norm_junction_mat,
              file.path(results_dir,
-                       "gtex-merged-norm-junction-ct-mat.qs2"))
+                       "normal-pedbrain-merged-norm-junction-ct-mat.qs2"))
 
-# Print session info
+# print session info
 sessionInfo()

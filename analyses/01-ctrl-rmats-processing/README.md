@@ -15,6 +15,7 @@ bash run_module.sh  --dpsi <dpsi> --n_na <n_na>
 * `run_module.sh` shell script to run analysis
 * `01-create-gtex-matrices.R` generate splice event matrices from GTEx <40 samples
 * `02-create-evodevo-matrices.R` generate splice event matrices from Evo-Devo brain samples (excluding middle adult, elderly participants)
+* `03-create-pedbrain-matrices.R` generated splice event matrices from normal pediatric brain samples
 * `util/rmats-processing-functions.R` scripts containing functions to process raw rMATS data, normal junction and target counts, calculate mean CPMs by subgroups, and generate matrices. 
 
 ## Input files
@@ -26,6 +27,7 @@ bash run_module.sh  --dpsi <dpsi> --n_na <n_na>
 .
 ├── 01-create-gtex-matrices.R
 ├── 02-create-evodevo-matrices.R
+├── 03-create-pedbrain-matrices.R
 ├── README.md
 ├── input
 │   ├── GTEx_Analysis_v8_Annotations_SubjectPhenotypesDS.txt
@@ -44,7 +46,14 @@ bash run_module.sh  --dpsi <dpsi> --n_na <n_na>
 │   ├── gtex-ri-norm-junction-ct-mat.qs2
 │   ├── gtex-ri-norm-target-ct-mat.qs2
 │   ├── gtex-se-norm-junction-ct-mat.qs2
-│   └── gtex-se-norm-target-ct-mat.qs2
+│   ├── gtex-se-norm-target-ct-mat.qs2
+│   ├── normal-pedbrain-a3ss-norm-junction-ct-mat.qs2
+│   ├── normal-pedbrain-a5ss-norm-junction-ct-mat.qs2
+│   ├── normal-pedbrain-merged-norm-junction-ct-mat.qs2
+│   ├── normal-pedbrain-ri-norm-junction-ct-mat.qs2
+│   ├── normal-pedbrain-ri-norm-target-ct-mat.qs2
+│   ├── normal-pedbrain-se-norm-junction-ct-mat.qs2
+│   └── normal-pedbrain-se-norm-target-ct-mat.qs2
 ├── run_module.sh
 └── util
     └── rmats-processing-functions.R
