@@ -16,7 +16,7 @@ library(data.table)
 
 ### Set directory paths
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
-data_dir <- file.path(root_dir, "data", "v9")
+data_dir <- file.path(root_dir, "data")
 analysis_dir <- file.path(root_dir, "analyses", "01-ctrl-rmats-processing")
 input_dir <- file.path(analysis_dir, "input")
 results_dir <- file.path(analysis_dir, "results")
@@ -50,7 +50,10 @@ evodevo_hist <- read_tsv(hist_file) %>%
 
 # Load rMATS SE results
 se_df <- qs2::qs_read(se_file) %>%
-  dplyr::mutate(sample_id = sub("_.*", "", sample_id)) %>%
+  dplyr::mutate(sample_id = sub("_.*", "", sample_id),
+                exonStart_0base = exonStart_0base + 1,
+                upstreamES = upstreamES + 1,
+                downstreamES = downstreamES + 1) %>%
   dplyr::filter(sample_id %in% evodevo_hist$Kids_First_Biospecimen_ID)
 
 # Define SE junction and target IDs, and select relevant columns 
@@ -66,7 +69,9 @@ se_junction_df <- create_junction_df(se_df,
 
 # Load retained intron (RI) rMATS results, update sample ID, and filter for brain under40
 ri_df <- qs2::qs_read(ri_file) %>%
-  dplyr::mutate(sample_id = sub("_.*", "", sample_id)) %>%
+  dplyr::mutate(sample_id = sub("_.*", "", sample_id),
+                upstreamES = upstreamES + 1,
+                downstreamES = downstreamES + 1) %>%
   dplyr::filter(sample_id %in% evodevo_hist$Kids_First_Biospecimen_ID)
 
 # define columns specifying junction coordinates and retain only relevant columns
@@ -85,7 +90,10 @@ ri_junction_df <- create_junction_df(ri_df,
 
 # A3SS events, modify sample ID and filter out cell samples 
 a3ss_df <- qs2::qs_read(a3ss_file) %>%
-  dplyr::mutate(sample_id = sub("_.*", "", sample_id)) %>%
+  dplyr::mutate(sample_id = sub("_.*", "", sample_id), 
+                flankingES = flankingES + 1,
+                longExonStart_0base = longExonStart_0base + 1,
+                shortES = shortES + 1) %>%
   dplyr::filter(sample_id %in% evodevo_hist$Kids_First_Biospecimen_ID)
 
 # define junction coordinates and filter for relevant columns
@@ -98,7 +106,10 @@ a3ss_junction_df <- create_junction_df(a3ss_df,
 
 # A5SS events
 a5ss_df <- qs2::qs_read(a5ss_file) %>%
-  dplyr::mutate(sample_id = sub("_.*", "", sample_id)) %>%
+  dplyr::mutate(sample_id = sub("_.*", "", sample_id), 
+                flankingES = flankingES + 1,
+                longExonStart_0base = longExonStart_0base + 1,
+                shortES = shortES + 1) %>%
   dplyr::filter(sample_id %in% evodevo_hist$Kids_First_Biospecimen_ID)
 
 # define junction coordinates and filter for relevant columns 
