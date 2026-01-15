@@ -1,0 +1,885 @@
+SAMPID	SMTS	SMTSD	AGE
+GTEX-1117F-1326-SM-5EGHH	Adipose Tissue	Adipose - Visceral (Omentum)	60-69
+GTEX-117YW-2726-SM-5GZZT	Blood Vessel	Artery - Tibial	50-59
+GTEX-11DXX-2326-SM-9YFKS	Adipose Tissue	Adipose - Subcutaneous	60-69
+GTEX-11DZ1-0126-SM-5985Q	Skin	Skin - Sun Exposed (Lower leg)	50-59
+GTEX-11EQ8-2626-SM-5N9BO	Colon	Colon - Sigmoid	60-69
+GTEX-11GS4-0006-SM-5SI9M	Blood	Whole Blood	60-69
+GTEX-11O72-2226-SM-5PNW2	Colon	Colon - Transverse	40-49
+GTEX-11O72-3026-SM-5986R	Pituitary	Pituitary	40-49
+GTEX-11TT1-0126-SM-5LUAA	Adrenal Gland	Adrenal Gland	20-29
+GTEX-11WQK-1826-SM-5EQM2	Esophagus	Esophagus - Muscularis	50-59
+GTEX-11WQK-2626-SM-5EQ4K	Stomach	Stomach	50-59
+GTEX-11XUK-0005-SM-5LU9F	Blood	Whole Blood	40-49
+GTEX-11ZUS-0011-R11b-SM-5BC7B	Brain	Brain - Cerebellar Hemisphere	30-39
+GTEX-11ZVC-0011-R3a-SM-5BC6V	Brain	Brain - Anterior cingulate cortex (BA24)	50-59
+GTEX-1211K-0626-SM-5FQUZ	Heart	Heart - Left Ventricle	60-69
+GTEX-12584-0526-SM-5FQTS	Muscle	Muscle - Skeletal	40-49
+GTEX-12BJ1-0006-SM-5SIB5	Blood	Whole Blood	60-69
+GTEX-12KS4-0005-SM-5SI94	Blood	Whole Blood	30-39
+GTEX-12WSD-0011-R6b-SM-5P9JU	Brain	Brain - Nucleus accumbens (basal ganglia)	60-69
+GTEX-12WSE-0526-SM-793B2	Skin	Skin - Sun Exposed (Lower leg)	20-29
+GTEX-12WSE-1226-SM-73KUF	Thyroid	Thyroid	20-29
+GTEX-12WSH-0011-R5b-SM-5P9F3	Brain	Brain - Caudate (basal ganglia)	50-59
+GTEX-12WSL-1026-SM-5CVNJ	Lung	Lung	50-59
+GTEX-12WSN-5001-SM-7DHMK	Heart	Heart - Left Ventricle	40-49
+GTEX-13111-0426-SM-5DUXR	Lung	Lung	50-59
+GTEX-13113-0626-SM-5GCP2	Esophagus	Esophagus - Gastroesophageal Junction	60-69
+GTEX-131XE-0926-SM-5HL7J	Small Intestine	Small Intestine - Terminal Ileum	50-59
+GTEX-1399S-2126-SM-5J2MH	Ovary	Ovary	30-39
+GTEX-139T8-0526-SM-5KLZL	Muscle	Muscle - Skeletal	60-69
+GTEX-139T8-0626-SM-5KLZX	Skin	Skin - Not Sun Exposed (Suprapubic)	60-69
+GTEX-139T8-0826-SM-5L3DE	Breast	Breast - Mammary Tissue	60-69
+GTEX-13IVO-0011-R10a-SM-5LZY3	Brain	Brain - Frontal Cortex (BA9)	70-79
+GTEX-13IVO-0011-R3b-SM-5IJBJ	Brain	Brain - Anterior cingulate cortex (BA24)	70-79
+GTEX-13IVO-0011-R6b-SM-5K7X9	Brain	Brain - Nucleus accumbens (basal ganglia)	70-79
+GTEX-13IVO-0011-R8a-SM-5L3DY	Brain	Brain - Hypothalamus	70-79
+GTEX-13N11-0426-SM-5KM3O	Heart	Heart - Left Ventricle	50-59
+GTEX-13NZ8-0011-R8b-SM-5KM48	Brain	Brain - Hypothalamus	60-69
+GTEX-13OVG-1426-SM-5K7VP	Colon	Colon - Transverse	60-69
+GTEX-13OVI-0626-SM-5IJCN	Blood Vessel	Artery - Aorta	60-69
+GTEX-13PDP-0011-R6b-SM-5O9D5	Brain	Brain - Nucleus accumbens (basal ganglia)	60-69
+GTEX-13PL7-1226-SM-5SIAR	Adipose Tissue	Adipose - Visceral (Omentum)	60-69
+GTEX-13PVQ-0226-SM-5SIBG	Adipose Tissue	Adipose - Subcutaneous	50-59
+GTEX-13PVQ-3026-SM-5SI93	Brain	Brain - Cortex	50-59
+GTEX-13PVR-1626-SM-73KVF	Colon	Colon - Transverse	60-69
+GTEX-13PVR-2026-SM-73KXT	Esophagus	Esophagus - Gastroesophageal Junction	60-69
+GTEX-13PVR-2126-SM-73KVR	Stomach	Stomach	60-69
+GTEX-13PVR-2226-SM-7DHKP	Breast	Breast - Mammary Tissue	60-69
+GTEX-13PVR-2626-SM-7DHKQ	Nerve	Nerve - Tibial	60-69
+GTEX-13QJ3-0826-SM-7DHKK	Breast	Breast - Mammary Tissue	50-59
+GTEX-13QJ3-0926-SM-73KX5	Thyroid	Thyroid	50-59
+GTEX-13RTJ-2626-SM-7DHKR	Blood Vessel	Artery - Tibial	60-69
+GTEX-13RTJ-2726-SM-73KVG	Muscle	Muscle - Skeletal	60-69
+GTEX-13U4I-0226-SM-5SIB1	Adipose Tissue	Adipose - Subcutaneous	40-49
+GTEX-13U4I-0826-SM-5SIBD	Heart	Heart - Left Ventricle	40-49
+GTEX-13U4I-2526-SM-5SI8Z	Stomach	Stomach	40-49
+GTEX-13U4I-2626-SM-5SI9C	Colon	Colon - Sigmoid	40-49
+GTEX-13VXT-0526-SM-5SI9O	Blood Vessel	Artery - Tibial	20-29
+GTEX-13VXT-0626-SM-5SIA1	Thyroid	Thyroid	20-29
+GTEX-13VXT-0726-SM-5SIAD	Heart	Heart - Atrial Appendage	20-29
+GTEX-13VXT-0826-SM-5SIAP	Blood Vessel	Artery - Aorta	20-29
+GTEX-13VXU-0126-SM-5SI9F	Skin	Skin - Sun Exposed (Lower leg)	50-59
+GTEX-13VXU-0226-SM-5SI9R	Adipose Tissue	Adipose - Subcutaneous	50-59
+GTEX-13VXU-3126-SM-5SIA4	Pituitary	Pituitary	50-59
+GTEX-13W3W-0005-SM-5SI9Y	Blood	Whole Blood	60-69
+GTEX-13W3W-0226-SM-731ET	Blood Vessel	Artery - Aorta	60-69
+GTEX-13W3W-0326-SM-731DS	Lung	Lung	60-69
+GTEX-13W3W-0426-SM-5SI9D	Heart	Heart - Left Ventricle	60-69
+GTEX-13W3W-1426-SM-5LU56	Uterus	Uterus	60-69
+GTEX-13W3W-2026-SM-5K7UL	Small Intestine	Small Intestine - Terminal Ileum	60-69
+GTEX-13W3W-2126-SM-5K7UX	Colon	Colon - Transverse	60-69
+GTEX-13W3W-2526-SM-5SI9P	Adipose Tissue	Adipose - Subcutaneous	60-69
+GTEX-13W3W-2626-SM-5SIA2	Muscle	Muscle - Skeletal	60-69
+GTEX-13W3W-2726-SM-5SIAE	Nerve	Nerve - Tibial	60-69
+GTEX-13W3W-2826-SM-731E5	Blood Vessel	Artery - Tibial	60-69
+GTEX-13W46-0226-SM-5SIAG	Skin	Skin - Sun Exposed (Lower leg)	50-59
+GTEX-13W46-1226-SM-5SIAS	Adipose Tissue	Adipose - Visceral (Omentum)	50-59
+GTEX-13X6H-0126-SM-5QGOS	Blood Vessel	Artery - Aorta	50-59
+GTEX-13X6H-0926-SM-5SIB2	Skin	Skin - Not Sun Exposed (Suprapubic)	50-59
+GTEX-13X6H-1026-SM-5SIBE	Ovary	Ovary	50-59
+GTEX-13X6H-1426-SM-5SI91	Esophagus	Esophagus - Muscularis	50-59
+GTEX-13X6H-1826-SM-7EWCZ	Small Intestine	Small Intestine - Terminal Ileum	50-59
+GTEX-13X6H-1926-SM-7EWD3	Colon	Colon - Transverse	50-59
+GTEX-13X6H-2126-SM-7EWD5	Skin	Skin - Sun Exposed (Lower leg)	50-59
+GTEX-13X6H-2326-SM-7EWEB	Muscle	Muscle - Skeletal	50-59
+GTEX-13X6I-1426-SM-5SI9Z	Heart	Heart - Left Ventricle	60-69
+GTEX-13X6I-1526-SM-5SIAC	Adipose Tissue	Adipose - Visceral (Omentum)	60-69
+GTEX-13X6I-1826-SM-5SIAO	Skin	Skin - Not Sun Exposed (Suprapubic)	60-69
+GTEX-13X6J-1226-SM-79OMF	Heart	Heart - Atrial Appendage	50-59
+GTEX-13X6K-1626-SM-7EWCX	Lung	Lung	60-69
+GTEX-13X6K-2226-SM-79OMI	Esophagus	Esophagus - Muscularis	60-69
+GTEX-1445S-0626-SM-5LU3C	Muscle	Muscle - Skeletal	60-69
+GTEX-1445S-2426-SM-79ON2	Adipose Tissue	Adipose - Visceral (Omentum)	60-69
+GTEX-144GL-0526-SM-5LU41	Blood Vessel	Artery - Tibial	50-59
+GTEX-144GL-1426-SM-79OMA	Liver	Liver	50-59
+GTEX-144GL-1826-SM-79OMB	Adrenal Gland	Adrenal Gland	50-59
+GTEX-144GL-2226-SM-79OMD	Esophagus	Esophagus - Muscularis	50-59
+GTEX-144GM-0526-SM-79OJO	Skin	Skin - Not Sun Exposed (Suprapubic)	20-29
+GTEX-144GM-0626-SM-79OKY	Adipose Tissue	Adipose - Visceral (Omentum)	20-29
+GTEX-144GM-0726-SM-79OJQ	Pancreas	Pancreas	20-29
+GTEX-144GM-0826-SM-5O98R	Prostate	Prostate	20-29
+GTEX-144GM-1026-SM-79OKU	Small Intestine	Small Intestine - Terminal Ileum	20-29
+GTEX-144GM-1126-SM-79OJK	Colon	Colon - Sigmoid	20-29
+GTEX-144GM-1526-SM-79OJM	Esophagus	Esophagus - Muscularis	20-29
+GTEX-144GN-2326-SM-5LU4F	Skin	Skin - Sun Exposed (Lower leg)	50-59
+GTEX-144GN-2426-SM-5LU4R	Muscle	Muscle - Skeletal	50-59
+GTEX-144GN-2526-SM-5LU54	Nerve	Nerve - Tibial	50-59
+GTEX-144GO-1626-SM-7EPG5	Adipose Tissue	Adipose - Subcutaneous	60-69
+GTEX-145LS-1826-SM-5LUAZ	Esophagus	Esophagus - Mucosa	60-69
+GTEX-145LU-0826-SM-79OJJ	Blood Vessel	Artery - Tibial	50-59
+GTEX-145LU-0926-SM-79OJL	Esophagus	Esophagus - Mucosa	50-59
+GTEX-145LU-1926-SM-79OJN	Skin	Skin - Not Sun Exposed (Suprapubic)	50-59
+GTEX-145ME-0826-SM-5O9AF	Colon	Colon - Transverse	40-49
+GTEX-145ME-1126-SM-5SIAT	Colon	Colon - Sigmoid	40-49
+GTEX-145ME-1226-SM-5SIB6	Ovary	Ovary	40-49
+GTEX-145ME-1526-SM-5Q5F2	Breast	Breast - Mammary Tissue	40-49
+GTEX-145ME-1826-SM-5SI9G	Skin	Skin - Sun Exposed (Lower leg)	40-49
+GTEX-145ME-2026-SM-5SIA5	Muscle	Muscle - Skeletal	40-49
+GTEX-145ME-2126-SM-5SIAH	Nerve	Nerve - Tibial	40-49
+GTEX-145ME-5004-SM-7MGXP	Esophagus	Esophagus - Mucosa	40-49
+GTEX-145ME-5007-SM-7DHN8	Esophagus	Esophagus - Muscularis	40-49
+GTEX-145MF-2826-SM-7EPGU	Brain	Brain - Cerebellum	50-59
+GTEX-145MI-0011-R10a-SM-5PNZD	Brain	Brain - Frontal Cortex (BA9)	60-69
+GTEX-145MI-0011-R4b-SM-5PNZH	Brain	Brain - Amygdala	60-69
+GTEX-145MI-0011-R6a-SM-5PNZA	Brain	Brain - Nucleus accumbens (basal ganglia)	60-69
+GTEX-145MI-0011-R8b-SM-5PNZ9	Brain	Brain - Hypothalamus	60-69
+GTEX-145MI-0626-SM-5SI8S	Skin	Skin - Not Sun Exposed (Suprapubic)	60-69
+GTEX-145MI-0826-SM-5SI95	Adipose Tissue	Adipose - Visceral (Omentum)	60-69
+GTEX-145MN-0626-SM-5QGRH	Heart	Heart - Left Ventricle	30-39
+GTEX-145MN-1426-SM-5SI9H	Pancreas	Pancreas	30-39
+GTEX-145MN-1526-SM-5SI9T	Skin	Skin - Not Sun Exposed (Suprapubic)	30-39
+GTEX-145MN-1726-SM-5SIA6	Colon	Colon - Transverse	30-39
+GTEX-145MN-1926-SM-5SIAI	Breast	Breast - Mammary Tissue	30-39
+GTEX-145MN-2226-SM-5SIAU	Skin	Skin - Sun Exposed (Lower leg)	30-39
+GTEX-145MN-2326-SM-5SIB7	Blood Vessel	Artery - Tibial	30-39
+GTEX-146FH-0826-SM-5SI8T	Breast	Breast - Mammary Tissue	50-59
+GTEX-146FH-0926-SM-5SI96	Blood Vessel	Artery - Coronary	50-59
+GTEX-146FH-2026-SM-5SI9I	Adipose Tissue	Adipose - Visceral (Omentum)	50-59
+GTEX-146FH-2126-SM-5SI9U	Stomach	Stomach	50-59
+GTEX-146FR-0326-SM-5SI8U	Thyroid	Thyroid	60-69
+GTEX-146FR-0426-SM-5SI97	Esophagus	Esophagus - Mucosa	60-69
+GTEX-146FR-1226-SM-5SIA7	Salivary Gland	Minor Salivary Gland	60-69
+GTEX-146FR-1326-SM-E9J48	Skin	Skin - Sun Exposed (Lower leg)	60-69
+GTEX-146FR-1426-SM-5SIAV	Nerve	Nerve - Tibial	60-69
+GTEX-146FR-1526-SM-5SIB8	Adrenal Gland	Adrenal Gland	60-69
+GTEX-1477Z-1526-SM-5SI9V	Nerve	Nerve - Tibial	60-69
+GTEX-1477Z-1626-SM-5SIA8	Muscle	Muscle - Skeletal	60-69
+GTEX-1477Z-2226-SM-5QGPG	Prostate	Prostate	60-69
+GTEX-1477Z-2826-SM-5SI9J	Pituitary	Pituitary	60-69
+GTEX-147F3-0426-SM-5SI8V	Blood Vessel	Artery - Tibial	50-59
+GTEX-147F3-0526-SM-5SI98	Skin	Skin - Sun Exposed (Lower leg)	50-59
+GTEX-147F3-1526-SM-5SIAK	Vagina	Vagina	50-59
+GTEX-147F3-1726-SM-5SIAW	Skin	Skin - Not Sun Exposed (Suprapubic)	50-59
+GTEX-147F3-1926-SM-5SIB9	Colon	Colon - Transverse	50-59
+GTEX-1497J-2626-SM-5SI9K	Muscle	Muscle - Skeletal	60-69
+GTEX-1497J-2726-SM-5SI9W	Esophagus	Esophagus - Mucosa	60-69
+GTEX-14A5H-1626-SM-5SIAN	Colon	Colon - Sigmoid	60-69
+GTEX-14A5I-1326-SM-5SIAQ	Blood Vessel	Artery - Aorta	50-59
+GTEX-14A5I-2726-SM-5SIB3	Vagina	Vagina	50-59
+GTEX-14A5I-2826-SM-5SIBF	Brain	Brain - Cerebellum	50-59
+GTEX-14ABY-0005-SM-5O99U	Blood	Whole Blood	50-59
+GTEX-14ABY-2126-SM-5QGQZ	Breast	Breast - Mammary Tissue	50-59
+GTEX-14BIL-0126-SM-5SI92	Skin	Skin - Sun Exposed (Lower leg)	50-59
+GTEX-14BIL-0226-SM-5SI9E	Adipose Tissue	Adipose - Subcutaneous	50-59
+GTEX-14BIL-0326-SM-5SI9Q	Muscle	Muscle - Skeletal	50-59
+GTEX-14BIL-0426-SM-5SIA3	Nerve	Nerve - Tibial	50-59
+GTEX-14BIL-0926-SM-7DHKN	Heart	Heart - Atrial Appendage	50-59
+GTEX-14BIL-1126-SM-79OMC	Heart	Heart - Left Ventricle	50-59
+GTEX-14BIL-1226-SM-79OME	Lung	Lung	50-59
+GTEX-14BIL-1326-SM-79OMR	Liver	Liver	50-59
+GTEX-14BIL-1826-SM-7DUEO	Esophagus	Esophagus - Gastroesophageal Junction	50-59
+GTEX-14BIL-1926-SM-73KYI	Stomach	Stomach	50-59
+GTEX-14BIL-2226-SM-73KWF	Testis	Testis	50-59
+GTEX-14BIL-2926-SM-5SIAF	Pituitary	Pituitary	50-59
+GTEX-14BIL-3026-SM-7EWD4	Brain	Brain - Cortex	50-59
+GTEX-14BIM-0326-SM-5SI9B	Muscle	Muscle - Skeletal	60-69
+GTEX-14BIM-0426-SM-5SI9N	Nerve	Nerve - Tibial	60-69
+GTEX-14BIM-1226-SM-5SIBC	Esophagus	Esophagus - Muscularis	60-69
+GTEX-14BIM-1326-SM-7EWD1	Esophagus	Esophagus - Mucosa	60-69
+GTEX-14BIM-1626-SM-7EWD2	Adipose Tissue	Adipose - Visceral (Omentum)	60-69
+GTEX-14BIM-2226-SM-5SI8Y	Uterus	Uterus	60-69
+GTEX-14BIM-3026-SM-7EWCY	Brain	Brain - Cortex	60-69
+GTEX-14BIN-0626-SM-793DP	Skin	Skin - Sun Exposed (Lower leg)	50-59
+GTEX-14BIN-0726-SM-793DQ	Adipose Tissue	Adipose - Subcutaneous	50-59
+GTEX-14BIN-0826-SM-793DR	Nerve	Nerve - Tibial	50-59
+GTEX-14BIN-1526-SM-73KZ7	Uterus	Uterus	50-59
+GTEX-14BIN-2126-SM-793AX	Heart	Heart - Atrial Appendage	50-59
+GTEX-14BMU-0326-SM-793DO	Blood Vessel	Artery - Aorta	20-29
+GTEX-14BMU-0426-SM-73KYT	Spleen	Spleen	20-29
+GTEX-14BMU-0526-SM-73KW4	Lung	Lung	20-29
+GTEX-14BMU-0626-SM-73KZ6	Adipose Tissue	Adipose - Visceral (Omentum)	20-29
+GTEX-14BMU-0726-SM-73KXS	Pancreas	Pancreas	20-29
+GTEX-14BMU-0826-SM-73KZ8	Esophagus	Esophagus - Muscularis	20-29
+GTEX-14BMV-0626-SM-793AU	Breast	Breast - Mammary Tissue	50-59
+GTEX-14BMV-0826-SM-73KXU	Lung	Lung	50-59
+GTEX-14BMV-0926-SM-7DHKM	Blood Vessel	Artery - Coronary	50-59
+GTEX-14BMV-1526-SM-793AV	Esophagus	Esophagus - Gastroesophageal Junction	50-59
+GTEX-14BMV-1626-SM-73KVQ	Adipose Tissue	Adipose - Visceral (Omentum)	50-59
+GTEX-14C38-1026-SM-73KY7	Adipose Tissue	Adipose - Visceral (Omentum)	50-59
+GTEX-14C39-1026-SM-73KWG	Pancreas	Pancreas	40-49
+GTEX-14C39-2726-SM-7DUEK	Nerve	Nerve - Tibial	40-49
+GTEX-14C39-2926-SM-73KU3	Pituitary	Pituitary	40-49
+GTEX-14C5O-0926-SM-793DM	Adipose Tissue	Adipose - Visceral (Omentum)	60-69
+GTEX-14C5O-1626-SM-73KYH	Esophagus	Esophagus - Mucosa	60-69
+GTEX-14C5O-2326-SM-73KYU	Testis	Testis	60-69
+GTEX-14C5O-2526-SM-73KU2	Colon	Colon - Transverse	60-69
+GTEX-14DAQ-0526-SM-793AY	Blood Vessel	Artery - Tibial	60-69
+GTEX-14DAQ-0626-SM-793DS	Skin	Skin - Not Sun Exposed (Suprapubic)	60-69
+GTEX-14DAQ-0826-SM-73KWT	Thyroid	Thyroid	60-69
+GTEX-14DAQ-0926-SM-793AZ	Lung	Lung	60-69
+GTEX-14DAQ-1026-SM-793B1	Heart	Heart - Atrial Appendage	60-69
+GTEX-14DAR-0826-SM-73KYJ	Esophagus	Esophagus - Mucosa	50-59
+GTEX-14DAR-1126-SM-793AT	Testis	Testis	50-59
+GTEX-14DAR-1226-SM-73KYV	Skin	Skin - Not Sun Exposed (Suprapubic)	50-59
+GTEX-14E1K-1126-SM-73KV4	Esophagus	Esophagus - Muscularis	50-59
+GTEX-14E1K-1826-SM-793DT	Colon	Colon - Transverse	50-59
+GTEX-14E1K-1926-SM-73KWS	Testis	Testis	50-59
+GTEX-14E1K-2126-SM-793DU	Adipose Tissue	Adipose - Subcutaneous	50-59
+GTEX-14E6E-0126-SM-73KXH	Adrenal Gland	Adrenal Gland	30-39
+GTEX-14E6E-0326-SM-73KY6	Thyroid	Thyroid	30-39
+GTEX-14E6E-0526-SM-793DN	Skin	Skin - Not Sun Exposed (Suprapubic)	30-39
+GTEX-14E6E-0626-SM-73KX6	Esophagus	Esophagus - Muscularis	30-39
+GTEX-14E7W-0011-R11a-SM-5ZZVA	Brain	Brain - Cerebellar Hemisphere	70-79
+GTEX-14ICL-0006-SM-5SIAB	Blood	Whole Blood	30-39
+GTEX-14JFF-0626-SM-5ZZVT	Skin	Skin - Not Sun Exposed (Suprapubic)	60-69
+GTEX-14LLW-0011-R8a-SM-62LFG	Brain	Brain - Hypothalamus	70-79
+GTEX-14PJ5-0926-SM-6LLIK	Colon	Colon - Transverse	60-69
+GTEX-14PK6-0326-SM-6AJ9S	Lung	Lung	70-79
+GTEX-14XAO-0526-SM-6AJB7	Lung	Lung	60-69
+GTEX-15CHC-2026-SM-6EU1Z	Uterus	Uterus	60-69
+GTEX-15CHR-0726-SM-7EPHG	Lung	Lung	50-59
+GTEX-15CHR-1226-SM-79OON	Prostate	Prostate	50-59
+GTEX-15DDE-0011-R4b-SM-7KULI	Brain	Brain - Amygdala	50-59
+GTEX-15DDE-1326-SM-6LLJM	Blood Vessel	Artery - Aorta	50-59
+GTEX-15EOM-5007-SM-793DG	Heart	Heart - Left Ventricle	20-29
+GTEX-15EOM-5016-SM-7P8SR	Esophagus	Esophagus - Muscularis	20-29
+GTEX-15RIE-1726-SM-7KUMU	Heart	Heart - Left Ventricle	60-69
+GTEX-15RIE-2426-SM-7KUDS	Muscle	Muscle - Skeletal	60-69
+GTEX-15RJ7-1726-SM-6PAL3	Colon	Colon - Sigmoid	40-49
+GTEX-15SB6-0226-SM-6LLIA	Pancreas	Pancreas	50-59
+GTEX-15SB6-0726-SM-6M48F	Esophagus	Esophagus - Mucosa	50-59
+GTEX-15SB6-1826-SM-6PALN	Muscle	Muscle - Skeletal	50-59
+GTEX-16BQI-0326-SM-6PAM4	Muscle	Muscle - Skeletal	30-39
+GTEX-16GPK-1826-SM-7MGW5	Lung	Lung	60-69
+GTEX-16NPV-0011-R10a-SM-79OKA	Brain	Brain - Frontal Cortex (BA9)	50-59
+GTEX-16NPV-0011-R1b-SM-7MGVZ	Brain	Brain - Hippocampus	50-59
+GTEX-17MF6-1426-SM-7IGOX	Pancreas	Pancreas	40-49
+GTEX-17MF6-1526-SM-7MGW8	Esophagus	Esophagus - Muscularis	40-49
+GTEX-183WM-0011-R4a-SM-7LG6S	Brain	Brain - Amygdala	70-79
+GTEX-183WM-0011-R8a-SM-7189W	Brain	Brain - Hypothalamus	70-79
+GTEX-18464-0011-R10a-SM-72D6X	Brain	Brain - Frontal Cortex (BA9)	50-59
+GTEX-18464-0011-R11a-SM-72D76	Brain	Brain - Cerebellar Hemisphere	50-59
+GTEX-18464-0011-R2a-SM-731AL	Brain	Brain - Substantia nigra	50-59
+GTEX-18464-0011-R4a-SM-7LG6T	Brain	Brain - Amygdala	50-59
+GTEX-18464-0011-R5b-SM-718A6	Brain	Brain - Caudate (basal ganglia)	50-59
+GTEX-18464-0011-R6a-SM-731CA	Brain	Brain - Nucleus accumbens (basal ganglia)	50-59
+GTEX-18464-0011-R7b-SM-731CM	Brain	Brain - Putamen (basal ganglia)	50-59
+GTEX-18464-0011-R8a-SM-72D4Z	Brain	Brain - Hypothalamus	50-59
+GTEX-18464-0011-R9a-SM-731BK	Brain	Brain - Spinal cord (cervical c-1)	50-59
+GTEX-1A3MW-2126-SM-731DO	Adrenal Gland	Adrenal Gland	60-69
+GTEX-1AX9K-0726-SM-73KYR	Blood Vessel	Artery - Aorta	50-59
+GTEX-1AX9K-0826-SM-731F9	Lung	Lung	50-59
+GTEX-1B8SG-1226-SM-7IGPF	Breast	Breast - Mammary Tissue	50-59
+GTEX-1B97J-0526-SM-793C2	Blood Vessel	Artery - Aorta	50-59
+GTEX-1B996-2926-SM-7MXUH	Brain	Brain - Cerebellum	60-69
+GTEX-1CAMQ-2226-SM-7MGWS	Prostate	Prostate	40-49
+GTEX-1CAMR-1626-SM-79OLC	Prostate	Prostate	20-29
+GTEX-1CAV2-1426-SM-7MGX6	Uterus	Uterus	40-49
+GTEX-1CB4F-1826-SM-7MGXI	Small Intestine	Small Intestine - Terminal Ileum	60-69
+GTEX-1CB4J-0011-R4b-SM-9WG5P	Brain	Brain - Amygdala	60-69
+GTEX-1EH9U-2626-SM-7IGQN	Testis	Testis	60-69
+GTEX-1EWIQ-0011-R1a-SM-9OSX7	Brain	Brain - Hippocampus	70-79
+GTEX-1F5PK-1626-SM-7PBZU	Esophagus	Esophagus - Muscularis	50-59
+GTEX-1F88F-1526-SM-9JGG1	Adrenal Gland	Adrenal Gland	60-69
+GTEX-1F88F-2126-SM-9KNUK	Ovary	Ovary	60-69
+GTEX-1GF9V-0011-R1a-SM-CKZNQ	Brain	Brain - Hippocampus	60-69
+GTEX-1GF9X-0726-SM-7SB7V	Esophagus	Esophagus - Muscularis	40-49
+GTEX-1GF9X-2426-SM-7SB7W	Ovary	Ovary	40-49
+GTEX-1GMR2-1726-SM-9JGI2	Colon	Colon - Transverse	50-59
+GTEX-1GN1U-0011-R10b-SM-CKZNH	Brain	Brain - Frontal Cortex (BA9)	50-59
+GTEX-1GN1U-2326-SM-9MQK4	Ovary	Ovary	50-59
+GTEX-1GN1V-0011-R10a-SM-CKZNU	Brain	Brain - Frontal Cortex (BA9)	60-69
+GTEX-1GN73-2426-SM-7RHFQ	Heart	Heart - Left Ventricle	60-69
+GTEX-1GTWX-1326-SM-9JGHU	Esophagus	Esophagus - Mucosa	60-69
+GTEX-1GZ4I-1126-SM-9QEHR	Blood Vessel	Artery - Aorta	50-59
+GTEX-1H2FU-0011-R4a-SM-CL551	Brain	Brain - Amygdala	60-69
+GTEX-1H3VE-0011-R3a-SM-CE6SK	Brain	Brain - Anterior cingulate cortex (BA24)	40-49
+GTEX-1H3VE-0011-R6b-SM-A9G1M	Brain	Brain - Nucleus accumbens (basal ganglia)	40-49
+GTEX-1H3VE-0011-R8b-SM-A9G1L	Brain	Brain - Hypothalamus	40-49
+GTEX-1HBPN-2326-SM-9WPPU	Breast	Breast - Mammary Tissue	50-59
+GTEX-1HC8U-1626-SM-CNPPG	Esophagus	Esophagus - Muscularis	40-49
+GTEX-1HCU8-1326-SM-C1YQQ	Stomach	Stomach	60-69
+GTEX-1HCU8-2026-SM-9YFLE	Vagina	Vagina	60-69
+GTEX-1HCU8-2326-SM-ACKVL	Esophagus	Esophagus - Muscularis	60-69
+GTEX-1HCVE-1326-SM-A9G3Q	Esophagus	Esophagus - Muscularis	50-59
+GTEX-1HFI6-0011-R6b-SM-CM2SR	Brain	Brain - Nucleus accumbens (basal ganglia)	40-49
+GTEX-1HR98-0011-R1a-SM-ARZLQ	Brain	Brain - Hippocampus	60-69
+GTEX-1HSMP-1326-SM-A96TR	Lung	Lung	70-79
+GTEX-1HSMP-1826-SM-E9TIB	Esophagus	Esophagus - Gastroesophageal Junction	70-79
+GTEX-1HSMQ-0726-SM-B2LXY	Lung	Lung	50-59
+GTEX-1HSMQ-1826-SM-A9SMJ	Prostate	Prostate	50-59
+GTEX-1HSMQ-2126-SM-CJI3E	Esophagus	Esophagus - Muscularis	50-59
+GTEX-1I1GP-0726-SM-B2LVP	Blood Vessel	Artery - Coronary	50-59
+GTEX-1I1GP-1126-SM-ARL7I	Esophagus	Esophagus - Muscularis	50-59
+GTEX-1I1GR-0226-SM-CMKHQ	Adipose Tissue	Adipose - Subcutaneous	60-69
+GTEX-1I1GR-2926-SM-CNNQG	Brain	Brain - Cortex	60-69
+GTEX-1I6K7-1326-SM-ARZM1	Esophagus	Esophagus - Gastroesophageal Junction	40-49
+GTEX-1ICG6-2026-SM-CE6SX	Esophagus	Esophagus - Muscularis	70-79
+GTEX-1IKJJ-1026-SM-A96SQ	Thyroid	Thyroid	60-69
+GTEX-1IKOH-0011-R2a-SM-CMKHO	Brain	Brain - Substantia nigra	60-69
+GTEX-1IOXB-0011-R11a-SM-A9G1X	Brain	Brain - Cerebellar Hemisphere	50-59
+GTEX-1IOXB-0011-R7b-SM-CE6SM	Brain	Brain - Putamen (basal ganglia)	50-59
+GTEX-1J1OQ-0011-R10a-SM-A9G1Y	Brain	Brain - Frontal Cortex (BA9)	40-49
+GTEX-1J1OQ-0011-R11a-SM-A96S3	Brain	Brain - Cerebellar Hemisphere	40-49
+GTEX-1J1OQ-0011-R6a-SM-ARU86	Brain	Brain - Nucleus accumbens (basal ganglia)	40-49
+GTEX-1J1OQ-0011-R7b-SM-ARU87	Brain	Brain - Putamen (basal ganglia)	40-49
+GTEX-1J1OQ-0011-R9b-SM-ARZMK	Brain	Brain - Spinal cord (cervical c-1)	40-49
+GTEX-1J1R8-1126-SM-CNPQ3	Colon	Colon - Transverse	40-49
+GTEX-1J8Q2-0011-R1a-SM-D4P2D	Brain	Brain - Hippocampus	60-69
+GTEX-1JJEA-0011-R4a-SM-EXUTC	Brain	Brain - Amygdala	60-69
+GTEX-1JJEA-2726-SM-ARL8V	Breast	Breast - Mammary Tissue	60-69
+GTEX-1JJEA-3026-SM-E9TIC	Pituitary	Pituitary	60-69
+GTEX-1JKYN-1926-SM-CMKH1	Nerve	Nerve - Tibial	30-39
+GTEX-1JN1M-2626-SM-CY8I3	Colon	Colon - Transverse	60-69
+GTEX-1JN1M-2926-SM-CNNPJ	Stomach	Stomach	60-69
+GTEX-1JN1M-3026-SM-CMKGK	Breast	Breast - Mammary Tissue	60-69
+GTEX-1JN6P-0011-R4a-SM-EZ6MS	Brain	Brain - Amygdala	60-69
+GTEX-1L5NE-1526-SM-DIPFW	Stomach	Stomach	50-59
+GTEX-1LC47-0011-R6b-SM-EZ6MI	Brain	Brain - Nucleus accumbens (basal ganglia)	60-69
+GTEX-1LG7Z-0526-SM-D4P3Q	Thyroid	Thyroid	30-39
+GTEX-1LNCM-0726-SM-DKPQ5	Esophagus	Esophagus - Muscularis	50-59
+GTEX-1LSNL-2826-SM-E9U5L	Breast	Breast - Mammary Tissue	50-59
+GTEX-1LVAN-0526-SM-CNNQ1	Muscle	Muscle - Skeletal	50-59
+GTEX-1LVAN-2726-SM-CNPQG	Ovary	Ovary	50-59
+GTEX-1MJIX-0426-SM-DTXEN	Heart	Heart - Atrial Appendage	40-49
+GTEX-1N2EF-2326-SM-DTXEE	Esophagus	Esophagus - Gastroesophageal Junction	60-69
+GTEX-1NUQO-1226-SM-E76PK	Esophagus	Esophagus - Muscularis	20-29
+GTEX-1NV5F-2526-SM-EXUSK	Adipose Tissue	Adipose - Visceral (Omentum)	60-69
+GTEX-1PIEJ-1726-SM-EVYB6	Uterus	Uterus	20-29
+GTEX-1PPH6-0005-SM-DLZQP	Blood	Whole Blood	60-69
+GTEX-1PPH7-2026-SM-E9J3N	Heart	Heart - Left Ventricle	40-49
+GTEX-1PWST-0005-SM-DLZQC	Blood	Whole Blood	70-79
+GTEX-1PWST-2126-SM-DPRZ5	Adrenal Gland	Adrenal Gland	70-79
+GTEX-1PWST-2626-SM-E8VN8	Prostate	Prostate	70-79
+GTEX-1QAET-1926-SM-DPRZG	Testis	Testis	50-59
+GTEX-1QCLY-0426-SM-E8VOH	Muscle	Muscle - Skeletal	30-39
+GTEX-1QP28-1626-SM-E8VOI	Esophagus	Esophagus - Gastroesophageal Junction	50-59
+GTEX-1QW4Y-1926-SM-E8VO3	Blood Vessel	Artery - Tibial	30-39
+GTEX-1R9PM-1126-SM-E76OX	Esophagus	Esophagus - Gastroesophageal Junction	20-29
+GTEX-1R9PM-1726-SM-E8VOA	Salivary Gland	Minor Salivary Gland	20-29
+GTEX-1R9PN-1826-SM-E8VO4	Muscle	Muscle - Skeletal	40-49
+GTEX-1RAZR-1026-SM-E8VOJ	Adipose Tissue	Adipose - Visceral (Omentum)	40-49
+GTEX-1RB15-1126-SM-E8VMX	Adipose Tissue	Adipose - Visceral (Omentum)	60-69
+GTEX-1RLM8-0011-R6a-SM-EYYXS	Brain	Brain - Nucleus accumbens (basal ganglia)	50-59
+GTEX-1RLM8-0526-SM-E8VOK	Blood Vessel	Artery - Aorta	50-59
+GTEX-1RNSC-0011-R5a-SM-EZ6N5	Brain	Brain - Caudate (basal ganglia)	60-69
+GTEX-1S82Y-0005-SM-DO123	Blood	Whole Blood	40-49
+GTEX-1S82Y-1026-SM-EV7BJ	Liver	Liver	40-49
+GTEX-1S82Y-1226-SM-EV7BD	Esophagus	Esophagus - Mucosa	40-49
+GTEX-1S82Y-2026-SM-EVYCM	Skin	Skin - Sun Exposed (Lower leg)	40-49
+GTEX-1S82Y-2226-SM-EWRNV	Muscle	Muscle - Skeletal	40-49
+GTEX-1S82Y-2426-SM-E9U6N	Blood Vessel	Artery - Tibial	40-49
+GTEX-N7MS-0011-R2a-SM-2HML6	Brain	Brain - Substantia nigra	60-69
+GTEX-N7MS-0011-R4a-SM-2HMKW	Brain	Brain - Amygdala	60-69
+GTEX-N7MS-0011-R7a-SM-2HMKN	Brain	Brain - Putamen (basal ganglia)	60-69
+GTEX-N7MS-0926-SM-2HMIZ	Lung	Lung	60-69
+GTEX-N7MS-1225-SM-3LK5G	Esophagus	Esophagus - Mucosa	60-69
+GTEX-N7MS-2326-SM-2HMLD	Thyroid	Thyroid	60-69
+GTEX-N7MS-2625-SM-3LK77	Pituitary	Pituitary	60-69
+GTEX-N7MT-0011-R11A-SM-2I3DZ	Brain	Brain - Cerebellar Hemisphere	60-69
+GTEX-N7MT-0011-R2a-SM-2I3GI	Brain	Brain - Substantia nigra	60-69
+GTEX-N7MT-0011-R3a-SM-2I3GC	Brain	Brain - Anterior cingulate cortex (BA24)	60-69
+GTEX-N7MT-0011-R5a-SM-2I3G6	Brain	Brain - Caudate (basal ganglia)	60-69
+GTEX-N7MT-0011-R8a-SM-2I5GU	Brain	Brain - Hypothalamus	60-69
+GTEX-N7MT-0226-SM-48TC3	Esophagus	Esophagus - Muscularis	60-69
+GTEX-N7MT-1126-SM-CYPQY	Brain	Brain - Cortex	60-69
+GTEX-NFK9-0126-SM-3LK5H	Testis	Testis	40-49
+GTEX-NFK9-0226-SM-2HMKQ	Skin	Skin - Sun Exposed (Lower leg)	40-49
+GTEX-NFK9-1026-SM-2HMK1	Lung	Lung	40-49
+GTEX-NL3H-0011-R1a-SM-48TDJ	Brain	Brain - Hippocampus	60-69
+GTEX-NL3H-0011-R4a-SM-2I3GK	Brain	Brain - Amygdala	60-69
+GTEX-NL3H-0011-R7a-SM-2I3G5	Brain	Brain - Putamen (basal ganglia)	60-69
+GTEX-NL3H-0011-R8a-SM-DIPDY	Brain	Brain - Hypothalamus	60-69
+GTEX-NL4W-0011-R2a-SM-2I5GV	Brain	Brain - Substantia nigra	50-59
+GTEX-NPJ7-0011-R8a-SM-2I3G2	Brain	Brain - Hypothalamus	60-69
+GTEX-NPJ7-0011-R9a-SM-2TC5R	Brain	Brain - Spinal cord (cervical c-1)	60-69
+GTEX-NPJ7-1726-SM-2YUNA	Nerve	Nerve - Tibial	60-69
+GTEX-NPJ7-2726-SM-2I3FT	Brain	Brain - Cortex	60-69
+GTEX-NPJ8-0011-R10A-SM-2YUMO	Brain	Brain - Frontal Cortex (BA9)	40-49
+GTEX-NPJ8-0011-R11A-SM-2YUMS	Brain	Brain - Cerebellar Hemisphere	40-49
+GTEX-NPJ8-0011-R2a-SM-2TC6M	Brain	Brain - Substantia nigra	40-49
+GTEX-NPJ8-0011-R3a-SM-2HMIW	Brain	Brain - Anterior cingulate cortex (BA24)	40-49
+GTEX-NPJ8-0011-R7a-SM-2HMJV	Brain	Brain - Putamen (basal ganglia)	40-49
+GTEX-NPJ8-0011-R9a-SM-2YUN5	Brain	Brain - Spinal cord (cervical c-1)	40-49
+GTEX-NPJ8-0126-SM-2YUNR	Skin	Skin - Sun Exposed (Lower leg)	40-49
+GTEX-NPJ8-0326-SM-2D7VV	Lung	Lung	40-49
+GTEX-NPJ8-1526-SM-2D7VU	Brain	Brain - Cortex	40-49
+GTEX-NPJ8-1726-SM-2YUNB	Nerve	Nerve - Tibial	40-49
+GTEX-NPJ8-2226-SM-3TW8D	Kidney	Kidney - Cortex	40-49
+GTEX-NPJ8-2626-SM-2D7W2	Brain	Brain - Cerebellum	40-49
+GTEX-O5YT-0226-SM-32PK5	Adipose Tissue	Adipose - Subcutaneous	20-29
+GTEX-O5YT-0326-SM-32PKA	Heart	Heart - Left Ventricle	20-29
+GTEX-O5YT-1626-SM-32PK6	Muscle	Muscle - Skeletal	20-29
+GTEX-O5YT-2126-SM-3MJGD	Testis	Testis	20-29
+GTEX-O5YU-0726-SM-EV792	Blood Vessel	Artery - Coronary	60-69
+GTEX-O5YW-1826-SM-2YUN2	Blood Vessel	Artery - Tibial	50-59
+GTEX-OHPL-0126-SM-2HMJ7	Skin	Skin - Sun Exposed (Lower leg)	60-69
+GTEX-OHPL-2626-SM-2HMJA	Thyroid	Thyroid	60-69
+GTEX-OHPM-0326-SM-33HCA	Heart	Heart - Left Ventricle	50-59
+GTEX-OHPN-0005-SM-2YUML	Blood	Whole Blood	60-69
+GTEX-OHPN-0011-R10A-SM-33HBU	Brain	Brain - Frontal Cortex (BA9)	60-69
+GTEX-OHPN-0011-R7A-SM-2I5FI	Brain	Brain - Putamen (basal ganglia)	60-69
+GTEX-OHPN-0011-R8A-SM-33HBT	Brain	Brain - Hypothalamus	60-69
+GTEX-OIZF-0826-SM-3MJGO	Liver	Liver	60-69
+GTEX-OIZF-1026-SM-2HML5	Pancreas	Pancreas	60-69
+GTEX-OIZG-0226-SM-2TC5L	Thyroid	Thyroid	50-59
+GTEX-OIZG-0526-SM-2HMLF	Lung	Lung	50-59
+GTEX-OIZH-0005-SM-2HMJN	Blood	Whole Blood	50-59
+GTEX-OIZH-0326-SM-2HMKC	Heart	Heart - Left Ventricle	50-59
+GTEX-OIZI-0005-SM-2XCED	Blood	Whole Blood	40-49
+GTEX-OOBJ-0326-SM-33HBO	Heart	Heart - Left Ventricle	60-69
+GTEX-OOBJ-1626-SM-2I3F7	Muscle	Muscle - Skeletal	60-69
+GTEX-OOBK-0005-SM-2YUMG	Blood	Whole Blood	40-49
+GTEX-OOBK-0126-SM-2YUND	Skin	Skin - Sun Exposed (Lower leg)	40-49
+GTEX-OOBK-0226-SM-2YUMF	Adipose Tissue	Adipose - Subcutaneous	40-49
+GTEX-OOBK-1626-SM-2HMKG	Muscle	Muscle - Skeletal	40-49
+GTEX-OXRK-1726-SM-3NB16	Colon	Colon - Transverse	50-59
+GTEX-OXRK-1826-SM-2HMJE	Muscle	Muscle - Skeletal	50-59
+GTEX-OXRL-2626-SM-2I3F1	Thyroid	Thyroid	50-59
+GTEX-OXRN-0011-R5A-SM-2I5EF	Brain	Brain - Caudate (basal ganglia)	50-59
+GTEX-OXRN-2426-SM-2I5EQ	Brain	Brain - Cortex	50-59
+GTEX-OXRO-0011-R10A-SM-2I5EH	Brain	Brain - Frontal Cortex (BA9)	60-69
+GTEX-OXRO-0011-R2A-SM-3NB1W	Brain	Brain - Substantia nigra	60-69
+GTEX-OXRO-0011-R5A-SM-2I5EG	Brain	Brain - Caudate (basal ganglia)	60-69
+GTEX-OXRO-0126-SM-2YUN4	Skin	Skin - Sun Exposed (Lower leg)	60-69
+GTEX-OXRO-0326-SM-33HBM	Lung	Lung	60-69
+GTEX-OXRO-1926-SM-2S1O3	Blood Vessel	Artery - Tibial	60-69
+GTEX-OXRO-2026-SM-2YUMZ	Heart	Heart - Left Ventricle	60-69
+GTEX-OXRP-2326-SM-2S1NL	Muscle	Muscle - Skeletal	60-69
+GTEX-OXRP-2426-SM-2S1NR	Blood Vessel	Artery - Tibial	60-69
+GTEX-OXRP-2526-SM-2S1NO	Nerve	Nerve - Tibial	60-69
+GTEX-P44G-0006-SM-2TC6A	Blood	Whole Blood	30-39
+GTEX-P44G-0011-R10A-SM-2I3FF	Brain	Brain - Frontal Cortex (BA9)	30-39
+GTEX-P44G-0011-R11A-SM-2I3FD	Brain	Brain - Cerebellar Hemisphere	30-39
+GTEX-P44G-0011-R1A-SM-2I3FE	Brain	Brain - Hippocampus	30-39
+GTEX-P44G-0011-R2A-SM-2XCD2	Brain	Brain - Substantia nigra	30-39
+GTEX-P44G-0011-R3A-SM-2I3FC	Brain	Brain - Anterior cingulate cortex (BA24)	30-39
+GTEX-P44G-0011-R4A-SM-2I3FB	Brain	Brain - Amygdala	30-39
+GTEX-P44G-0011-R5A-SM-2I3FA	Brain	Brain - Caudate (basal ganglia)	30-39
+GTEX-P44G-0011-R6A-SM-2XCD3	Brain	Brain - Nucleus accumbens (basal ganglia)	30-39
+GTEX-P44G-0011-R7A-SM-2I3F9	Brain	Brain - Putamen (basal ganglia)	30-39
+GTEX-P44G-0526-SM-2XCD1	Muscle	Muscle - Skeletal	30-39
+GTEX-P44G-0626-SM-2I5EO	Thyroid	Thyroid	30-39
+GTEX-P44G-0826-SM-2I5ES	Heart	Heart - Left Ventricle	30-39
+GTEX-P44G-1126-SM-3NM9D	Liver	Liver	30-39
+GTEX-P44G-2326-SM-2XCCZ	Adipose Tissue	Adipose - Subcutaneous	30-39
+GTEX-P44G-2426-SM-2I5ER	Brain	Brain - Cortex	30-39
+GTEX-P44G-2526-SM-2I5EK	Brain	Brain - Cerebellum	30-39
+GTEX-P44H-0006-SM-2XCFB	Blood	Whole Blood	40-49
+GTEX-P44H-0011-R10A-SM-2XCEK	Brain	Brain - Frontal Cortex (BA9)	40-49
+GTEX-P44H-0011-R4A-SM-2XCEW	Brain	Brain - Amygdala	40-49
+GTEX-P44H-0011-R5A-SM-2XCEX	Brain	Brain - Caudate (basal ganglia)	40-49
+GTEX-P44H-0011-R6A-SM-2XCF3	Brain	Brain - Nucleus accumbens (basal ganglia)	40-49
+GTEX-P44H-0326-SM-2XCES	Adipose Tissue	Adipose - Subcutaneous	40-49
+GTEX-P44H-0626-SM-2XCF2	Blood Vessel	Artery - Tibial	40-49
+GTEX-P44H-2626-SM-2XCET	Pituitary	Pituitary	40-49
+GTEX-P4PP-1626-SM-2HMJF	Muscle	Muscle - Skeletal	30-39
+GTEX-P4PP-1726-SM-2S1NS	Nerve	Nerve - Tibial	30-39
+GTEX-P4PP-1826-SM-2S1NT	Blood Vessel	Artery - Tibial	30-39
+GTEX-P4PQ-0126-SM-2S1NM	Skin	Skin - Sun Exposed (Lower leg)	60-69
+GTEX-P4PQ-0226-SM-2S1NK	Adipose Tissue	Adipose - Subcutaneous	60-69
+GTEX-P4QS-1626-SM-2S1NH	Muscle	Muscle - Skeletal	60-69
+GTEX-P4QS-1826-SM-2S1NI	Blood Vessel	Artery - Tibial	60-69
+GTEX-P4QS-2626-SM-2I3EV	Thyroid	Thyroid	60-69
+GTEX-P4QT-0126-SM-2I3FL	Skin	Skin - Sun Exposed (Lower leg)	50-59
+GTEX-P4QT-1726-SM-2S1NQ	Nerve	Nerve - Tibial	50-59
+GTEX-P4QT-1826-SM-2S1NJ	Blood Vessel	Artery - Tibial	50-59
+GTEX-P78B-0005-SM-2I5GM	Blood	Whole Blood	40-49
+GTEX-P78B-0526-SM-2I5F7	Thyroid	Thyroid	40-49
+GTEX-P78B-0726-SM-2S1O2	Blood Vessel	Artery - Tibial	40-49
+GTEX-PLZ4-0126-SM-5SI8O	Skin	Skin - Sun Exposed (Lower leg)	50-59
+GTEX-PLZ4-0226-SM-CYPR1	Adipose Tissue	Adipose - Subcutaneous	50-59
+GTEX-PLZ4-0726-SM-2TC6Q	Lung	Lung	50-59
+GTEX-PLZ4-0926-SM-2S1OI	Muscle	Muscle - Skeletal	50-59
+GTEX-PLZ4-1326-SM-2S1O7	Blood Vessel	Artery - Tibial	50-59
+GTEX-PLZ5-0726-SM-2I5F9	Lung	Lung	50-59
+GTEX-PLZ5-2026-SM-2S1O4	Skin	Skin - Sun Exposed (Lower leg)	50-59
+GTEX-PLZ6-1526-SM-2S1OC	Muscle	Muscle - Skeletal	30-39
+GTEX-PLZ6-1726-SM-2S1O6	Nerve	Nerve - Tibial	30-39
+GTEX-POMQ-2126-SM-2S1OJ	Blood Vessel	Artery - Tibial	20-29
+GTEX-POYW-0006-SM-2XCF4	Blood	Whole Blood	60-69
+GTEX-POYW-0426-SM-2XCEV	Nerve	Nerve - Tibial	60-69
+GTEX-POYW-0826-SM-2XCEM	Thyroid	Thyroid	60-69
+GTEX-PSDG-0526-SM-2S1OH	Blood Vessel	Artery - Tibial	50-59
+GTEX-PSDG-0626-SM-2S1OE	Nerve	Nerve - Tibial	50-59
+GTEX-PSDG-1126-SM-2S1ON	Lung	Lung	50-59
+GTEX-PVOW-0011-R1A-SM-32PL6	Brain	Brain - Hippocampus	40-49
+GTEX-PW2O-1726-SM-2S1OO	Muscle	Muscle - Skeletal	20-29
+GTEX-PWCY-2226-SM-2S1OP	Blood Vessel	Artery - Tibial	20-29
+GTEX-PWCY-2326-SM-2I3EQ	Thyroid	Thyroid	20-29
+GTEX-PWN1-1626-SM-2S1OL	Muscle	Muscle - Skeletal	40-49
+GTEX-PWN1-1726-SM-2S1O9	Nerve	Nerve - Tibial	40-49
+GTEX-PWN1-2626-SM-2I3FH	Thyroid	Thyroid	40-49
+GTEX-PWO3-0011-R1A-SM-2I5EW	Brain	Brain - Hippocampus	60-69
+GTEX-PWO3-0011-R2A-SM-2S1OX	Brain	Brain - Substantia nigra	60-69
+GTEX-PWO3-0011-R6A-SM-2I5F3	Brain	Brain - Nucleus accumbens (basal ganglia)	60-69
+GTEX-PX3G-0426-SM-48U1C	Blood Vessel	Artery - Aorta	20-29
+GTEX-PX3G-1626-SM-2S1PT	Muscle	Muscle - Skeletal	20-29
+GTEX-PX3G-1826-SM-2S1PK	Blood Vessel	Artery - Tibial	20-29
+GTEX-PX3G-2626-SM-2I3EG	Thyroid	Thyroid	20-29
+GTEX-Q2AG-0011-R3A-SM-2HMJ9	Brain	Brain - Anterior cingulate cortex (BA24)	40-49
+GTEX-Q2AG-0011-R8A-SM-2HMK5	Brain	Brain - Hypothalamus	40-49
+GTEX-Q2AG-0011-R9A-SM-2HMJ6	Brain	Brain - Spinal cord (cervical c-1)	40-49
+GTEX-Q2AG-0226-SM-2S1P4	Adipose Tissue	Adipose - Subcutaneous	40-49
+GTEX-Q2AG-0426-SM-2S1PU	Muscle	Muscle - Skeletal	40-49
+GTEX-Q2AG-0626-SM-2S1PV	Nerve	Nerve - Tibial	40-49
+GTEX-Q2AG-0826-SM-2HMKF	Thyroid	Thyroid	40-49
+GTEX-Q2AG-2826-SM-2HMJQ	Brain	Brain - Cerebellum	40-49
+GTEX-Q2AG-2926-SM-2HMJ3	Brain	Brain - Cortex	40-49
+GTEX-Q2AH-0526-SM-2I3ED	Heart	Heart - Left Ventricle	40-49
+GTEX-Q2AH-0826-SM-48TZN	Esophagus	Esophagus - Mucosa	40-49
+GTEX-Q2AH-1126-SM-48TZM	Stomach	Stomach	40-49
+GTEX-Q2AH-2026-SM-2S1PX	Blood Vessel	Artery - Tibial	40-49
+GTEX-Q2AI-0626-SM-48TZU	Esophagus	Esophagus - Mucosa	40-49
+GTEX-Q2AI-1326-SM-2S1PL	Skin	Skin - Sun Exposed (Lower leg)	40-49
+GTEX-Q2AI-1426-SM-2S1P5	Adipose Tissue	Adipose - Subcutaneous	40-49
+GTEX-Q2AI-1526-SM-3GIJ3	Muscle	Muscle - Skeletal	40-49
+GTEX-Q2AI-1726-SM-2S1PZ	Blood Vessel	Artery - Tibial	40-49
+GTEX-Q734-1926-SM-2I5EV	Skin	Skin - Sun Exposed (Lower leg)	40-49
+GTEX-QCQG-0726-SM-48U1Z	Esophagus	Esophagus - Muscularis	50-59
+GTEX-QCQG-1726-SM-3GIJ9	Skin	Skin - Sun Exposed (Lower leg)	50-59
+GTEX-QCQG-2026-SM-2S1PH	Nerve	Nerve - Tibial	50-59
+GTEX-QDT8-0011-R1A-SM-32PKS	Brain	Brain - Hippocampus	30-39
+GTEX-QDT8-0011-R4A-SM-32PKM	Brain	Brain - Amygdala	30-39
+GTEX-QDT8-0011-R8A-SM-32PKE	Brain	Brain - Hypothalamus	30-39
+GTEX-QDT8-0126-SM-48TZ1	Skin	Skin - Sun Exposed (Lower leg)	30-39
+GTEX-QDT8-0926-SM-32PL2	Lung	Lung	30-39
+GTEX-QDT8-1326-SM-48TYY	Esophagus	Esophagus - Muscularis	30-39
+GTEX-QDVJ-1726-SM-2I5FX	Skin	Skin - Sun Exposed (Lower leg)	50-59
+GTEX-QDVJ-1826-SM-2S1P3	Adipose Tissue	Adipose - Subcutaneous	50-59
+GTEX-QDVJ-1926-SM-2S1PJ	Muscle	Muscle - Skeletal	50-59
+GTEX-QDVJ-2026-SM-2S1PD	Nerve	Nerve - Tibial	50-59
+GTEX-QDVN-0926-SM-2I5GL	Pancreas	Pancreas	50-59
+GTEX-QDVN-1026-SM-48TZA	Esophagus	Esophagus - Mucosa	50-59
+GTEX-QDVN-1626-SM-48TZC	Kidney	Kidney - Cortex	50-59
+GTEX-QDVN-2126-SM-33HBS	Adipose Tissue	Adipose - Subcutaneous	50-59
+GTEX-QDVN-2326-SM-2S1PF	Blood Vessel	Artery - Tibial	50-59
+GTEX-QDVN-2426-SM-2S1Q4	Muscle	Muscle - Skeletal	50-59
+GTEX-QEG4-0226-SM-2S1PY	Skin	Skin - Sun Exposed (Lower leg)	30-39
+GTEX-QEG4-1226-SM-2S1P6	Blood Vessel	Artery - Tibial	30-39
+GTEX-QEG5-0626-SM-2S1PP	Blood Vessel	Artery - Tibial	20-29
+GTEX-QEG5-0926-SM-2TC64	Heart	Heart - Left Ventricle	20-29
+GTEX-QEL4-0526-SM-3GIJ4	Blood Vessel	Artery - Tibial	50-59
+GTEX-QEL4-0826-SM-3GAF2	Lung	Lung	50-59
+GTEX-QEL4-0926-SM-3GAD1	Heart	Heart - Left Ventricle	50-59
+GTEX-QESD-0426-SM-DKPOG	Blood Vessel	Artery - Aorta	20-29
+GTEX-QESD-0626-SM-2I5G4	Lung	Lung	20-29
+GTEX-QESD-1426-SM-2S1R9	Skin	Skin - Sun Exposed (Lower leg)	20-29
+GTEX-QESD-1526-SM-2S1QT	Adipose Tissue	Adipose - Subcutaneous	20-29
+GTEX-QESD-1726-SM-2S1R7	Nerve	Nerve - Tibial	20-29
+GTEX-QLQ7-0005-SM-2S1QP	Blood	Whole Blood	60-69
+GTEX-QLQW-0526-SM-4R1KS	Esophagus	Esophagus - Mucosa	30-39
+GTEX-QLQW-1226-SM-2S1Q9	Adipose Tissue	Adipose - Subcutaneous	30-39
+GTEX-QLQW-1326-SM-2S1QS	Muscle	Muscle - Skeletal	30-39
+GTEX-QLQW-1426-SM-2S1QU	Nerve	Nerve - Tibial	30-39
+GTEX-QLQW-1526-SM-2S1QV	Blood Vessel	Artery - Tibial	30-39
+GTEX-QMR6-0005-SM-32PKY	Blood	Whole Blood	50-59
+GTEX-QMR6-0011-R10A-SM-32PKO	Brain	Brain - Frontal Cortex (BA9)	50-59
+GTEX-QMR6-0011-R1A-SM-32PKW	Brain	Brain - Hippocampus	50-59
+GTEX-QMR6-0011-R4A-SM-32PKU	Brain	Brain - Amygdala	50-59
+GTEX-QMR6-1926-SM-32PL9	Lung	Lung	50-59
+GTEX-QMRM-0526-SM-2I5GA	Heart	Heart - Left Ventricle	50-59
+GTEX-QMRM-1726-SM-2S1QG	Adipose Tissue	Adipose - Subcutaneous	50-59
+GTEX-QV31-0006-SM-793B5	Blood	Whole Blood	30-39
+GTEX-QV31-1426-SM-2S1QD	Muscle	Muscle - Skeletal	30-39
+GTEX-QV31-1626-SM-2S1QC	Blood Vessel	Artery - Tibial	30-39
+GTEX-QV44-0926-SM-2S1RH	Lung	Lung	50-59
+GTEX-QVJO-0006-SM-2S1RC	Blood	Whole Blood	60-69
+GTEX-QVJO-0011-R10A-SM-2S1QJ	Brain	Brain - Frontal Cortex (BA9)	60-69
+GTEX-QVJO-0011-R1A-SM-2S1QI	Brain	Brain - Hippocampus	60-69
+GTEX-QVJO-0011-R7A-SM-2S1QO	Brain	Brain - Putamen (basal ganglia)	60-69
+GTEX-QVJO-0126-SM-3GIK4	Muscle	Muscle - Skeletal	60-69
+GTEX-QVJO-0326-SM-2S1R1	Nerve	Nerve - Tibial	60-69
+GTEX-QVJO-1226-SM-4R1KA	Pituitary	Pituitary	60-69
+GTEX-QVJO-1426-SM-2S1QY	Brain	Brain - Cortex	60-69
+GTEX-QVJO-1626-SM-2S1QW	Skin	Skin - Sun Exposed (Lower leg)	60-69
+GTEX-QVJO-1926-SM-2S1QZ	Heart	Heart - Left Ventricle	60-69
+GTEX-QVUS-0011-R6A-SM-3GACX	Brain	Brain - Nucleus accumbens (basal ganglia)	60-69
+GTEX-QVUS-0011-R9A-SM-3GIJA	Brain	Brain - Spinal cord (cervical c-1)	60-69
+GTEX-QVUS-0426-SM-48FE3	Blood Vessel	Artery - Aorta	60-69
+GTEX-QVUS-2826-SM-3GADB	Brain	Brain - Cortex	60-69
+GTEX-QXCU-0006-SM-2TC5K	Blood	Whole Blood	50-59
+GTEX-QXCU-0126-SM-2TC5Q	Nerve	Nerve - Tibial	50-59
+GTEX-QXCU-0226-SM-2TC5W	Blood Vessel	Artery - Tibial	50-59
+GTEX-QXCU-0326-SM-2TC63	Thyroid	Thyroid	50-59
+GTEX-QXCU-0926-SM-48FEP	Blood Vessel	Artery - Aorta	50-59
+GTEX-QXCU-1126-SM-48FE5	Esophagus	Esophagus - Muscularis	50-59
+GTEX-QXCU-1726-SM-2TC6L	Muscle	Muscle - Skeletal	50-59
+GTEX-R3RS-0005-SM-3GAEH	Blood	Whole Blood	40-49
+GTEX-R3RS-0126-SM-3GIJL	Skin	Skin - Sun Exposed (Lower leg)	40-49
+GTEX-R3RS-0726-SM-3GIJR	Thyroid	Thyroid	40-49
+GTEX-R3RS-1026-SM-3GADF	Lung	Lung	40-49
+GTEX-R45C-0926-SM-3GAD4	Heart	Heart - Left Ventricle	60-69
+GTEX-R55C-0626-SM-2TF4Q	Thyroid	Thyroid	40-49
+GTEX-R55D-0006-SM-3GIJS	Blood	Whole Blood	50-59
+GTEX-R55D-0926-SM-3GAEU	Lung	Lung	50-59
+GTEX-R55E-0006-SM-2TC5G	Blood	Whole Blood	20-29
+GTEX-R55E-0011-R1A-SM-2TC6N	Brain	Brain - Hippocampus	20-29
+GTEX-R55E-0011-R4A-SM-2TC5H	Brain	Brain - Amygdala	20-29
+GTEX-R55E-0011-R5A-SM-2TC5N	Brain	Brain - Caudate (basal ganglia)	20-29
+GTEX-R55E-0011-R7A-SM-2TC5Z	Brain	Brain - Putamen (basal ganglia)	20-29
+GTEX-R55E-0011-R8A-SM-2TC66	Brain	Brain - Hypothalamus	20-29
+GTEX-R55E-0011-R9A-SM-2TC6C	Brain	Brain - Spinal cord (cervical c-1)	20-29
+GTEX-R55E-0426-SM-2TC65	Nerve	Nerve - Tibial	20-29
+GTEX-R55E-0826-SM-2TC5M	Thyroid	Thyroid	20-29
+GTEX-R55E-1026-SM-2TC5S	Heart	Heart - Left Ventricle	20-29
+GTEX-R55G-0006-SM-2TC6O	Blood	Whole Blood	40-49
+GTEX-R55G-0726-SM-2TC6J	Thyroid	Thyroid	40-49
+GTEX-R55G-0826-SM-2TC5U	Lung	Lung	40-49
+GTEX-R55G-2326-SM-2TC61	Muscle	Muscle - Skeletal	40-49
+GTEX-R55G-2426-SM-2TC5I	Adipose Tissue	Adipose - Subcutaneous	40-49
+GTEX-R55G-2526-SM-2TC6D	Skin	Skin - Sun Exposed (Lower leg)	40-49
+GTEX-REY6-0426-SM-2TF5G	Lung	Lung	60-69
+GTEX-RM2N-0006-SM-2TF5H	Blood	Whole Blood	50-59
+GTEX-RM2N-0526-SM-2TF4N	Thyroid	Thyroid	50-59
+GTEX-RM2N-1626-SM-2TF5N	Muscle	Muscle - Skeletal	50-59
+GTEX-RM2N-1726-SM-2TF55	Adipose Tissue	Adipose - Subcutaneous	50-59
+GTEX-RN64-0005-SM-793B4	Blood	Whole Blood	50-59
+GTEX-RN64-0526-SM-2TC5P	Blood Vessel	Artery - Tibial	50-59
+GTEX-RN64-0826-SM-2TC62	Heart	Heart - Left Ventricle	50-59
+GTEX-RN64-1226-SM-2TC6E	Lung	Lung	50-59
+GTEX-RNOR-0005-SM-2TF4Z	Blood	Whole Blood	50-59
+GTEX-RNOR-0011-R5A-SM-2TF4J	Brain	Brain - Caudate (basal ganglia)	50-59
+GTEX-RNOR-0011-R9A-SM-2TF52	Brain	Brain - Spinal cord (cervical c-1)	50-59
+GTEX-RNOR-0326-SM-2TF51	Nerve	Nerve - Tibial	50-59
+GTEX-RNOR-0826-SM-2TF5C	Heart	Heart - Left Ventricle	50-59
+GTEX-RTLS-0226-SM-2TF5E	Adipose Tissue	Adipose - Subcutaneous	60-69
+GTEX-RTLS-0326-SM-2TF6A	Nerve	Nerve - Tibial	60-69
+GTEX-RTLS-0926-SM-2TF5X	Lung	Lung	60-69
+GTEX-RU1J-0006-SM-2TF6M	Blood	Whole Blood	20-29
+GTEX-RU1J-0126-SM-2TF6Y	Lung	Lung	20-29
+GTEX-RU1J-0226-SM-2TF5Y	Thyroid	Thyroid	20-29
+GTEX-RU1J-1726-SM-2TF5S	Muscle	Muscle - Skeletal	20-29
+GTEX-RU1J-1926-SM-2TF6S	Blood Vessel	Artery - Tibial	20-29
+GTEX-RU72-0006-SM-2TF65	Blood	Whole Blood	50-59
+GTEX-RU72-0011-R5A-SM-2TF6U	Brain	Brain - Caudate (basal ganglia)	50-59
+GTEX-RU72-0011-R6A-SM-2TF71	Brain	Brain - Nucleus accumbens (basal ganglia)	50-59
+GTEX-RU72-0011-R7A-SM-2TF5U	Brain	Brain - Putamen (basal ganglia)	50-59
+GTEX-RU72-0011-R8A-SM-2TF61	Brain	Brain - Hypothalamus	50-59
+GTEX-RU72-0011-R9A-SM-2TF67	Brain	Brain - Spinal cord (cervical c-1)	50-59
+GTEX-RU72-0126-SM-2TF6Z	Thyroid	Thyroid	50-59
+GTEX-RU72-0526-SM-2TF5Z	Lung	Lung	50-59
+GTEX-RU72-0926-SM-2TF6B	Skin	Skin - Sun Exposed (Lower leg)	50-59
+GTEX-RU72-1126-SM-2TF6H	Nerve	Nerve - Tibial	50-59
+GTEX-RU72-1326-SM-2TF6T	Muscle	Muscle - Skeletal	50-59
+GTEX-RU72-2526-SM-EWRML	Bladder	Bladder	50-59
+GTEX-RU72-2626-SM-CYPS6	Uterus	Uterus	50-59
+GTEX-RU72-2926-SM-2TF66	Brain	Brain - Cerebellum	50-59
+GTEX-RUSQ-0003-SM-2XCEB	Blood	Cells - EBV-transformed lymphocytes	50-59
+GTEX-RUSQ-0006-SM-2TF6P	Blood	Whole Blood	50-59
+GTEX-RUSQ-0526-SM-2TF72	Heart	Heart - Left Ventricle	50-59
+GTEX-RUSQ-0626-SM-2TF5V	Lung	Lung	50-59
+GTEX-RUSQ-1026-SM-2TF6V	Thyroid	Thyroid	50-59
+GTEX-RUSQ-1526-SM-2TF62	Skin	Skin - Sun Exposed (Lower leg)	50-59
+GTEX-RUSQ-1726-SM-2TF68	Muscle	Muscle - Skeletal	50-59
+GTEX-RUSQ-1926-SM-2TF6K	Blood Vessel	Artery - Tibial	50-59
+GTEX-RVPV-0006-SM-2TF6Q	Blood	Whole Blood	60-69
+GTEX-RVPV-0011-R3A-SM-2TF63	Brain	Brain - Anterior cingulate cortex (BA24)	60-69
+GTEX-RVPV-0011-R5A-SM-2TF69	Brain	Brain - Caudate (basal ganglia)	60-69
+GTEX-RVPV-0226-SM-2TF6W	Blood Vessel	Artery - Tibial	60-69
+GTEX-RVPV-1226-SM-2TF73	Thyroid	Thyroid	60-69
+GTEX-RWS6-0005-SM-2XCAN	Blood	Whole Blood	60-69
+GTEX-RWS6-2326-SM-2XCB4	Blood Vessel	Artery - Tibial	60-69
+GTEX-RWSA-0005-SM-2XCAO	Blood	Whole Blood	40-49
+GTEX-RWSA-0126-SM-2XCBB	Skin	Skin - Sun Exposed (Lower leg)	40-49
+GTEX-RWSA-0226-SM-2XCBA	Adipose Tissue	Adipose - Subcutaneous	40-49
+GTEX-RWSA-0726-SM-2XCBE	Muscle	Muscle - Skeletal	40-49
+GTEX-RWSA-1126-SM-2XCAZ	Lung	Lung	40-49
+GTEX-S32W-0006-SM-2XCAK	Blood	Whole Blood	50-59
+GTEX-S32W-0726-SM-2XCBL	Thyroid	Thyroid	50-59
+GTEX-S32W-2526-SM-2XCB8	Nerve	Nerve - Tibial	50-59
+GTEX-S33H-0005-SM-2XCAL	Blood	Whole Blood	30-39
+GTEX-S341-2026-SM-2XCAA	Blood Vessel	Artery - Tibial	40-49
+GTEX-S4Z8-1226-SM-4AD6W	Stomach	Stomach	60-69
+GTEX-S7SE-0011-R11A-SM-2XCDD	Brain	Brain - Cerebellar Hemisphere	50-59
+GTEX-S7SE-0011-R5A-SM-2XCDA	Brain	Brain - Caudate (basal ganglia)	50-59
+GTEX-S7SE-0011-R6A-SM-2XCD9	Brain	Brain - Nucleus accumbens (basal ganglia)	50-59
+GTEX-S7SE-0011-R7A-SM-2XCDI	Brain	Brain - Putamen (basal ganglia)	50-59
+GTEX-S7SE-0011-R8A-SM-2XCDG	Brain	Brain - Hypothalamus	50-59
+GTEX-S95S-0005-SM-2XCEC	Blood	Whole Blood	60-69
+GTEX-S95S-1326-SM-2XCDK	Adipose Tissue	Adipose - Subcutaneous	60-69
+GTEX-S95S-1626-SM-2XCDJ	Blood Vessel	Artery - Tibial	60-69
+GTEX-SE5C-0526-SM-2XCE1	Lung	Lung	40-49
+GTEX-SE5C-1626-SM-2XCE3	Skin	Skin - Sun Exposed (Lower leg)	40-49
+GTEX-SIU8-0006-SM-2XCE5	Blood	Whole Blood	50-59
+GTEX-SIU8-0226-SM-2XCDS	Adipose Tissue	Adipose - Subcutaneous	50-59
+GTEX-SIU8-0526-SM-2XCDP	Muscle	Muscle - Skeletal	50-59
+GTEX-SIU8-0826-SM-2XCDQ	Heart	Heart - Left Ventricle	50-59
+GTEX-SJXC-0126-SM-2XCFF	Skin	Skin - Sun Exposed (Lower leg)	60-69
+GTEX-SJXC-0326-SM-2XCFI	Nerve	Nerve - Tibial	60-69
+GTEX-SN8G-0426-SM-32PLF	Nerve	Nerve - Tibial	50-59
+GTEX-SNMC-0006-SM-2XCFE	Blood	Whole Blood	20-29
+GTEX-SNMC-0126-SM-2XCFO	Heart	Heart - Left Ventricle	20-29
+GTEX-SNMC-1226-SM-2XCFP	Skin	Skin - Sun Exposed (Lower leg)	20-29
+GTEX-SNOS-0006-SM-32PLH	Blood	Whole Blood	40-49
+GTEX-SNOS-0226-SM-32PLR	Thyroid	Thyroid	40-49
+GTEX-SUCS-1726-SM-32PM8	Nerve	Nerve - Tibial	70-79
+GTEX-T2IS-0226-SM-32QPH	Adipose Tissue	Adipose - Subcutaneous	20-29
+GTEX-T2IS-1026-SM-32QP1	Blood Vessel	Artery - Tibial	20-29
+GTEX-T2IS-3126-SM-32QPK	Pituitary	Pituitary	20-29
+GTEX-T2YK-0005-SM-32QOV	Blood	Whole Blood	50-59
+GTEX-T2YK-0526-SM-32QPJ	Skin	Skin - Sun Exposed (Lower leg)	50-59
+GTEX-T2YK-2226-SM-32QPT	Breast	Breast - Mammary Tissue	50-59
+GTEX-T2YK-2326-SM-EZ6LA	Bladder	Bladder	50-59
+GTEX-T5JC-0011-R1A-SM-32PM6	Brain	Brain - Hippocampus	20-29
+GTEX-T5JC-0011-R2A-SM-32PLZ	Brain	Brain - Substantia nigra	20-29
+GTEX-T5JC-0011-R4A-SM-32PLT	Brain	Brain - Amygdala	20-29
+GTEX-T5JC-0426-SM-32PLO	Skin	Skin - Sun Exposed (Lower leg)	20-29
+GTEX-T5JC-0526-SM-32PM7	Adipose Tissue	Adipose - Subcutaneous	20-29
+GTEX-T6MN-0011-R4A-SM-32QPG	Brain	Brain - Amygdala	50-59
+GTEX-T6MN-0426-SM-32PMF	Blood Vessel	Artery - Tibial	50-59
+GTEX-T6MN-0526-SM-32PMS	Muscle	Muscle - Skeletal	50-59
+GTEX-TKQ1-0006-SM-33HBI	Blood	Whole Blood	30-39
+GTEX-TML8-1926-SM-32QOS	Skin	Skin - Sun Exposed (Lower leg)	40-49
+GTEX-TMMY-0226-SM-33HBA	Skin	Skin - Sun Exposed (Lower leg)	40-49
+GTEX-TMMY-0626-SM-33HBD	Blood Vessel	Artery - Tibial	40-49
+GTEX-TMZS-0326-SM-3DB9P	Muscle	Muscle - Skeletal	60-69
+GTEX-TSE9-0011-R1A-SM-3DB7E	Brain	Brain - Hippocampus	60-69
+GTEX-TSE9-0011-R5A-SM-3DB7J	Brain	Brain - Caudate (basal ganglia)	60-69
+GTEX-TSE9-0011-R7A-SM-3DB7P	Brain	Brain - Putamen (basal ganglia)	60-69
+GTEX-TSE9-0011-R8A-SM-3DB7R	Brain	Brain - Hypothalamus	60-69
+GTEX-TSE9-0126-SM-3DB83	Skin	Skin - Sun Exposed (Lower leg)	60-69
+GTEX-TSE9-0326-SM-3DB82	Nerve	Nerve - Tibial	60-69
+GTEX-TSE9-0526-SM-3DB7Z	Muscle	Muscle - Skeletal	60-69
+GTEX-TSE9-0726-SM-3DB8C	Lung	Lung	60-69
+GTEX-U3ZH-0226-SM-3DB7B	Thyroid	Thyroid	30-39
+GTEX-U3ZM-1226-SM-3DB9G	Muscle	Muscle - Skeletal	40-49
+GTEX-U3ZN-0006-SM-3DB7Y	Blood	Whole Blood	30-39
+GTEX-U3ZN-1626-SM-4DXTZ	Cervix Uteri	Cervix - Ectocervix	30-39
+GTEX-U3ZN-2626-SM-3DB7T	Adipose Tissue	Adipose - Subcutaneous	30-39
+GTEX-U412-0526-SM-3DB9I	Adipose Tissue	Adipose - Subcutaneous	60-69
+GTEX-U4B1-0226-SM-4DXU8	Blood Vessel	Artery - Coronary	40-49
+GTEX-U8XE-1126-SM-3DB8W	Heart	Heart - Left Ventricle	30-39
+GTEX-UJHI-1426-SM-3DB9C	Breast	Breast - Mammary Tissue	50-59
+GTEX-UJHI-1526-SM-3DB99	Skin	Skin - Sun Exposed (Lower leg)	50-59
+GTEX-UJMC-0326-SM-3GAE2	Thyroid	Thyroid	50-59
+GTEX-UJMC-1126-SM-3GADP	Pancreas	Pancreas	50-59
+GTEX-UJMC-1926-SM-3GADS	Nerve	Nerve - Tibial	50-59
+GTEX-UJMC-2026-SM-3GADR	Blood Vessel	Artery - Tibial	50-59
+GTEX-UPJH-0326-SM-3GADU	Skin	Skin - Sun Exposed (Lower leg)	50-59
+GTEX-UPK5-0426-SM-3GAEK	Skin	Skin - Not Sun Exposed (Suprapubic)	40-49
+GTEX-UPK5-1826-SM-3GAEB	Adipose Tissue	Adipose - Visceral (Omentum)	40-49
+GTEX-UTHO-0011-R10A-SM-3GIJQ	Brain	Brain - Frontal Cortex (BA9)	60-69
+GTEX-UTHO-0011-R4A-SM-3GIJP	Brain	Brain - Amygdala	60-69
+GTEX-UTHO-0011-R5A-SM-3GIJD	Brain	Brain - Caudate (basal ganglia)	60-69
+GTEX-UTHO-1226-SM-3GAEE	Heart	Heart - Atrial Appendage	60-69
+GTEX-VJWN-0005-SM-3GIKF	Blood	Whole Blood	50-59
+GTEX-VJYA-1226-SM-3GIJ6	Prostate	Prostate	60-69
+GTEX-VJYA-1326-SM-3GIJC	Adipose Tissue	Adipose - Subcutaneous	60-69
+GTEX-VUSG-0326-SM-3GIJ7	Pancreas	Pancreas	50-59
+GTEX-VUSG-0726-SM-3GIK1	Heart	Heart - Atrial Appendage	50-59
+GTEX-W5WG-0006-SM-3GIJT	Blood	Whole Blood	50-59
+GTEX-W5X1-0426-SM-3GILB	Thyroid	Thyroid	40-49
+GTEX-W5X1-0526-SM-3GILH	Lung	Lung	40-49
+GTEX-W5X1-1426-SM-3GIKH	Adipose Tissue	Adipose - Visceral (Omentum)	40-49
+GTEX-W5X1-2526-SM-3GILC	Skin	Skin - Not Sun Exposed (Suprapubic)	40-49
+GTEX-WEY5-0426-SM-3GIKT	Heart	Heart - Left Ventricle	40-49
+GTEX-WEY5-1326-SM-3GILS	Adipose Tissue	Adipose - Visceral (Omentum)	40-49
+GTEX-WEY5-2026-SM-CYPRC	Muscle	Muscle - Skeletal	40-49
+GTEX-WEY5-2326-SM-3GIKK	Skin	Skin - Not Sun Exposed (Suprapubic)	40-49
+GTEX-WFG7-1826-SM-3GIL1	Prostate	Prostate	20-29
+GTEX-WFG7-2226-SM-3GIKP	Muscle	Muscle - Skeletal	20-29
+GTEX-WFG7-2326-SM-3GIKV	Blood Vessel	Artery - Tibial	20-29
+GTEX-WFG8-0926-SM-3GIKJ	Lung	Lung	20-29
+GTEX-WFG8-2126-SM-3GIKQ	Skin	Skin - Not Sun Exposed (Suprapubic)	20-29
+GTEX-WFG8-2526-SM-3GILR	Nerve	Nerve - Tibial	20-29
+GTEX-WFJO-0005-SM-3GIKY	Blood	Whole Blood	30-39
+GTEX-WFJO-0226-SM-3GIKW	Thyroid	Thyroid	30-39
+GTEX-WFJO-0326-SM-3GIL3	Lung	Lung	30-39
+GTEX-WFON-1326-SM-4LVMN	Colon	Colon - Sigmoid	40-49
+GTEX-WH7G-1426-SM-4LVMU	Colon	Colon - Sigmoid	40-49
+GTEX-WH7G-2326-SM-3NMBC	Skin	Skin - Sun Exposed (Lower leg)	40-49
+GTEX-WHPG-0926-SM-4M1XY	Blood Vessel	Artery - Aorta	50-59
+GTEX-WHSE-0726-SM-4RTXA	Blood Vessel	Artery - Coronary	20-29
+GTEX-WHWD-0008-SM-4OOSU	Skin	Cells - Cultured fibroblasts	50-59
+GTEX-WHWD-0126-SM-4OORS	Spleen	Spleen	50-59
+GTEX-WHWD-0226-SM-4OORT	Blood Vessel	Artery - Coronary	50-59
+GTEX-WHWD-0526-SM-4OORW	Blood Vessel	Artery - Aorta	50-59
+GTEX-WHWD-0726-SM-4OORX	Pancreas	Pancreas	50-59
+GTEX-WHWD-0926-SM-4OORY	Esophagus	Esophagus - Mucosa	50-59
+GTEX-WHWD-1026-SM-4OORZ	Esophagus	Esophagus - Muscularis	50-59
+GTEX-WHWD-1226-SM-4OOS1	Colon	Colon - Transverse	50-59
+GTEX-WHWD-1426-SM-4OORU	Stomach	Stomach	50-59
+GTEX-WHWD-1526-SM-4OORV	Colon	Colon - Sigmoid	50-59
+GTEX-WI4N-0005-SM-3LK7E	Blood	Whole Blood	40-49
+GTEX-WI4N-0008-SM-4OOSV	Skin	Cells - Cultured fibroblasts	40-49
+GTEX-WI4N-1826-SM-4OOSF	Pancreas	Pancreas	40-49
+GTEX-WI4N-2226-SM-4OOS9	Colon	Colon - Sigmoid	40-49
+GTEX-WI4N-2426-SM-4OOSC	Uterus	Uterus	40-49
+GTEX-WI4N-2526-SM-4OOSE	Ovary	Ovary	40-49
+GTEX-WK11-0008-SM-4OOSX	Skin	Cells - Cultured fibroblasts	50-59
+GTEX-WK11-0326-SM-4OOS6	Testis	Testis	50-59
+GTEX-WK11-1026-SM-4OOS8	Esophagus	Esophagus - Mucosa	50-59
+GTEX-WK11-1126-SM-4OOSJ	Esophagus	Esophagus - Muscularis	50-59
+GTEX-WK11-1326-SM-4OOSI	Liver	Liver	50-59
+GTEX-WK11-2626-SM-4OOSK	Prostate	Prostate	50-59
+GTEX-WL46-0006-SM-4OOS5	Blood	Whole Blood	50-59
+GTEX-WL46-0008-SM-4OOSW	Skin	Cells - Cultured fibroblasts	50-59
+GTEX-WOFL-0008-SM-4OOSZ	Skin	Cells - Cultured fibroblasts	60-69
+GTEX-WOFL-1226-SM-4OOST	Heart	Heart - Atrial Appendage	60-69
+GTEX-WOFM-0001-SM-4OOT2	Blood	Cells - EBV-transformed lymphocytes	20-29
+GTEX-WOFM-0008-SM-4OOSY	Skin	Cells - Cultured fibroblasts	20-29
+GTEX-WOFM-0326-SM-4OOSL	Prostate	Prostate	20-29
+GTEX-WOFM-0526-SM-4OOS2	Esophagus	Esophagus - Muscularis	20-29
+GTEX-WOFM-0626-SM-4OOS3	Esophagus	Esophagus - Mucosa	20-29
+GTEX-WOFM-1126-SM-4OOSB	Testis	Testis	20-29
+GTEX-WOFM-1926-SM-4OOSP	Colon	Colon - Sigmoid	20-29
+GTEX-WOFM-2026-SM-4OOSQ	Colon	Colon - Transverse	20-29
+GTEX-WOFM-2126-SM-4OOSR	Salivary Gland	Minor Salivary Gland	20-29
+GTEX-WQUQ-0008-SM-4OOT1	Skin	Cells - Cultured fibroblasts	60-69
+GTEX-WQUQ-0126-SM-4OOSS	Adrenal Gland	Adrenal Gland	60-69
+GTEX-WQUQ-1526-SM-4OOSM	Blood Vessel	Artery - Aorta	60-69
+GTEX-WQUQ-1626-SM-4OOSH	Esophagus	Esophagus - Mucosa	60-69
+GTEX-WQUQ-1826-SM-4OOSD	Esophagus	Esophagus - Gastroesophageal Junction	60-69
+GTEX-WQUQ-1926-SM-4OOSA	Liver	Liver	60-69
+GTEX-WQUQ-2126-SM-4OOSO	Pancreas	Pancreas	60-69
+GTEX-WVLH-1526-SM-4MVOC	Esophagus	Esophagus - Gastroesophageal Junction	50-59
+GTEX-WYJK-0726-SM-4ONC9	Spleen	Spleen	50-59
+GTEX-WZTO-1226-SM-3NMAZ	Heart	Heart - Atrial Appendage	40-49
+GTEX-X4EP-0011-R1A-SM-3P624	Brain	Brain - Hippocampus	60-69
+GTEX-X4EP-0011-R3A-SM-3P626	Brain	Brain - Anterior cingulate cortex (BA24)	60-69
+GTEX-X4EP-0011-R4B-SM-3P627	Brain	Brain - Amygdala	60-69
+GTEX-X4EP-0011-R6A-SM-3P629	Brain	Brain - Nucleus accumbens (basal ganglia)	60-69
+GTEX-X4EP-0011-R8B-SM-4QASL	Brain	Brain - Hypothalamus	60-69
+GTEX-X4XY-0011-R10B-SM-46MWS	Brain	Brain - Frontal Cortex (BA9)	60-69
+GTEX-X4XY-0011-R6B-SM-46MVB	Brain	Brain - Nucleus accumbens (basal ganglia)	60-69
+GTEX-X585-1026-SM-46MW6	Lung	Lung	50-59
+GTEX-X585-1426-SM-4E3JO	Esophagus	Esophagus - Gastroesophageal Junction	50-59
+GTEX-X5EB-0926-SM-46MVT	Colon	Colon - Transverse	40-49
+GTEX-XBEC-0326-SM-4AT4M	Adipose Tissue	Adipose - Subcutaneous	50-59
+GTEX-XLM4-0011-R8A-SM-4AT44	Brain	Brain - Hypothalamus	60-69
+GTEX-XPVG-0726-SM-4B658	Heart	Heart - Atrial Appendage	50-59
+GTEX-XXEK-0626-SM-4BRWE	Lung	Lung	50-59
+GTEX-XYKS-0826-SM-4BRVF	Thyroid	Thyroid	60-69
+GTEX-Y114-1126-SM-4TT7V	Esophagus	Esophagus - Gastroesophageal Junction	50-59
+GTEX-Y114-1926-SM-4TT8J	Vagina	Vagina	50-59
+GTEX-Y114-2126-SM-4TT8B	Skin	Skin - Not Sun Exposed (Suprapubic)	50-59
+GTEX-Y5V6-1226-SM-4VDTE	Esophagus	Esophagus - Gastroesophageal Junction	60-69
+GTEX-Y8DK-0011-R4A-SM-EXUR1	Brain	Brain - Amygdala	60-69
+GTEX-Y8LW-1426-SM-5RQJJ	Vagina	Vagina	50-59
+GTEX-YEC3-0426-SM-CYPS8	Heart	Heart - Atrial Appendage	50-59
+GTEX-YFC4-0011-R6b-SM-4V6E1	Brain	Brain - Nucleus accumbens (basal ganglia)	40-49
+GTEX-ZAB4-0011-R6a-SM-4SOKD	Brain	Brain - Nucleus accumbens (basal ganglia)	40-49
+GTEX-ZAB5-2726-SM-5J2NH	Blood Vessel	Artery - Coronary	50-59
+GTEX-ZE7O-0011-R1a-SM-57WDM	Brain	Brain - Hippocampus	50-59
+GTEX-ZE9C-0011-R4a-SM-4WKH6	Brain	Brain - Amygdala	60-69
+GTEX-ZF28-0011-R6a-SM-4WKHI	Brain	Brain - Nucleus accumbens (basal ganglia)	60-69
+GTEX-ZGAY-1226-SM-DO92W	Esophagus	Esophagus - Muscularis	40-49
+GTEX-ZLFU-0126-SM-5EQMN	Blood Vessel	Artery - Coronary	40-49
+GTEX-ZPIC-0326-SM-DO91U	Blood Vessel	Artery - Coronary	40-49
+GTEX-ZPIC-1726-SM-DHXIU	Skin	Skin - Sun Exposed (Lower leg)	40-49
+GTEX-ZPIC-2026-SM-57WG3	Stomach	Stomach	40-49
+GTEX-ZQG8-2126-SM-4YCF1	Salivary Gland	Minor Salivary Gland	60-69
+GTEX-ZQUD-0126-SM-7EPIS	Thyroid	Thyroid	30-39
+GTEX-ZTPG-0726-SM-5DUXP	Blood Vessel	Artery - Aorta	20-29
+GTEX-ZU9S-1626-SM-5E452	Esophagus	Esophagus - Gastroesophageal Junction	30-39
+GTEX-ZUA1-0011-R6b-SM-4YCDD	Brain	Brain - Nucleus accumbens (basal ganglia)	40-49
+GTEX-ZV68-0011-R6a-SM-51MSR	Brain	Brain - Nucleus accumbens (basal ganglia)	50-59
+GTEX-ZV6S-1426-SM-59HKX	Ovary	Ovary	40-49
+GTEX-ZV7C-1326-SM-A9SK7	Esophagus	Esophagus - Gastroesophageal Junction	50-59
+GTEX-ZVP2-0826-SM-59HJ6	Prostate	Prostate	50-59
+GTEX-ZWKS-0126-SM-5SIAA	Skin	Skin - Sun Exposed (Lower leg)	30-39
+GTEX-ZY6K-0126-SM-5SIAM	Adrenal Gland	Adrenal Gland	50-59
+GTEX-ZY6K-0226-SM-5SIAY	Thyroid	Thyroid	50-59
+GTEX-ZY6K-0326-SM-5SIBB	Lung	Lung	50-59
+GTEX-ZYFC-1226-SM-5GIE4	Blood Vessel	Artery - Coronary	50-59
+GTEX-ZYT6-1326-SM-5E453	Pancreas	Pancreas	30-39
+GTEX-ZYVF-1626-SM-5N9EH	Adrenal Gland	Adrenal Gland	50-59
+GTEX-ZYW4-1126-SM-5SI99	Thyroid	Thyroid	60-69
+GTEX-ZYW4-1426-SM-5SIAX	Esophagus	Esophagus - Muscularis	60-69
+GTEX-ZYW4-1526-SM-5SIBA	Lung	Lung	60-69
+GTEX-ZYY3-1526-SM-5SIA9	Esophagus	Esophagus - Mucosa	60-69
+GTEX-ZYY3-3126-SM-5SI9L	Brain	Brain - Cortex	60-69
+GTEX-ZYY3-3226-SM-5SI9X	Pituitary	Pituitary	60-69
+GTEX-ZZPU-0226-SM-5N9BV	Blood Vessel	Artery - Aorta	50-59
