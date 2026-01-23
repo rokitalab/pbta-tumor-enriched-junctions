@@ -97,4 +97,4 @@ scratch/
 analyses/summarize-tumor-enriched-splicing/results/merged-tumor-enriched-splice-events.tsv.gz
 
 # survival analyses folder
-analyses/hgg-enriched-splicing/results/survival/
+analyses/hgg-enriched-splicing/results/survival/*RDS
