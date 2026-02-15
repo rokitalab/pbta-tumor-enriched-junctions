@@ -98,3 +98,6 @@ analyses/summarize-tumor-enriched-splicing/results/merged-tumor-enriched-splice-
 
 # survival analyses folder
 analyses/hgg-enriched-splicing/results/survival/*RDS
+
+# pepMLM summary generated FASTA files
+analyses/pepMLM-summary/results/input_fastas/
