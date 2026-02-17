@@ -16,6 +16,7 @@ bash run_module.sh
 * `01-get-junction-counts.R` extract junction counts from PBTA rMATS and normalize. 
 * `02-calculate-tumor-enriched-splicing.R` identify tumor-enriched junctions by comparing expression in PBTA versus normal control cohorts. 
 * `03-uniprot-domain-annotation.sh` annotate junction to uniprot topological domains. 
+* `04-pfam-annotation.R` annotate junctions to Pfam functional domains. 
 * `util/rmats-processing-functions.R` scripts containing functions to process raw rMATS data, normal junction and target counts, calculate mean CPMs by subgroups, and generate matrices. 
 
 ## Input files
@@ -27,12 +28,14 @@ bash run_module.sh
 ├── 01-get-junction-counts.R
 ├── 02-calculate-tumor-enriched-splicing.R
 ├── 03-uniprot-domain-annotation.sh
+├── 04-pfam-annotation.R
 ├── README.md
 ├── input
 │   └── pbta-rna-high-intron-samples.tsv
 ├── results
 │   ├── junction-annot.tsv.gz
 │   ├── pbta-merged-norm-junction-cts.qs2
+│   ├── tumor-enriched-oncofetal-splice-junctions-pfam-annotated.tsv.gz
 │   ├── tumor-enriched-oncofetal-splice-junctions.bed
 │   ├── tumor-enriched-oncofetal-splice-junctions.tsv.gz
 │   ├── tumor-enriched-oncofetal-splice-events-domain-anno.uniq.tsv
