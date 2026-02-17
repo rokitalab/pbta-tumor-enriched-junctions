@@ -16,3 +16,6 @@ bash 03-uniprot-domain-annotation.sh
 
 # pfam domain annotation
 Rscript --vanilla 04-pfam-annotation.R
+
+# domain and expression filtering
+Rscript --vanilla 05-domain-expression-filtering.R
