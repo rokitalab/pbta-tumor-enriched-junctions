@@ -51,12 +51,16 @@ se_df <- qs2::qs_read(se_file) %>%
                 downstreamES = downstreamES + 1) %>%
   dplyr::filter(sample_id %in% hist$Run)
 
+# create average psi matrix (splice event ids x subgroups)
+se_psi_mat <- create_psi_matrix(se_df,
+                                event_type = "SE",
+                                hist = hist,
+                                group_col = "cell_type",
+                                id_col = "Run")
+
 # Define SE junction and target IDs, and select relevant columns 
 se_df <- define_junctions_targets(se_df,
                                   event_type = "SE")
-
-# get median target counts 
-se_target_df <- create_target_df(se_df)
 
 # Extract all junctions and pivot longer
 se_junction_df <- create_junction_df(se_df, 
@@ -69,12 +73,16 @@ ri_df <- qs2::qs_read(ri_file) %>%
                 downstreamES = downstreamES + 1) %>%
   dplyr::filter(sample_id %in% hist$Run)
 
+# create average psi matrix (splice event ids x subgroups)
+ri_psi_mat <- create_psi_matrix(ri_df,
+                                event_type = "RI",
+                                hist = hist,
+                                group_col = "cell_type",
+                                id_col = "Run")
+
 # define columns specifying junction coordinates and retain only relevant columns
 ri_df <- define_junctions_targets(ri_df,
                                   event_type = "RI")
-
-# get median intron counts 
-ri_target_df <- create_target_df(ri_df)
 
 # Build the long-form junction table, merging data from:
 # upstream-intron 
@@ -90,6 +98,13 @@ a3ss_df <- qs2::qs_read(a3ss_file) %>%
                 longExonStart_0base = longExonStart_0base + 1,
                 shortES = shortES + 1) %>%
   dplyr::filter(sample_id %in% hist$Run)
+
+# create average psi matrix (splice event ids x subgroups)
+a3ss_psi_mat <- create_psi_matrix(a3ss_df,
+                                event_type = "A3SS",
+                                hist = hist,
+                                group_col = "cell_type",
+                                id_col = "Run")
 
 # define junction coordinates and filter for relevant columns
 a3ss_df <- define_junctions_targets(a3ss_df,
@@ -107,6 +122,13 @@ a5ss_df <- qs2::qs_read(a5ss_file) %>%
                 shortES = shortES + 1) %>%
   dplyr::filter(sample_id %in% hist$Run)
 
+# create average psi matrix (splice event ids x subgroups)
+a5ss_psi_mat <- create_psi_matrix(a5ss_df,
+                                  event_type = "A5SS",
+                                  hist = hist,
+                                  group_col = "cell_type",
+                                  id_col = "Run")
+
 # define junction coordinates and filter for relevant columns 
 a5ss_df <- define_junctions_targets(a5ss_df,
                                     event_type = "A5SS")
@@ -114,10 +136,6 @@ a5ss_df <- define_junctions_targets(a5ss_df,
 # pivot longer for single row per unique sample & junction 
 a5ss_junction_df <- create_junction_df(a5ss_df,
                                        event_type = "A5SS")
-
-# define lists of target and junction dfs
-target_list <- list("se"= se_target_df,
-                    "ri" = ri_target_df)
 
 junction_list <- list("se" = se_junction_df,
                       "ri" = ri_junction_df,
@@ -130,28 +148,9 @@ hist_dt <- as.data.table(hist)
 read_cts <- read_tsv(read_file) %>%
   dplyr::mutate(sample_id = sub("_.*", "", sample_id))
 
-# Loop through target lists to generate matrices
-for (event in names(target_list)){
-  
-  # get current df
-  target_df <- target_list[[event]]
-  
-  # run `generate_norm_target_mat` funtion to obtain desired matrix
-  norm_target_mat <- generate_norm_target_mat(target_df, 
-                                              read_cts,
-                                              hist_dt,
-                                              group_col = "cell_type",
-                                              id_col = "Run")
-  
-  # save mat
-  qs2::qs_save(norm_target_mat,
-               file.path(results_dir, 
-                         glue::glue("normal-brain-celltype-{event}-norm-target-ct-mat.qs2")))
-  
-}
-
 # create empty list to scores junction cpm matrices
 junction_mat_list <- list()
+junction_sd_list <- list()
 
 # loop through junction dfs to generate matrices
 for (event in names(junction_list)){
@@ -166,10 +165,12 @@ for (event in names(junction_list)){
                                                            group_col = "cell_type",
                                                            id_col = "Run")
   
-  # save mat
-  qs2::qs_save(junction_mat_list[[event]],
-               file.path(results_dir, 
-                         glue::glue("normal-brain-celltype-{event}-norm-junction-ct-mat.qs2")))
+  # run `generate_junction_sd_mat` to obtain desired normalized sd cpm matrix
+  junction_sd_list[[event]] <- generate_junction_sd_mat(junction_df, 
+                                                        read_cts,
+                                                        hist_dt,
+                                                        group_col = "cell_type",
+                                                        id_col = "Run")
   
 }
 
@@ -184,6 +185,33 @@ merged_norm_junction_mat <- junction_mat_list[["se"]] %>%
 qs2::qs_save(merged_norm_junction_mat,
              file.path(results_dir,
                        "normal-brain-celltype-merged-norm-junction-ct-mat.qs2"))
+
+# Merge junction sd matrices and filter for unique junction IDs
+merged_junction_sd_mat <- junction_sd_list[["se"]] %>%
+  bind_rows(junction_sd_list[["ri"]],
+            junction_sd_list[["a3ss"]],
+            junction_sd_list[["a5ss"]]) %>%
+  distinct(junction, .keep_all = TRUE)
+
+# Save merged junction output
+qs2::qs_save(merged_junction_sd_mat,
+             file.path(results_dir,
+                       "normal-brain-celltype-merged-norm-junction-sd-mat.qs2"))
+
+# Merge PSI matrices 
+merged_psi_mat <- se_psi_mat %>%
+  dplyr::mutate(splicing_case = "SE") %>%
+  bind_rows(ri_psi_mat %>%
+              dplyr::mutate(splicing_case = "RI"),
+            a3ss_psi_mat %>%
+              dplyr::mutate(splicing_case = "A3SS"),
+            a5ss_psi_mat %>%
+              dplyr::mutate(splicing_case = "A5SS")) %>%
+  dplyr::select(splice_id, splicing_case, everything())
+
+qs2::qs_save(merged_psi_mat,
+             file.path(results_dir,
+                       "normal-brain-celltype-merged-psi-mat.qs2"))
 
 # print session info
 sessionInfo()

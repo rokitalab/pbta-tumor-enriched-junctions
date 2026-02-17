@@ -17,16 +17,14 @@ define_junctions_targets <- function(df, event_type){
                            exonStart_0base, "-", exonEnd),
         down_incl_jc = str_c(chr, ":", exonStart_0base, "-", exonEnd, "_",
                              downstreamES, "-", downstreamEE),
-        target = str_c(chr, ":", exonStart_0base, "_", exonEnd),
         skip_jc  = str_c(chr, ":", upstreamES, "-", upstreamEE, "_",
                          downstreamES, "-", downstreamEE)
       ) %>%
       # select sample, gene, coordinate, and count columns
       dplyr::select(sample_id, geneSymbol, up_incl_jc,
-                    down_incl_jc, target, skip_jc,
+                    down_incl_jc, skip_jc,
                     upstream_to_target_count,
                     target_to_downstream_count,
-                    target_count,
                     upstream_to_downstream_count)
     
   } else if (event_type == "RI"){
@@ -38,17 +36,15 @@ define_junctions_targets <- function(df, event_type){
                            upstreamEE, "-", downstreamES),
         down_incl_jc = str_c(chr, ":", upstreamEE, "-", downstreamES, "_",
                              downstreamES, "-", downstreamEE),
-        target = str_c(chr, ":", upstreamEE, "_", downstreamES),
         skip_jc = str_c(chr, ":", upstreamES, "-", upstreamEE, "_",
                         downstreamES, "-", downstreamEE)
       ) %>%
       # rename `intron_count` as `target_count` 
-      dplyr::rename(target_count = intron_count) %>%
       dplyr::select(sample_id, geneSymbol, up_incl_jc,
-                    down_incl_jc, target, skip_jc,
+                    down_incl_jc, skip_jc,
                     upstream_to_intron_count,
                     intron_to_downstream_count,
-                    target_count,
+                  #  target_count,
                     upstream_to_downstream_count)
     
   } else if (event_type == "A3SS"){
@@ -273,6 +269,120 @@ generate_norm_junction_mat <- function(junction_df,
   
   # return mat
   return(norm_junction_mat)
+  
+}
+
+
+
+# generate mean normalized junction cpm matrices 
+generate_junction_sd_mat <- function(junction_df, 
+                                       read_cts,
+                                       hist,
+                                       group_col = "gtex_subgroup",
+                                       id_col = "Kids_First_Biospecimen_ID"){
+  
+  # in rare cases where junctions are duplicated, calculate median junction counts
+  junction_df <- junction_df[
+    , .(junction_count = median(junction_ct)),
+    by = .(sample_id, geneSymbol, junction)
+  ]
+  
+  # Merge histology info
+  junction_df <- merge(
+    junction_df,
+    hist[, c(id_col, group_col), with = FALSE],
+    by.x = "sample_id",
+    by.y = id_col,
+    all.x = TRUE
+  )
+  
+  # Merge read count info
+  junction_df <- merge(
+    junction_df,
+    read_cts,
+    by.x = "sample_id",
+    by.y = "sample_id",
+    all.x = TRUE
+  )
+  
+  # calculate cpm
+  junction_df[, junction_cpm :=
+                junction_count / used_read_count * 1000000
+  ]
+  
+  # Group and compute means
+  agg_junction_df <- junction_df[
+    , .(sd_junction_cpm = sd(junction_cpm, na.rm = TRUE)),
+    by = c(group_col, "junction")
+  ]
+  
+  # Wide format
+  norm_junction_mat <- dcast(
+    agg_junction_df,
+    as.formula(paste("junction ~", group_col)),
+    value.var = "sd_junction_cpm"
+  )
+  
+  # return mat
+  return(norm_junction_mat)
+  
+}
+
+
+create_psi_matrix <- function(df,
+                              event_type,
+                              hist,
+                              id_col,
+                              group_col){
+  
+  
+  if (event_type == "SE"){
+    
+    psi_df <- df %>% 
+      dplyr::mutate(splice_id = glue::glue("{chr}:{exonStart_0base}-{exonEnd}_{upstreamES}-{upstreamEE}_{downstreamES}-{downstreamEE}_{strand}")) %>%
+      dplyr::rename(psi = IncLevel1) %>%
+      dplyr::select(sample_id, splice_id, psi)
+    
+  } else if (event_type == "RI"){
+    
+    psi_df <- df %>% 
+      dplyr::mutate(splice_id = glue::glue("{chr}:{riExonStart_0base}-{riExonEnd}_{upstreamES}-{upstreamEE}_{downstreamES}-{downstreamEE}_{strand}")) %>%
+      dplyr::rename(psi = IncLevel1) %>%
+      dplyr::select(sample_id, splice_id, psi)
+    
+  } else if (event_type %in% c("A3SS", "A5SS")){
+    
+    psi_df <- df %>% 
+      dplyr::mutate(splice_id = glue::glue("{chr}:{longExonStart_0base}-{longExonEnd}_{shortES}-{shortEE}_{flankingES}-{flankingEE}_{strand}")) %>%
+      dplyr::rename(psi = IncLevel1) %>%
+      dplyr::select(sample_id, splice_id, psi)
+    
+  }
+  
+  # join hist
+  psi_df <- merge(
+    psi_df,
+    hist[, c(id_col, group_col), with = FALSE],
+    by.x = "sample_id",
+    by.y = id_col,
+    all.x = TRUE
+  )
+  
+  # Group and compute means
+  agg_psi_df <- psi_df[
+    , .(mean_psi = mean(psi, na.rm = TRUE)),
+    by = c(group_col, "splice_id")
+  ]
+  
+  # Wide format
+  psi_mat <- dcast(
+    agg_psi_df,
+    as.formula(paste("splice_id ~", group_col)),
+    value.var = "mean_psi"
+  )
+  
+  # return mat
+  return(psi_mat)
   
 }
   
