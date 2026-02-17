@@ -98,3 +98,6 @@ analyses/summarize-tumor-enriched-splicing/results/merged-tumor-enriched-splice-
 
 # survival analyses folder
 analyses/hgg-enriched-splicing/results/survival/
+
+# 02-tumor-enriched-splicing output
+analyses/02-tumor-enriched-splicing/results/pbta-merged-norm-junction-cts.qs2
