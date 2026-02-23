@@ -60,7 +60,7 @@ se_df <- qs2::qs_read(se_file) %>%
     upstream_to_target_count,
     target_to_downstream_count,
     upstream_to_downstream_count
-  )
+  ) %>%
   # remove suffix from sample ID, convert coordinates to one-based
   dplyr::mutate(sample_id = str_remove(sample_id, "_[^_]+$"),
                 exonStart_0base = exonStart_0base + 1,
