@@ -106,3 +106,5 @@ analyses/02-tumor-enriched-splicing/results/tumor-enriched-oncofetal-splice-junc
 
 # 03-tesj-differential-splicing output
 analyses/03-tesj-differential-splicing/results/tumor-enriched-oncofetal-junction-splice-events.qs2
+analyses/03-tesj-differential-splicing/results/tumor-enriched-oncofetal-junction-diff-splice-event-annotation.tsv.gz
+analyses/03-tesj-differential-splicing/results/tumor-enriched-oncofetal-diff-splice-junctions.qs2
