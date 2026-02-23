@@ -65,7 +65,7 @@ gtex_brain_under40_hist <- read_tsv(hist_file) %>%
   dplyr::mutate(id = glue::glue("GTEX-{id}")) %>%
   # filter for pts under 40yo, filter out samples removed in v10
   dplyr::filter(id %in% pts_under40,
-                !id %in% gtex_v10_rm_samples) %>%
+                !Kids_First_Biospecimen_ID %in% gtex_v10_rm_samples) %>%
   # only need BS ID, subgroup columns
   dplyr::select(Kids_First_Biospecimen_ID, id, gtex_subgroup)
 
@@ -77,12 +77,16 @@ se_df <- qs2::qs_read(gtex_se_file) %>%
                 downstreamES = downstreamES + 1) %>%
   dplyr::filter(sample_id %in% gtex_brain_under40_hist$Kids_First_Biospecimen_ID)
 
+# create average psi matrix (splice event ids x subgroups)
+se_psi_mat <- create_psi_matrix(se_df,
+                                event_type = "SE",
+                                hist = gtex_brain_under40_hist,
+                                group_col = "gtex_subgroup",
+                                id_col = "Kids_First_Biospecimen_ID")
+
 # Define SE junction and target IDs, and select relevant columns 
 se_df <- define_junctions_targets(se_df,
                                   event_type = "SE")
-
-# get median target counts 
-se_target_df <- create_target_df(se_df)
 
 # Extract all junctions and pivot longer
 se_junction_df <- create_junction_df(se_df, 
@@ -95,12 +99,16 @@ ri_df <- qs2::qs_read(gtex_ri_file) %>%
                 downstreamES = downstreamES + 1) %>%
   dplyr::filter(sample_id %in% gtex_brain_under40_hist$Kids_First_Biospecimen_ID)
 
+# create average psi matrix (splice event ids x subgroups)
+ri_psi_mat <- create_psi_matrix(ri_df,
+                                event_type = "RI",
+                                hist = gtex_brain_under40_hist,
+                                group_col = "gtex_subgroup",
+                                id_col = "Kids_First_Biospecimen_ID")
+
 # define columns specifying junction coordinates and retain only relevant columns
 ri_df <- define_junctions_targets(ri_df,
                                   event_type = "RI")
-
-# get median intron counts 
-ri_target_df <- create_target_df(ri_df)
 
 # Build the long-form junction table, merging data from:
 # upstream-intron 
@@ -116,6 +124,13 @@ a3ss_df <- qs2::qs_read(gtex_a3ss_file) %>%
                 longExonStart_0base = longExonStart_0base + 1,
                 shortES = shortES + 1) %>%
   dplyr::filter(sample_id %in% gtex_brain_under40_hist$Kids_First_Biospecimen_ID)
+
+# create average psi matrix (splice event ids x subgroups)
+a3ss_psi_mat <- create_psi_matrix(a3ss_df,
+                                event_type = "A3SS",
+                                hist = gtex_brain_under40_hist,
+                                group_col = "gtex_subgroup",
+                                id_col = "Kids_First_Biospecimen_ID")
 
 # define junction coordinates and filter for relevant columns
 a3ss_df <- define_junctions_targets(a3ss_df,
@@ -133,6 +148,13 @@ a5ss_df <- qs2::qs_read(gtex_a5ss_file) %>%
                 shortES = shortES + 1) %>%
   dplyr::filter(sample_id %in% gtex_brain_under40_hist$Kids_First_Biospecimen_ID)
 
+# create average psi matrix (splice event ids x subgroups)
+a5ss_psi_mat <- create_psi_matrix(a5ss_df,
+                                  event_type = "A5SS",
+                                  hist = gtex_brain_under40_hist,
+                                  group_col = "gtex_subgroup",
+                                  id_col = "Kids_First_Biospecimen_ID")
+
 # define junction coordinates and filter for relevant columns 
 a5ss_df <- define_junctions_targets(a5ss_df,
                                     event_type = "A5SS")
@@ -140,10 +162,6 @@ a5ss_df <- define_junctions_targets(a5ss_df,
 # pivot longer for single row per unique sample & junction 
 a5ss_junction_df <- create_junction_df(a5ss_df,
                                        event_type = "A5SS")
-
-# define lists of target and junction dfs
-target_list <- list("se"= se_target_df,
-                    "ri" = ri_target_df)
 
 junction_list <- list("se" = se_junction_df,
                       "ri" = ri_junction_df,
@@ -156,28 +174,9 @@ gtex_hist_dt <- as.data.table(gtex_brain_under40_hist)
 gtex_read_cts <- read_tsv(gtex_read_file) %>%
   dplyr::mutate(sample_id = sub("_.*", "", sample_id))
 
-# Loops through target lists to generate matrices
-for (event in names(target_list)){
-  
-  # get current df
-  target_df <- target_list[[event]]
-
-  # run `generate_norm_target_mat` funtion to obtain desired matrix
-  norm_target_mat <- generate_norm_target_mat(target_df, 
-                                              gtex_read_cts,
-                                              gtex_hist_dt,
-                                              group_col = "gtex_subgroup",
-                                              id_col = "Kids_First_Biospecimen_ID")
-  
-  # save mat
-  qs2::qs_save(norm_target_mat,
-               file.path(results_dir, 
-                         glue::glue("gtex-{event}-norm-target-ct-mat.qs2")))
-  
-}
-
 # create empty list to scores junction cpm matrices
 junction_mat_list <- list()
+junction_sd_list <- list()
 
 # loop through junction dfs to generate matrices
 for (event in names(junction_list)){
@@ -191,11 +190,13 @@ for (event in names(junction_list)){
                                                          gtex_hist_dt,
                                                          group_col = "gtex_subgroup",
                                                          id_col = "Kids_First_Biospecimen_ID")
-  
-  # save mat
-  qs2::qs_save(junction_mat_list[[event]],
-               file.path(results_dir, 
-                         glue::glue("gtex-{event}-norm-junction-ct-mat.qs2")))
+
+  # run `generate_junction_sd_mat` to obtain desired normalized sd cpm matrix
+  junction_sd_list[[event]] <- generate_junction_sd_mat(junction_df, 
+                                                        gtex_read_cts,
+                                                        gtex_hist_dt,
+                                                        group_col = "gtex_subgroup",
+                                                        id_col = "Kids_First_Biospecimen_ID")
   
 }
 
@@ -210,6 +211,33 @@ merged_norm_junction_mat <- junction_mat_list[["se"]] %>%
 qs2::qs_save(merged_norm_junction_mat,
              file.path(results_dir,
                        "gtex-merged-norm-junction-ct-mat.qs2"))
+
+# Merge junction sd matrices and filter for unique junction IDs
+merged_junction_sd_mat <- junction_sd_list[["se"]] %>%
+  bind_rows(junction_sd_list[["ri"]],
+            junction_sd_list[["a3ss"]],
+            junction_sd_list[["a5ss"]]) %>%
+  distinct(junction, .keep_all = TRUE)
+
+# Save merged junction output
+qs2::qs_save(merged_junction_sd_mat,
+             file.path(results_dir,
+                       "gtex-merged-norm-junction-sd-mat.qs2"))
+
+# Merge PSI matrices 
+merged_psi_mat <- se_psi_mat %>%
+  dplyr::mutate(splicing_case = "SE") %>%
+  bind_rows(ri_psi_mat %>%
+              dplyr::mutate(splicing_case = "RI"),
+            a3ss_psi_mat %>%
+              dplyr::mutate(splicing_case = "A3SS"),
+            a5ss_psi_mat %>%
+              dplyr::mutate(splicing_case = "A5SS")) %>%
+  dplyr::select(splice_id, splicing_case, everything())
+
+qs2::qs_save(merged_psi_mat,
+             file.path(results_dir,
+                       "gtex-merged-psi-mat.qs2"))
 
 # Print session info
 sessionInfo()
