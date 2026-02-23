@@ -103,3 +103,6 @@ analyses/hgg-enriched-splicing/results/survival/
 analyses/02-tumor-enriched-splicing/results/pbta-merged-norm-junction-cts.qs2
 analyses/02-tumor-enriched-splicing/results/tumor-enriched-oncofetal-splice-junctions.tsv.gz
 analyses/02-tumor-enriched-splicing/results/tumor-enriched-oncofetal-splice-junctions-domain-expr-annotated.tsv.gz
+
+# 03-tesj-differential-splicing output
+analyses/03-tesj-differential-splicing/results/tumor-enriched-oncofetal-junction-splice-events.qs2
