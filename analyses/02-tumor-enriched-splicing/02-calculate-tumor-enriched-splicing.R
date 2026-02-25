@@ -302,7 +302,7 @@ merged_enr_jc_df <- merged_enr_jc_df %>%
 # Load junction annotation file
 jc_annot <- read_tsv(file.path(results_dir, "junction-annot.tsv.gz")) %>% 
   dplyr::filter(junction %in% merged_enr_jc_df$junction) %>%
-  distinct(junction, geneSymbol, event_type, .keep_all = TRUE) %>%
+  distinct(junction, geneSymbol, .keep_all = TRUE) %>%
   group_by(junction, strand, chr, 
            up_jc_start, up_jc_end, down_jc_start,
            down_jc_end) %>%
