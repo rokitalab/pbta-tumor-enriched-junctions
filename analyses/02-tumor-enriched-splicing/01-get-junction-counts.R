@@ -220,7 +220,7 @@ merged_norm_junction_df <- bind_rows(norm_jc_chunk_list)
 # Save merged junction output
 qs2::qs_save(merged_norm_junction_df,
              file.path(results_dir,
-                       "pbta-merged-norm-junction-cts-test.qs2"))
+                       "pbta-merged-norm-junction-cts.qs2"))
 
 # create junction annotation df
 
@@ -248,7 +248,7 @@ system.time({
 # save junction annotation
 write_tsv(merged_junction_df,
           file.path(results_dir,
-                    "junction-annot-test.tsv.gz"))
+                    "junction-annot.tsv.gz"))
 
 # print session info
 sessionInfo()
