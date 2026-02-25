@@ -96,8 +96,6 @@ scratch/
 # merged TESE file
 analyses/summarize-tumor-enriched-splicing/results/merged-tumor-enriched-splice-events.tsv.gz
 
-# survival analyses folder
-analyses/hgg-enriched-splicing/results/survival/
-
 # 02-tumor-enriched-splicing output
 analyses/02-tumor-enriched-splicing/results/pbta-merged-norm-junction-cts.qs2
+analyses/hgg-enriched-splicing/results/survival/*RDS
