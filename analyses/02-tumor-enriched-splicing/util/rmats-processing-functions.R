@@ -17,19 +17,16 @@ define_junctions_targets <- function(df, event_type){
                            exonStart_0base, "-", exonEnd),
         down_incl_jc = str_c(chr, ":", exonStart_0base, "-", exonEnd, "_",
                              downstreamES, "-", downstreamEE),
-       # target = str_c(chr, ":", exonStart_0base, "_", exonEnd),
         skip_jc  = str_c(chr, ":", upstreamES, "-", upstreamEE, "_",
                          downstreamES, "-", downstreamEE)
       ) %>%
       # select sample, gene, coordinate, and count columns
       dplyr::select(sample_id, geneSymbol, up_incl_jc,
                     down_incl_jc,
-                    #target,
                     skip_jc,
                     strand,
                     upstream_to_target_count,
                     target_to_downstream_count,
-                  #  target_count,
                     upstream_to_downstream_count)
     
   } else if (event_type == "RI"){
@@ -38,23 +35,19 @@ define_junctions_targets <- function(df, event_type){
     reformatted_df <- df %>%
       dplyr::mutate(
         up_incl_jc = paste0(chr, ":", upstreamES, "-", upstreamEE, "_",
-                           upstreamEE, "-", downstreamES),
+                            upstreamEE, "-", downstreamES),
         down_incl_jc = paste0(chr, ":", upstreamEE, "-", downstreamES, "_",
-                             downstreamES, "-", downstreamEE),
-       # target = str_c(chr, ":", upstreamEE, "_", downstreamES),
+                              downstreamES, "-", downstreamEE),
         skip_jc = paste0(chr, ":", upstreamES, "-", upstreamEE, "_",
-                        downstreamES, "-", downstreamEE)
+                         downstreamES, "-", downstreamEE)
       ) %>%
       # rename `intron_count` as `target_count` 
-     # dplyr::rename(target_count = intron_count) %>%
       dplyr::select(sample_id, geneSymbol, up_incl_jc,
                     down_incl_jc, 
-                    #target, 
                     skip_jc,
                     strand,
                     upstream_to_intron_count,
                     intron_to_downstream_count,
-                   # target_count,
                     upstream_to_downstream_count)
     
   } else if (event_type == "A3SS"){
@@ -64,15 +57,15 @@ define_junctions_targets <- function(df, event_type){
       dplyr::mutate(
         long_incl_jc = case_when(
           strand == "+" ~ paste0(chr, ":", flankingES, "-", flankingEE, "_",
-                                longExonStart_0base, "-", longExonEnd),
+                                 longExonStart_0base, "-", longExonEnd),
           strand == "-" ~ paste0(chr, ":", longExonStart_0base, "-", longExonEnd, "_",
-                                flankingES, "-", flankingEE))) %>%
+                                 flankingES, "-", flankingEE))) %>%
       dplyr::mutate(
         short_incl_jc = case_when(
           strand == "+" ~ paste0(chr, ":", flankingES, "-", flankingEE, "_",
-                                shortES, "-", shortEE),
+                                 shortES, "-", shortEE),
           strand == "-" ~ paste0(chr, ":", shortES, "-", shortEE, "_",
-                                flankingES, "-", flankingEE))
+                                 flankingES, "-", flankingEE))
       ) %>%
       # retain sample, gene, coordinates, and count columns
       dplyr::select(sample_id, geneSymbol, long_incl_jc,
@@ -88,16 +81,16 @@ define_junctions_targets <- function(df, event_type){
       dplyr::mutate(
         long_incl_jc = case_when(
           strand == "+" ~ paste0(chr, ":", longExonStart_0base, "-", longExonEnd, "_",
-                                flankingES, "-", flankingEE),
+                                 flankingES, "-", flankingEE),
           strand == "-" ~ paste0(chr, ":", flankingES, "-", flankingEE, "_",
-                                longExonStart_0base, "-", longExonEnd))
+                                 longExonStart_0base, "-", longExonEnd))
       ) %>%
       dplyr::mutate(
         short_incl_jc = case_when(
           strand == "+" ~ paste0(chr, ":", shortES, "-", shortEE, "_",
-                                flankingES, "-", flankingEE),
+                                 flankingES, "-", flankingEE),
           strand == "-" ~ paste0(chr, ":", flankingES, "-", flankingEE, "_",
-                                shortES, "-", shortEE))
+                                 shortES, "-", shortEE))
       ) %>%
       # retain sample, gene, coordinates, and count columns
       dplyr::select(sample_id, geneSymbol, long_incl_jc,
@@ -126,10 +119,10 @@ create_target_df <- function(df){
   ]
   
   return(target_df)
-
+  
 }
 
-# create data frame of rmats-dervied junction counts by sample
+# create data frame of rmats-derived junction counts by sample
 create_junction_df <- function(df, event_type){
   
   # processing will differ based on event_type
@@ -137,72 +130,156 @@ create_junction_df <- function(df, event_type){
     
     # create unique rows for each inclusion and skipping junction
     junction_df <- rbindlist(list(
-      df[, .(sample_id, geneSymbol, strand,
-             junction = up_incl_jc,
+      df[, .(sample_id, geneSymbol, chr, strand,
+             up_start = upstreamES,
+             up_end = upstreamEE,
+             down_start = exonStart_0base,
+             down_end = exonEnd,
              junction_ct = upstream_to_target_count
-             )],
-      df[, .(sample_id, geneSymbol, strand,
-             junction = down_incl_jc,
+      )],
+      df[, .(sample_id, geneSymbol, chr, strand,
+             up_start = exonStart_0base,
+             up_end = exonEnd,
+             down_start = downstreamES,
+             down_end = downstreamEE,
              junction_ct = target_to_downstream_count)],
-      df[, .(sample_id, geneSymbol, strand,
-             junction = skip_jc,
+      df[, .(sample_id, geneSymbol, chr, strand,
+             up_start = upstreamES,
+             up_end = upstreamEE,
+             down_start = downstreamES,
+             down_end = downstreamEE,
              junction_ct = upstream_to_downstream_count)]
     ))
     
+    jc_map <- junction_df %>%
+      distinct(chr, up_start, up_end,
+               down_start, down_end) %>%
+      dplyr::mutate(up_start = as.integer(up_start),
+                    up_end = as.integer(up_end),
+                    down_start = as.integer(down_start),
+                    down_end = as.integer(down_end)) %>%
+      dplyr::mutate(junction = paste0(chr, ":", up_start, "-", up_end, "_",
+                                      down_start, "-", down_end))
     
-    # junction_df <- rbindlist(list(
-    #   df[, .(sample_id, geneSymbol, chr, strand,
-    #         # junction = up_incl_jc,
-    #          up_start = upstreamES,
-    #          up_end = upstreamEE,
-    #          down_start = exonStart_0base,
-    #          down_end = exonEnd,
-    #          junction_ct = upstream_to_target_count
-    #   )],
-    #   df[, .(sample_id, geneSymbol, chr, strand,
-    #          up_start = exonStart_0base,
-    #          up_end = exonEnd,
-    #          down_start = downstreamES,
-    #          down_end = downstreamEE,
-    #         # junction = down_incl_jc,
-    #          junction_ct = target_to_downstream_count)],
-    #   df[, .(sample_id, geneSymbol, chr, strand,
-    #          up_start = upstreamES,
-    #          up_end = upstreamEE,
-    #          down_start = downstreamES,
-    #          down_end = downstreamEE,
-    #         # junction = skip_jc,
-    #          junction_ct = upstream_to_downstream_count)]
-    # )) %>%
-    #   dplyr::mutate(junction = str_c(chr, ":", up_start, "-", up_end, "_",
-    #                       down_start, "-", down_end))
+    junction_df <- junction_df %>%
+      left_join(jc_map) %>%
+      dplyr::select(-chr, -up_start,
+                    -up_end, -down_start,
+                    -down_end) %>%
+      dplyr::select(sample_id, geneSymbol, strand, junction, junction_ct)
     
   } else if (event_type == "RI"){
     
     # create unique rows for each inclusion and skipping junction
     junction_df <- rbindlist(list(
-      df[, .(sample_id, geneSymbol, strand,
-             junction = up_incl_jc,
-             junction_ct = upstream_to_intron_count)],
-      df[, .(sample_id, geneSymbol, strand,
-             junction = down_incl_jc,
+      df[, .(sample_id, geneSymbol, chr, strand,
+             up_start = upstreamES,
+             up_end = upstreamEE,
+             down_start = upstreamEE,
+             down_end = downstreamES,
+             junction_ct = upstream_to_intron_count
+      )],
+      df[, .(sample_id, geneSymbol, chr, strand,
+             up_start = upstreamEE,
+             up_end = downstreamES,
+             down_start = downstreamES,
+             down_end = downstreamEE,
              junction_ct = intron_to_downstream_count)],
-      df[, .(sample_id, geneSymbol, strand,
-             junction = skip_jc,
+      df[, .(sample_id, geneSymbol, chr, strand,
+             up_start = upstreamES,
+             up_end = upstreamEE,
+             down_start = downstreamES,
+             down_end = downstreamEE,
              junction_ct = upstream_to_downstream_count)]
     ))
     
-  } else if (event_type %in% c("A5SS", "A3SS")){
+    jc_map <- junction_df %>%
+      distinct(chr, up_start, up_end,
+               down_start, down_end) %>%
+      dplyr::mutate(up_start = as.integer(up_start),
+                    up_end = as.integer(up_end),
+                    down_start = as.integer(down_start),
+                    down_end = as.integer(down_end)) %>%
+      dplyr::mutate(junction = paste0(chr, ":", up_start, "-", up_end, "_",
+                                      down_start, "-", down_end))
     
-    # create unique rows for each long and short inclusion junction
+    junction_df <- junction_df %>%
+      left_join(jc_map) %>%
+      dplyr::select(-chr, -up_start,
+                    -up_end, -down_start,
+                    -down_end) %>%
+      dplyr::select(sample_id, geneSymbol, strand, junction, junction_ct)
+    
+  } else if (event_type == "A3SS"){
+    
     junction_df <- rbindlist(list(
-      df[, .(sample_id, geneSymbol, strand,
-             junction = long_incl_jc,
-             junction_ct = long_to_flanking_count)],
-      df[, .(sample_id, geneSymbol, strand,
-             junction = short_incl_jc,
+      df[, .(sample_id, geneSymbol, chr, strand,
+             up_start = fifelse(strand == "+", flankingES, longExonStart_0base),
+             up_end = fifelse(strand == "+", flankingEE, longExonEnd),
+             down_start = fifelse(strand == "+", longExonStart_0base, flankingES),
+             down_end = fifelse(strand == "+", longExonEnd, flankingEE),
+             junction_ct = long_to_flanking_count
+      )],
+      df[, .(sample_id, geneSymbol, chr, strand,
+             up_start = fifelse(strand == "+", flankingES, shortES),
+             up_end = fifelse(strand == "+", flankingEE, shortEE),
+             down_start = fifelse(strand == "+", shortES, flankingES),
+             down_end = fifelse(strand == "+", shortEE, flankingEE),
              junction_ct = short_to_flanking_count)]
     ))
+    
+    jc_map <- junction_df %>%
+      distinct(chr, up_start, up_end,
+               down_start, down_end) %>%
+      dplyr::mutate(up_start = as.integer(up_start),
+                    up_end = as.integer(up_end),
+                    down_start = as.integer(down_start),
+                    down_end = as.integer(down_end)) %>%
+      dplyr::mutate(junction = paste0(chr, ":", up_start, "-", up_end, "_",
+                                      down_start, "-", down_end))
+    
+    junction_df <- junction_df %>%
+      left_join(jc_map) %>%
+      dplyr::select(-chr, -up_start,
+                    -up_end, -down_start,
+                    -down_end) %>%
+      dplyr::select(sample_id, geneSymbol, strand, junction, junction_ct)
+    
+    
+  } else if (event_type == "A5SS"){
+    
+    junction_df <- rbindlist(list(
+      df[, .(sample_id, geneSymbol, chr, strand,
+             up_start = fifelse(strand == "+", longExonStart_0base, flankingES),
+             up_end = fifelse(strand == "+", longExonEnd, flankingEE),
+             down_start = fifelse(strand == "+", flankingES, longExonStart_0base),
+             down_end = fifelse(strand == "+", flankingEE, longExonEnd),
+             junction_ct = long_to_flanking_count
+      )],
+      df[, .(sample_id, geneSymbol, chr, strand,
+             up_start = fifelse(strand == "+", shortES, flankingES),
+             up_end = fifelse(strand == "+", shortEE, flankingEE),
+             down_start = fifelse(strand == "+", flankingES, shortES),
+             down_end = fifelse(strand == "+", flankingEE, shortEE),
+             junction_ct = short_to_flanking_count)]
+    ))
+    
+    jc_map <- junction_df %>%
+      distinct(chr, up_start, up_end,
+               down_start, down_end) %>%
+      dplyr::mutate(up_start = as.integer(up_start),
+                    up_end = as.integer(up_end),
+                    down_start = as.integer(down_start),
+                    down_end = as.integer(down_end)) %>%
+      dplyr::mutate(junction = paste0(chr, ":", up_start, "-", up_end, "_",
+                                      down_start, "-", down_end))
+    
+    junction_df <- junction_df %>%
+      left_join(jc_map) %>%
+      dplyr::select(-chr, -up_start,
+                    -up_end, -down_start,
+                    -down_end) %>%
+      dplyr::select(sample_id, geneSymbol, strand, junction, junction_ct)
     
   }
   
@@ -303,7 +380,7 @@ generate_norm_junction_mat <- function(junction_df,
   # ]
   
   final_junction_df <- junction_df %>%
-  #  distinct(junction, !!sym(group_col), .keep_all = TRUE) %>%
+    #  distinct(junction, !!sym(group_col), .keep_all = TRUE) %>%
     dplyr::select(junction, !!sym(group_col),
                   junction_count, junction_cpm)
   
@@ -326,4 +403,4 @@ generate_norm_junction_mat <- function(junction_df,
   return(final_junction_df)
   
 }
-  
+
