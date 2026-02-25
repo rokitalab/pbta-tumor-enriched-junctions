@@ -60,7 +60,7 @@ se_df <- qs2::qs_read(se_file) %>%
     upstream_to_target_count,
     target_to_downstream_count,
     upstream_to_downstream_count
-  )
+  ) %>%
   # remove suffix from sample ID, convert coordinates to one-based
   dplyr::mutate(sample_id = str_remove(sample_id, "_[^_]+$"),
                 exonStart_0base = exonStart_0base + 1,
@@ -69,40 +69,6 @@ se_df <- qs2::qs_read(se_file) %>%
   # rm low-quality RNA samples, events with low junction counts
   dplyr::filter(!sample_id %in% samples_to_rm,
                 (upstream_to_target_count >= 10 | target_to_downstream_count >= 10 | upstream_to_downstream_count >= 10))
-
-# Define SE junction and target IDs, and select relevant columns
-print("Extracting SE event junctions...")
-
-# do this in chunks to reduce memory
-n <- nrow(se_df)
-chunk_size = 1e7
-
-starts <- seq(1, n, by = chunk_size)
-
-# create empty list to store junction coordinates & counts
-se_jc_list <- list()
-
-# loop through chunks
-  for (i in 1:length(starts)) {
-
-    print(glue::glue("processing chunk {i}..."))
-
-    start <- starts[i]
-
-    # get current index
-    idx <- start:min(start + chunk_size - 1, n)
-
-    # subset full df
-    se_chunk <- se_df[idx,]
-
-    # Define junction coordinates
-    se_jc_list[[i]] <- define_junctions_targets(se_chunk,
-                                         event_type = "SE")
-
-  }
-
-# merge results from chunks
-se_df <- bind_rows(se_jc_list)
 
 # Build the long-form junction table, merging data from:
 # upstream-exon
@@ -137,12 +103,6 @@ ri_df <- qs2::qs_read(ri_file) %>%
   dplyr::filter(!sample_id %in% samples_to_rm,
                 (upstream_to_intron_count >= 10 | intron_to_downstream_count >= 10 | upstream_to_downstream_count >= 10))
 
-# define columns specifying junction coordinates and retain only relevant columns
-print("Extracting RI event junctions...")
-
-ri_df <- define_junctions_targets(ri_df,
-                                  event_type = "RI")
-
 # Build the long-form junction table, merging data from:
 # upstream-intron
 # intron-downstream
@@ -175,11 +135,6 @@ a3ss_df <- qs2::qs_read(a3ss_file) %>%
   dplyr::filter(!sample_id %in% samples_to_rm,
                 (long_to_flanking_count >= 10 | short_to_flanking_count >= 10))
 
-# define junction coordinates and filter for relevant columns
-print("Extracting A3SS junctions...")
-a3ss_df <- define_junctions_targets(a3ss_df,
-                                    event_type = "A3SS")
-
 # pivot longer for single row per unique sample & junction
 print("Creating A3SS junction df...")
 a3ss_junction_df <- create_junction_df(a3ss_df,
@@ -209,11 +164,6 @@ a5ss_df <- qs2::qs_read(a5ss_file) %>%
   dplyr::filter(!sample_id %in% samples_to_rm,
                 (long_to_flanking_count >= 10 | short_to_flanking_count >= 10))
 
-
-# define junction coordinates and filter for relevant columns
-print("Extracting A5SS junctions...")
-a5ss_df <- define_junctions_targets(a5ss_df,
-                                    event_type = "A5SS")
 
 # pivot longer for single row per unique sample & junction
 print("Creating A5SS junction df...")
@@ -247,20 +197,20 @@ norm_jc_chunk_list <- list()
 print("Normalizing junction counts...")
 system.time({
   for (i in 1:length(starts)) {
-
+    
     print(glue::glue("processing chunk {i}..."))
-
+    
     start <- starts[i]
-
+    
     idx <- start:min(start + chunk_size - 1, n)
-
+    
     jc_chunk <- merged_junction_df[idx,]
-
+    
     # run `generate_norm_junction_mat` to obtain desired normalized mean cpm matrix
     norm_jc_chunk_list[[i]] <- generate_norm_junction_mat(jc_chunk,
-                                                           read_cts,
-                                                           group_col = "sample_id")
-
+                                                          read_cts,
+                                                          group_col = "sample_id")
+    
   }
 })
 
@@ -292,7 +242,7 @@ system.time({
       up_jc_end = unlist(lapply(strsplit(junction, ":|-|_"), function(x) x[[3]])),
       down_jc_start = unlist(lapply(strsplit(junction, ":|-|_"), function(x) x[[4]])),
       down_jc_end = unlist(lapply(strsplit(junction, ":|-|_"), function(x) x[[5]])),
-                 )
+    )
 })
 
 # save junction annotation
