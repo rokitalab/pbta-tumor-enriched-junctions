@@ -59,6 +59,18 @@ for (event in names(file_list)){
     dplyr::filter(geneSymbol %in% enr_jc_df$gene_symbol,
                   !is.na(IncLevel1))
   
+  if (event %in% c("SE", "RI")){
+    
+    rmats <- rmats %>%
+      dplyr::arrange(upstreamES)
+    
+  } else if (event %in% c("A3SS", "A5SS")) {
+    
+    rmats <- rmats %>%
+      dplyr::arrange(flankingES)
+    
+  }
+  
   # Run splice event extraction in chunks 
   # define chunk sizes and number of chunks
   n <- nrow(rmats)
@@ -110,7 +122,7 @@ merged_enr_jc_event_df <- event_list[["SE"]] %>%
 # write to output
 qs2::qs_save(merged_enr_jc_event_df,
              file.path(results_dir,
-                       "tumor-enriched-oncofetal-junction-splice-events.qs2"))
+                       "tumor-enriched-oncofetal-junction-splice-events-test.qs2"))
 
 # print session info
 sessionInfo()

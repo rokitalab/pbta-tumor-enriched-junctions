@@ -1,27 +1,32 @@
-# reformat rMATS data frames to include junction and target coordinate intervals, and filter for relevant columns
+# reformat rMATS data frames to include junction and splice event coordinate intervals, and filter for relevant columns
 define_junctions_targets <- function(df, event_type){
   
   # processing will differ based on event_type
   if (event_type == "SE"){
     
+    # convert starts to one-based
     reformatted_df <- df  %>%
       dplyr::mutate(sample_id = str_remove(sample_id, "_[^_]+$"), 
                     exonStart_0base = exonStart_0base + 1,
                     upstreamES = upstreamES + 1,
-                    downstreamES = downstreamES + 1) %>%
-      # define inclusion junction, skip junction, and target coordinates
-      dplyr::mutate(
-        up_incl_jc = str_c(chr, ":", upstreamES, "-", upstreamEE, "_",
-                           exonStart_0base, "-", exonEnd),
-        down_incl_jc = str_c(chr, ":", exonStart_0base, "-", exonEnd, "_",
-                             downstreamES, "-", downstreamEE),
-        skip_jc  = str_c(chr, ":", upstreamES, "-", upstreamEE, "_",
-                         downstreamES, "-", downstreamEE)
-      ) %>%
-      dplyr::filter((up_incl_jc %in% enr_jc_df$junction | down_incl_jc %in% enr_jc_df$junction | skip_jc %in% enr_jc_df$junction),
-                    sample_id %in% enr_jc_df$sample_id) %>%
+                    downstreamES = downstreamES + 1) 
+    
+    # create df of unique splice event coordinates to define junction & splice event intervals
+    event_key <- reformatted_df %>%
+      distinct(chr, exonStart_0base, exonEnd,
+               upstreamES, upstreamEE, downstreamES, downstreamEE,
+               strand) %>%
       dplyr::mutate(splice_id = glue::glue("{chr}:{exonStart_0base}-{exonEnd}_{upstreamES}-{upstreamEE}_{downstreamES}-{downstreamEE}_{strand}")) %>%
-      # select sample, gene, coordinate, and count columns
+      dplyr::mutate(up_incl_jc = glue::glue("{chr}:{upstreamES}-{upstreamEE}_{exonStart_0base}-{exonStart_0base}"),
+                    down_incl_jc = glue::glue("{chr}:{exonStart_0base}-{exonStart_0base}_{downstreamES}-{downstreamEE}"),
+                    skip_jc = glue::glue("{chr}:{upstreamES}-{upstreamEE}_{downstreamES}-{downstreamEE}"))
+    
+    # join junction and splice event intervals to full df
+    reformatted_df <- reformatted_df %>%
+      left_join(event_key) %>%
+      # fiter of tumor-enriched splice junctions
+      dplyr::filter(up_incl_jc %in% enr_jc_df$junction | down_incl_jc %in% enr_jc_df$junction | skip_jc %in% enr_jc_df$junction) %>%
+      # retain sample, gene, coordinates, and count columns
       dplyr::select(sample_id, geneSymbol, up_incl_jc,
                     down_incl_jc, skip_jc,
                     strand,
@@ -34,19 +39,22 @@ define_junctions_targets <- function(df, event_type){
     reformatted_df <- df %>%
       dplyr::mutate(sample_id = str_remove(sample_id, "_[^_]+$"), 
                     upstreamES = upstreamES + 1,
-                    downstreamES = downstreamES + 1) %>%
-      dplyr::mutate(
-        up_incl_jc = str_c(chr, ":", upstreamES, "-", upstreamEE, "_",
-                           upstreamEE, "-", downstreamES),
-        down_incl_jc = str_c(chr, ":", upstreamEE, "-", downstreamES, "_",
-                             downstreamES, "-", downstreamEE),
-        skip_jc = str_c(chr, ":", upstreamES, "-", upstreamEE, "_",
-                        downstreamES, "-", downstreamEE)
-      ) %>%
-      dplyr::filter(up_incl_jc %in% enr_jc_df$junction | down_incl_jc %in% enr_jc_df$junction | skip_jc %in% enr_jc_df$junction) %>%
+                    downstreamES = downstreamES + 1)
+    
+    event_key <- reformatted_df %>%
+      distinct(chr, riExonStart_0base, riExonEnd,
+               upstreamES, upstreamEE, downstreamES, downstreamEE,
+               strand) %>%
+      # create df of unique splice event coordinates to define junction & splice event intervals
       dplyr::mutate(splice_id = glue::glue("{chr}:{riExonStart_0base}-{riExonEnd}_{upstreamES}-{upstreamEE}_{downstreamES}-{downstreamEE}_{strand}")) %>%
-      # rename `intron_count` as `target_count` 
-      dplyr::rename(target_count = intron_count) %>%
+      dplyr::mutate(up_incl_jc = glue::glue("{chr}:{upstreamES}-{upstreamEE}_{upstreamEE}-{downstreamES}"),
+                    down_incl_jc = glue::glue("{chr}:{upstreamEE}-{downstreamES}_{downstreamES}-{downstreamEE}"),
+                    skip_jc = glue::glue("{chr}:{upstreamES}-{upstreamEE}_{downstreamES}-{downstreamEE}"))
+    
+    reformatted_df <- reformatted_df %>%
+      left_join(event_key) %>%
+      dplyr::filter(up_incl_jc %in% enr_jc_df$junction | down_incl_jc %in% enr_jc_df$junction | skip_jc %in% enr_jc_df$junction) %>%
+      # retain sample, gene, coordinates, and count columns
       dplyr::select(sample_id, geneSymbol, up_incl_jc,
                     down_incl_jc, skip_jc,
                     strand,
@@ -60,22 +68,28 @@ define_junctions_targets <- function(df, event_type){
       dplyr::mutate(sample_id = str_remove(sample_id, "_[^_]+$"), 
                     longExonStart_0base = longExonStart_0base + 1,
                     shortES = shortES + 1,
-                    flankingES = flankingES + 1) %>%
+                    flankingES = flankingES + 1)
+    
+    event_key <- reformatted_df %>%
+      distinct(chr, longExonStart_0base, longExonEnd,
+               shortES, shortEE, flankingES, flankingEE,
+               strand) %>%
+      # create df of unique splice event coordinates to define junction & splice event intervals
+      dplyr::mutate(splice_id = glue::glue("{chr}:{longExonStart_0base}-{longExonEnd}_{shortES}-{shortEE}_{flankingES}-{flankingEE}_{strand}")) %>%
       dplyr::mutate(
         long_incl_jc = case_when(
-          strand == "+" ~ str_c(chr, ":", flankingES, "-", flankingEE, "_",
-                                longExonStart_0base, "-", longExonEnd),
-          strand == "-" ~ str_c(chr, ":", longExonStart_0base, "-", longExonEnd, "_",
-                                flankingES, "-", flankingEE))) %>%
+          strand == "-" ~ glue::glue("{chr}:{longExonStart_0base}-{longExonEnd}_{flankingES}-{flankingEE}"),
+          strand == "+" ~ glue::glue("{chr}:{flankingES}-{flankingEE}_{longExonStart_0base}-{longExonEnd}"))
+      ) %>%
       dplyr::mutate(
         short_incl_jc = case_when(
-          strand == "+" ~ str_c(chr, ":", flankingES, "-", flankingEE, "_",
-                                shortES, "-", shortEE),
-          strand == "-" ~ str_c(chr, ":", shortES, "-", shortEE, "_",
-                                flankingES, "-", flankingEE))
-      ) %>%
+          strand == "-" ~ glue::glue("{chr}:{shortES}-{shortEE}_{flankingES}-{flankingEE}"),
+          strand == "+" ~ glue::glue("{chr}:{flankingES}-{flankingEE}_{shortES}-{shortEE}"))
+      )
+    
+    reformatted_df <- reformatted_df %>%
+      left_join(event_key) %>%
       dplyr::filter(long_incl_jc %in% enr_jc_df$junction | short_incl_jc %in% enr_jc_df$junction) %>%
-      dplyr::mutate(splice_id = glue::glue("{chr}:{longExonStart_0base}-{longExonEnd}_{shortES}-{shortEE}_{flankingES}-{flankingEE}_{strand}")) %>%
       # retain sample, gene, coordinates, and count columns
       dplyr::select(sample_id, geneSymbol, long_incl_jc,
                     short_incl_jc,
@@ -90,29 +104,32 @@ define_junctions_targets <- function(df, event_type){
       dplyr::mutate(sample_id = str_remove(sample_id, "_[^_]+$"), 
                     longExonStart_0base = longExonStart_0base + 1,
                     shortES = shortES + 1,
-                    flankingES = flankingES + 1) %>%
+                    flankingES = flankingES + 1)
+    
+    event_key <- reformatted_df %>%
+      distinct(chr, longExonStart_0base, longExonEnd,
+               shortES, shortEE, flankingES, flankingEE,
+               strand) %>%
+      # create df of unique splice event coordinates to define junction & splice event intervals
+      dplyr::mutate(splice_id = glue::glue("{chr}:{longExonStart_0base}-{longExonEnd}_{shortES}-{shortEE}_{flankingES}-{flankingEE}_{strand}")) %>%
       dplyr::mutate(
         long_incl_jc = case_when(
-          strand == "+" ~ str_c(chr, ":", longExonStart_0base, "-", longExonEnd, "_",
-                                flankingES, "-", flankingEE),
-          strand == "-" ~ str_c(chr, ":", flankingES, "-", flankingEE, "_",
-                                longExonStart_0base, "-", longExonEnd))
+          strand == "+" ~ glue::glue("{chr}:{longExonStart_0base}-{longExonEnd}_{flankingES}-{flankingEE}"),
+          strand == "-" ~ glue::glue("{chr}:{flankingES}-{flankingEE}_{longExonStart_0base}-{longExonEnd}"))
       ) %>%
       dplyr::mutate(
         short_incl_jc = case_when(
-          strand == "+" ~ str_c(chr, ":", shortES, "-", shortEE, "_",
-                                flankingES, "-", flankingEE),
-          strand == "-" ~ str_c(chr, ":", flankingES, "-", flankingEE, "_",
-                                shortES, "-", shortEE))
-      ) %>%
+          strand == "+" ~ glue::glue("{chr}:{shortES}-{shortEE}_{flankingES}-{flankingEE}"),
+          strand == "-" ~ glue::glue("{chr}:{flankingES}-{flankingEE}_{shortES}-{shortEE}"))
+      )
+    
+    reformatted_df <- reformatted_df %>%
+      left_join(event_key) %>%
       dplyr::filter(long_incl_jc %in% enr_jc_df$junction | short_incl_jc %in% enr_jc_df$junction) %>%
-      dplyr::mutate(splice_id = glue::glue("{chr}:{longExonStart_0base}-{longExonEnd}_{shortES}-{shortEE}_{flankingES}-{flankingEE}_{strand}")) %>%
       # retain sample, gene, coordinates, and count columns
       dplyr::select(sample_id, geneSymbol, long_incl_jc,
                     short_incl_jc,
                     strand,
-                    # long_to_flanking_count,
-                    # short_to_flanking_count,
                     splice_id,
                     IncLevel1)
     
