@@ -195,9 +195,6 @@ for (i in 1:length(starts)) {
       # minimum junction CPM signal-to-noise ratio across all reference cohorts and postnatal cohorts
       min_cpm_snr_all = do.call(pmin, c(select(., contains("cpm_SNR")), na.rm = TRUE)),
       min_cpm_snr_postnatal = do.call(pmin, c(select(., contains("cpm_SNR") & !contains("fetal")), na.rm = TRUE)),
-      # Number of ref groups with NA junction counts
-      # n_na_ctrl_all = rowSums(across(contains("mean_cpm"), ~ is.na(.), .names = NULL), na.rm = TRUE),
-      # n_na_ctrl_postnatal = rowSums(across(!contains("fetal") & contains("mean_cpm"), ~ is.na(.), .names = NULL), na.rm = TRUE)
       ) %>%
     # determine if junction is tumor-enriched
     dplyr::mutate(junction_preference = case_when(
@@ -285,14 +282,14 @@ ts_junction_ct_df <- ts_junction_ct_df %>%
     up_bound_annotated == "No" & down_bound_annotated == "No" ~ "Yes",
     TRUE ~ "No"
   )) %>%
-  # filter for novel ss usage junctions in <10% of cohort
-  dplyr::filter(novel_ss_usage == "Yes",
-                n < 250) 
+  # filter for junctions in <10% of cohort
+  dplyr::filter(n < 250) 
 
 # get all ts junctions meeting criteria above
 tesjs_na_ctrl <- pbta_junction_df %>%
   dplyr::filter(junction %in% ts_junction_ct_df$junction) %>%
-  dplyr::mutate(criteria = "No ctrl expr, novel SS usage")
+  dplyr::mutate(criteria = "No ctrl expr, novel SS usage",
+                junction_preference = "Tumor-enriched")
 
 # append above junctions to merged enr jc df 
 merged_enr_jc_df <- merged_enr_jc_df %>%
