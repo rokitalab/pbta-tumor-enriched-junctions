@@ -10,3 +10,6 @@ fi
 
 # identify tumor-enriched junctions
 Rscript --vanilla 02-calculate-tumor-enriched-splicing.R
+
+# uniprot domain annotation
+bash 03-uniprot-domain-annotation.sh
