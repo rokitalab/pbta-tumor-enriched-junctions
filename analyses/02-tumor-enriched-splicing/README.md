@@ -32,7 +32,7 @@ bash run_module.sh
 │   ├── junction-annot.tsv.gz
 │   ├── pbta-merged-norm-junction-cts.qs2
 │   ├── tumor-enriched-oncofetal-splice-junctions.bed
-│   └── tumor-enriched-oncofetal-splice-junctions.tsv
+│   └── tumor-enriched-oncofetal-splice-junctions.tsv.gz
 ├── run_module.sh
 └── util
     └── rmats-processing-functions.R
