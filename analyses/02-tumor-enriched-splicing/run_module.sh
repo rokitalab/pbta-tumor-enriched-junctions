@@ -8,3 +8,5 @@ else
     Rscript 01-get-junction-counts.R
 fi
 
+# identify tumor-enriched junctions
+Rscript --vanilla 02-calculate-tumor-enriched-splicing.R
