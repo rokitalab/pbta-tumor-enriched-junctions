@@ -36,6 +36,7 @@ bash run_module.sh
 │   ├── tumor-enriched-oncofetal-splice-junctions.bed
 │   ├── tumor-enriched-oncofetal-splice-junctions.tsv.gz
 │   ├── tumor-enriched-oncofetal-splice-events-domain-anno.uniq.tsv
+│   ├── tumor-enriched-oncofetal-splice-junctions.tsv.gz
 │   ├── tumor-enriched-oncofetal-splice-junctions-cds.bed
 │   ├── tumor-enriched-oncofetal-splice-junctions.unipLocCytopl.bed
 │   ├── tumor-enriched-oncofetal-splice-junctions.unipLocExtra.bed

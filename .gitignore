@@ -95,6 +95,7 @@ scratch/
 
 # merged TESE file
 analyses/summarize-tumor-enriched-splicing/results/merged-tumor-enriched-splice-events.tsv.gz
+analyses/summarize-tumor-enriched-splicing/results/tumor-enriched-oncofetal-splice-junctions.bed
 
 # survival analyses folder
 analyses/hgg-enriched-splicing/results/survival/
