@@ -13,3 +13,6 @@ Rscript --vanilla 02-calculate-tumor-enriched-splicing.R
 
 # uniprot domain annotation
 bash 03-uniprot-domain-annotation.sh
+
+# pfam domain annotation
+Rscript --vanilla 04-pfam-annotation.R
