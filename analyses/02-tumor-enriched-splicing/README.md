@@ -15,8 +15,8 @@ bash run_module.sh
 * `run_module.sh` shell script to run analysis
 * `01-get-junction-counts.R` extract junction counts from PBTA rMATS and normalize. 
 * `02-calculate-tumor-enriched-splicing.R` identify tumor-enriched junctions by comparing expression in PBTA versus normal control cohorts. 
-* `03-uniprot-domain-annotation.sh` annotate junction to uniprot topological domains. 
-* `04-pfam-annotation.R` annotate junctions to Pfam functional domains. 
+* `03-uniprot-domain-annotation.sh` annotate junctions to uniprot topological domains. To retain junctions resulting in alterations or gains of topological domains, we filter junctions to those that either 1) partially overlap a topological domain interval or 2) are competely within a topological domain interval
+* `04-pfam-annotation.R` annotate junctions to Pfam functional domains. To assess domain gain, domain loss, and/or domain alteration due to tumor-enriched splicing, we retain all junction-domain overlap types for downstream analyses. 
 * `05-domain-expression-filtering.R` merge tumor-enriched splice junction annotations, filter for gene TPM > 10. 
 * `util/rmats-processing-functions.R` scripts containing functions to process raw rMATS data, normal junction and target counts, calculate mean CPMs by subgroups, and generate matrices. 
 
@@ -43,6 +43,7 @@ bash run_module.sh
 │   ├── tumor-enriched-oncofetal-splice-junctions.bed
 │   ├── tumor-enriched-oncofetal-splice-junctions.tsv.gz
 │   ├── tumor-enriched-oncofetal-splice-events-domain-anno.uniq.tsv
+│   ├── tumor-enriched-oncofetal-splice-junctions.tsv.gz
 │   ├── tumor-enriched-oncofetal-splice-junctions-cds.bed
 │   ├── tumor-enriched-oncofetal-splice-junctions.unipLocCytopl.bed
 │   ├── tumor-enriched-oncofetal-splice-junctions.unipLocExtra.bed

@@ -55,9 +55,17 @@ enr_jc_pfam_df <- enr_jc_df %>%
 # calculate junction overlap with domains
 enr_jc_pfam_df <- enr_jc_pfam_df %>%
   # Determine if junction overlaps domain
+  dplyr::mutate(domain_overlap_status = case_when(
+    # domain completely within junction interval
+    domain_start >= up_jc_end & domain_end <= down_jc_start ~ "Domain completely in junction interval",
+    # junction interval completely within domain
+    up_jc_end >= domain_start & down_jc_start <= domain_end ~ "Junction interval completely in domain",
+    # partial overlap b/w junction interval and domain
+    (up_jc_end >= domain_start & up_jc_end <= domain_end) | (down_jc_start >= domain_start & down_jc_start <= domain_end) ~ "Partial overlap",
+    TRUE ~ "No overlap"
+  )) %>%
   dplyr::mutate(junction_overlaps_domain = case_when(
-    # upstream boundary is between domain intervals and/or downstream boundary is between intervals, or domain is completely within junction boundaries
-    (up_jc_end > domain_start & up_jc_end < domain_end) | (down_jc_start > domain_start & down_jc_start < domain_end) | (domain_start > up_jc_end & domain_end < down_jc_start) ~ "Yes",
+    domain_overlap_status != "No overlap" ~ "Yes",
     TRUE ~ "No"
   )) %>%
   # only retain junctions that overlap domains
