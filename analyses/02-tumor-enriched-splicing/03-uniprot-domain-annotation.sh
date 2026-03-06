@@ -18,29 +18,51 @@ output_target_list_filename="${output_dir%.*}/tumor-enriched-oncofetal-splice-ju
 bedtools intersect -wo -a "$input_filename" -b <(zgrep 'CDS.*transcript_type "protein_coding"' ../../data/gencode.v39.primary_assembly.annotation.gtf.gz) | awk '{print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7}' | sort -u > "$output_cds_filename"
 
 ## Run bedtools intersect command against extracellular, transmembrane, and intra-cellular/cytosolic domains to get domain coordinates
-bedtools intersect -wo -a "$output_cds_filename" -b ../../data/unipLocExtra.hg38.col.txt | \
+
+# Get all overlaps
+bedtools intersect -a "$output_cds_filename" -b ../../data/unipLocExtra.hg38.col.txt -wa -wb | \
+# Filter out overlaps where domain is completely within junction interval (and would therefore not be included in any )
+awk '{
+  a_start=$2; a_end=$3;
+  b_start=$9; b_end=$10;
+  if (!(b_start >= a_start && b_end <= a_end)) print
+}' | \
+# define overlap start and end
 awk '{
     overlap_start = ($2 > $9) ? $2 : $9;
     overlap_end = ($3 < $10) ? $3 : $10;
-    sample_id = $5;
     print $0"\t"overlap_start"\t"overlap_end}' > "$output_cds_ec_filename"
 
-bedtools intersect -wo -a "$output_cds_filename" -b ../../data/unipLocTransMemb.hg38.col.txt |\
+# Get all overlaps
+bedtools intersect -a "$output_cds_filename" -b ../../data/unipLocTransMemb.hg38.col.txt -wa -wb | \
+# Filter out overlaps where domain is completely within junction interval
 awk '{
-    overlap_start = ($2 > $8) ? $2 : $9;
-    overlap_end = ($3 < $9) ? $3 : $10;
-    sample_id = $5;
-    print $0"\t"overlap_start"\t"overlap_end }' > "$output_cds_tmem_filename"
+  a_start=$2; a_end=$3;
+  b_start=$9; b_end=$10;
+  if (!(b_start >= a_start && b_end <= a_end)) print
+}' | \
+# define overlap start and end
+awk '{
+    overlap_start = ($2 > $9) ? $2 : $9;
+    overlap_end = ($3 < $10) ? $3 : $10;
+    print $0"\t"overlap_start"\t"overlap_end}' > "$output_cds_tmem_filename"
 
-bedtools intersect -wo -a "$output_cds_filename" -b ../../data/unipLocCytopl.hg38.col.txt |\
+# Get all overlaps
+bedtools intersect -a "$output_cds_filename" -b ../../data/unipLocCytopl.hg38.col.txt -wa -wb | \
+# Filter out overlaps where domain is completely within junction interval
 awk '{
-    overlap_start = ($2 > $8) ? $2 : $9;
-    overlap_end = ($3 < $9) ? $3 : $10;
-    sample_id = $5;
-    print $0"\t"overlap_start"\t"overlap_end }' > "$output_cds_cyto_filename"
+  a_start=$2; a_end=$3;
+  b_start=$9; b_end=$10;
+  if (!(b_start >= a_start && b_end <= a_end)) print
+}' | \
+# define overlap start and end
+awk '{
+    overlap_start = ($2 > $9) ? $2 : $9;
+    overlap_end = ($3 < $10) ? $3 : $10;
+    print $0"\t"overlap_start"\t"overlap_end}' > "$output_cds_cyto_filename"
 
 ## Extract overlapping junctions for each domain type
-echo -e  "junction\tjunction_preference\tcoverage\tdomain_type\toverlap_start\toverlap_end" > "$output_target_list_filename"
-cat "$output_cds_ec_filename" | awk '{print $4"\t"$5"\t"($11/($3-$2))*100"\tEC\t"$12"\t"$13}' | sort -u  >> "$output_target_list_filename"
-cat "$output_cds_tmem_filename" | awk '{print $4"\t"$5"\t"($11/($3-$2))*100"\tTM\t"$12"\t"$13}' | sort -u >> "$output_target_list_filename"
-cat "$output_cds_cyto_filename" | awk '{print $4"\t"$5"\t"($11/($3-$2))*100"\tIC\t"$12"\t"$13}' | sort -u  >> "$output_target_list_filename"
+echo -e  "junction\tjunction_preference\tdomain_type\tdomain_start\tdomain_end\toverlap_start\toverlap_end" > "$output_target_list_filename"
+cat "$output_cds_ec_filename" | awk '{print $4"\t"$5"\tEC\t"$9"\t"$10"\t"$11"\t"$12}' | sort -u  >> "$output_target_list_filename"
+cat "$output_cds_tmem_filename" | awk '{print $4"\t"$5"\tEC\t"$9"\t"$10"\t"$11"\t"$12}' | sort -u >> "$output_target_list_filename"
+cat "$output_cds_cyto_filename" | awk '{print $4"\t"$5"\tEC\t"$9"\t"$10"\t"$11"\t"$12}' | sort -u  >> "$output_target_list_filename"
