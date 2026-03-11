@@ -59,6 +59,7 @@ for (event in names(file_list)){
     dplyr::filter(geneSymbol %in% enr_jc_df$gene_symbol,
                   !is.na(IncLevel1))
   
+  # Order events by coordinates rather than sample IDs
   if (event %in% c("SE", "RI")){
     
     rmats <- rmats %>%

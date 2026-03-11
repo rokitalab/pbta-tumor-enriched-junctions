@@ -1,8 +1,8 @@
-# TESJ differential splicing assessment
+# TEJ differential splicing assessment
 
 Module authors: Ryan Corbett (@rjcorb)
 
-This module extracts splice events associated with identified TESJs in PBTA cohort, and filters TESJs for those associated with differential splicing events. 
+This module extracts splice events associated with identified TEJs in PBTA cohort, and filters TEJs for those associated with differential splicing events. 
 
 ## Usage
 ### script to run analysis
@@ -13,8 +13,8 @@ bash run_module.sh
 
 ## Folder content
 * `run_module.sh` shell script to run analysis
-* `01-get-junction-splice-events.R` extract TESJ-associated splice event PSIs from PBTA rMATS 
-* `02-get-junction-diff-splicing.R` calculate TESJ-associated splice event dPSIs, and filter for TESJs associated with differential splicing
+* `01-get-junction-splice-events.R` extract PBTA splice events associated with TEJs from rMATS files. 
+* `02-get-junction-diff-splicing.R` calculate TESJ-associated splice event dPSIs, and filter for TEJs associated with differential splicing
 
 ## Directory structure
 ```
