@@ -127,7 +127,7 @@ merged_enr_jc_event_df <- event_list[["SE"]] %>%
 # write to output
 qs2::qs_save(merged_enr_jc_event_df,
              file.path(results_dir,
-                       "tumor-enriched-oncofetal-junction-splice-events-test.qs2"))
+                       "tumor-enriched-oncofetal-junction-splice-events.qs2"))
 
 # print session info
 sessionInfo()
