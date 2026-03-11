@@ -17,14 +17,14 @@ define_junctions_targets <- function(df, event_type){
                upstreamES, upstreamEE, downstreamES, downstreamEE,
                strand) %>%
       dplyr::mutate(splice_id = glue::glue("{chr}:{exonStart_0base}-{exonEnd}_{upstreamES}-{upstreamEE}_{downstreamES}-{downstreamEE}_{strand}")) %>%
-      dplyr::mutate(up_incl_jc = glue::glue("{chr}:{upstreamES}-{upstreamEE}_{exonStart_0base}-{exonStart_0base}"),
-                    down_incl_jc = glue::glue("{chr}:{exonStart_0base}-{exonStart_0base}_{downstreamES}-{downstreamEE}"),
+      dplyr::mutate(up_incl_jc = glue::glue("{chr}:{upstreamES}-{upstreamEE}_{exonStart_0base}-{exonEnd}"),
+                    down_incl_jc = glue::glue("{chr}:{exonStart_0base}-{exonEnd}_{downstreamES}-{downstreamEE}"),
                     skip_jc = glue::glue("{chr}:{upstreamES}-{upstreamEE}_{downstreamES}-{downstreamEE}"))
     
     # join junction and splice event intervals to full df
     reformatted_df <- reformatted_df %>%
       left_join(event_key) %>%
-      # fiter of tumor-enriched splice junctions
+      # filter of tumor-enriched splice junctions
       dplyr::filter(up_incl_jc %in% enr_jc_df$junction | down_incl_jc %in% enr_jc_df$junction | skip_jc %in% enr_jc_df$junction) %>%
       # retain sample, gene, coordinates, and count columns
       dplyr::select(sample_id, geneSymbol, up_incl_jc,
