@@ -215,7 +215,9 @@ enr_jcs_annotated_filtered_df <- read_tsv(enr_jcs_annotated_file) %>%
   dplyr::mutate(id = glue::glue("{sample_id}-{junction}")) %>%
   dplyr::filter(id %in% merged_resolved_df$id) %>%
   left_join(merged_resolved_df %>%
-              dplyr::select(id, event_type_sample, consensus_jc_event_type))
+              dplyr::select(id, event_type_sample, consensus_jc_event_type)) %>%
+  # rename sample_id col to BS_ID for downstream analyses
+  dplyr::rename(Kids_First_Biospecimen_ID = sample_id)
 
 # write to output
 qs2::qs_save(enr_jcs_annotated_filtered_df,
