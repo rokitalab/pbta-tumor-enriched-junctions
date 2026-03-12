@@ -20,6 +20,10 @@ data_dir <- file.path(root_dir, "data")
 analysis_dir <- file.path(root_dir, "analyses", "03-tesj-differential-splicing")
 results_dir <- file.path(analysis_dir, "results")
 
+if (!dir.exists(results_dir)) {
+  dir.create(results_dir)
+}
+
 source(file.path(analysis_dir, "util", "rmats-processing-functions.R"))
 
 # Set file paths
@@ -123,7 +127,7 @@ merged_enr_jc_event_df <- event_list[["SE"]] %>%
 # write to output
 qs2::qs_save(merged_enr_jc_event_df,
              file.path(results_dir,
-                       "tumor-enriched-oncofetal-junction-splice-events-test.qs2"))
+                       "tumor-enriched-oncofetal-junction-splice-events.qs2"))
 
 # print session info
 sessionInfo()
