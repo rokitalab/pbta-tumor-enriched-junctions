@@ -66,7 +66,7 @@ Diffuse astrocytic and oligodendroglial tumor	Diffuse hemispheric glioma	High-gr
 Diffuse astrocytic and oligodendroglial tumor	Infant-type hemispheric glioma	High-grade glioma	Other high-grade glioma	#ffccf5	Other HGG	#ffccf5	3	High-grade glioma
 Diffuse astrocytic and oligodendroglial tumor	Oligodendroglioma	Oligodendroglioma	Oligodendroglioma	tan	Oligodendroglioma	tan	1	Oligodendroglioma
 Benign tumor	Cavernoma	Other tumor	Other tumor	#b5b5b5	Other tumor	#b5b5b5	13	Other tumor
-Embryonal tumor	Ganglioneuroblastoma	Other CNS embryonal tumor	#220040	Other ET	#b08ccf	5	Embryonal tumor
+Embryonal tumor	Ganglioneuroblastoma	Other embryonal tumor	Other CNS embryonal tumor	#220040	Other ET	#b08ccf	5	Embryonal tumor
 Embryonal tumor	Ganglioneuroma	Other embryonal tumor	Other tumor	#8B008B	Other tumor	#b5b5b5	13	Other tumor
 Embryonal tumor	Neuroblastoma	Other embryonal tumor	Other CNS embryonal tumor	#220040	Other ET	#b08ccf	5	Embryonal tumor
 Epstein-Barr virus-related tumor	Epstein-Barr virus-related tumor	Other tumor	Other tumor	#b5b5b5	Other tumor	#b5b5b5	13	Other tumor
@@ -78,7 +78,7 @@ Melanocytic tumor	Melanocytic tumor	Other tumor	Other tumor	#b5b5b5	Other tumor	
 Metastatic tumors	Metastatic secondary tumors	Other tumor	Other tumor	#b5b5b5	Metastasis	#b5b5b5	13	Other tumor
 Non-CNS tumor	Myxoid spindle cell tumor	Other tumor	Other tumor	#b5b5b5	Other tumor	#b5b5b5	13	Other tumor
 Other tumor	Other tumor	Other tumor	Other tumor	#b5b5b5	Other tumor	#b5b5b5	13	Other tumor
-Tumor of pineal region	Pineoblastoma	Other CNS embryonal tumor	#220040	Other ET	#b08ccf	5	Embryonal tumor
+Tumor of pineal region	Pineoblastoma	Other embryonal tumor	Other CNS embryonal tumor	#220040	Other ET	#b08ccf	5	Embryonal tumor
 Tumor of cranial and paraspinal nerves	Schwannoma	Tumor of cranial and paraspinal nerves	Schwannoma	#ffaa00	Schwannoma	#ab7200	10	NF or peripheral nerve tumor
 Tumor of cranial and paraspinal nerves	Malignant peripheral nerve sheath tumor	Tumor of cranial and paraspinal nerves	Other tumor	#b5b5b5	Other tumor	#b5b5b5	13	Other tumor
 Diffuse astrocytic and oligodendroglial tumor	Astroblastoma	NA	Other tumor	#b5b5b5	Other tumor	#b5b5b5	13	Other tumor
