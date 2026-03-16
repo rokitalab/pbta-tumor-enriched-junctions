@@ -120,6 +120,10 @@ cohort_hist <- hist %>%
     is.na(plot_group_hex) ~ "#b5b5b5",
     TRUE ~ plot_group_hex
   )) %>%
+  dplyr::mutate(plot_group = case_when(
+    Kids_First_Biospecimen_ID == "BS_N7VQ1GQB" ~ "Low-grade glioma",
+    TRUE ~ plot_group
+  )) %>%
   # add missing age dx for following patients
   mutate(age_at_diagnosis_days = case_when(Kids_First_Participant_ID == "PT_AEDWCP8Z" ~
                                              as.integer(365.25*17),
