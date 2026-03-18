@@ -18,7 +18,7 @@ bash run_module.sh
 ## Input files
 * `plot-mapping.tsv` curated cancer groups for plotting based on `broad_histology` and `cancer_group` field values. 
 * `somalier-ancestry-prediction-superpopulation.tsv` somalier genetic ancestry predicition results with BS_IDs appended. From [germline-preprocessing repo](https://github.com/rokitalab/germline-preprocessing/blob/f1fdeced5ad59a29bc0dc88fcba4f4366ab7fa8e/analyses/collapse-tumor-histologies/results/somalier-ancestry-prediction-superpopulation.tsv)
-* `openpedcan_histologies_20250924.csv` opc histologies warehouse pull dated Sep 24 2025
+* `openpedcan_histologies_0311.csv` opc histologies warehouse pull dated Mar 11 2026
 
 ## Directory structure
 ```
