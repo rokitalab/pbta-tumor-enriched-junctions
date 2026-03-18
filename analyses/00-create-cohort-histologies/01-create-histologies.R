@@ -36,7 +36,7 @@ ancestry_file <- file.path(input_dir,
                            "somalier-ancestry-prediction-superpopulation.tsv")
 
 survival_file <- file.path(input_dir,
-                           "openpedcan_histologies_20250924.csv")
+                           "openpedcan_histologies0311.csv")
 
 # Wrangle data 
 
@@ -94,15 +94,6 @@ cohort_hist <- hist %>%
                 reported_gender,
                 germline_sex_estimate,
                 cancer_predispositions) %>%
-  # update PNOC and mioncoseq DIPGs
-  mutate(cancer_group = case_when(pathology_diagnosis == "Brainstem glioma- Diffuse intrinsic pontine glioma" & 
-                                    sub_cohort %in% c("PNOC", "Mioncoseq") &
-                                    !grepl("IDH", molecular_subtype) &
-                                    cancer_group == "High-grade glioma" ~ "Diffuse intrinsic pontine glioma", 
-                                  TRUE ~ cancer_group)) %>%
-  mutate(molecular_subtype = case_when(cancer_group == "Diffuse intrinsic pontine glioma" ~ 
-                                         gsub("HGG", "DIPG", molecular_subtype),
-                                       TRUE ~ molecular_subtype)) %>%
   # add plot group & hex codes
   left_join(plot_mapping_df %>%
               dplyr::select(broad_histology,
@@ -123,6 +114,10 @@ cohort_hist <- hist %>%
   dplyr::mutate(plot_group = case_when(
     Kids_First_Biospecimen_ID == "BS_N7VQ1GQB" ~ "Low-grade glioma",
     TRUE ~ plot_group
+  )) %>%
+  dplyr::mutate(molecular_subtype = case_when(
+    Kids_First_Biospecimen_ID == "BS_N7VQ1GQB" ~ "LGG, KIAA1549-BRAF",
+    TRUE ~ molecular_subtype
   )) %>%
   # add missing age dx for following patients
   mutate(age_at_diagnosis_days = case_when(Kids_First_Participant_ID == "PT_AEDWCP8Z" ~
