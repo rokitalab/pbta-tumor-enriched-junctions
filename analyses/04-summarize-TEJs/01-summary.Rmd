@@ -185,6 +185,8 @@ ggsave(file.path(plot_dir,
                  "tej-n-by-hist-barplot.pdf"),
        tej_n_barplot,
        width = 7, height = 6)
+
+tej_n_barplot
 ```
 
 Plot number of total TEJs by sample and histology
@@ -224,6 +226,8 @@ ggsave(file.path(plot_dir,
                  "total-tej-n-by-sample-hist.pdf"),
        total_tej_n_plot,
        width = 5, height = 6)
+
+total_tej_n_plot
 ```
 
 Plot number of recurrent TEJs by sample and histology
@@ -258,6 +262,8 @@ ggsave(file.path(plot_dir,
                  "recurrent-tej-n-by-sample-hist.pdf"),
        recurrent_tej_n_plot,
        width = 4.5, height = 6)
+
+recurrent_tej_n_plot
 ```
 
 
@@ -311,6 +317,8 @@ ggsave(file.path(plot_dir,
                  "tejs-by-event-type-hist-barplot.pdf"),
        event_type_freq_barplot,
        width = 6, height = 6)
+
+event_type_freq_barplot
 ```
 
 Plot frequency of splice events by specificity (tumor-specific vs. onco-fetal)
@@ -347,6 +355,8 @@ tej_spec_barplot <- hist_tej_spec_ct %>%
 ggsave(file.path(plot_dir,
                  "tej-by-specificity-hist-barplot.pdf"),
        width = 7, height = 6)
+
+tej_spec_barplot
 ```
 
 Save recurrent splice event df to output
