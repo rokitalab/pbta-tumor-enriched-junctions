@@ -141,7 +141,7 @@ system.time({
 })
 ```
 
-Join annotation to full and recurrent TEJ data frames
+Join annotation to recurrent TEJ data frame
 
 ```{r}
 tej_df <- tej_df %>%
