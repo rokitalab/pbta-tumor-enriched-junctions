@@ -365,6 +365,7 @@ tej_spec_barplot <- hist_tej_spec_ct %>%
                                         as.character(hist_order))) %>%
   ggplot(aes(y = plot_group, x = n_norm, fill = consensus_specificity)) +
   geom_bar(stat = "identity", color = "black", show.legend = TRUE) + 
+  scale_fill_npg() +
   theme_Publication() +
   labs(x = "Proportion TEJs",
      y = NULL,
