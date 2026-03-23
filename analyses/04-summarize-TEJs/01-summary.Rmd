@@ -1,0 +1,393 @@
+---
+title: "Summarize tumor-enriched splicing"
+output: 
+  html_notebook:
+    toc: TRUE
+    toc_float: TRUE
+author: Ryan Corbett
+date: 2025
+params:
+  plot_ci: TRUE
+---
+
+This scripts identifies recurrent tumor-enriched junctions in primary PBTA tumors and generates summary plots by sample and tumor histology
+
+Load required packages
+
+```{r}
+suppressPackageStartupMessages({
+  library(qs2)
+  library(tidyverse)
+  library(data.table)
+  library(rprojroot)
+  library(R.utils)
+  library(ggsci)
+  library(ggforce)
+  library(ggpubr)
+})
+```
+
+Set directory paths
+
+```{r}
+root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
+data_dir <- file.path(root_dir, "data")
+analysis_dir <- file.path(root_dir, "analyses", "04-summarize-TEJs")
+input_dir <- file.path(analysis_dir, "input")
+results_dir <- file.path(analysis_dir, "results")
+plot_dir <- file.path(analysis_dir, "plots")
+if (!dir.exists(results_dir)) {
+  dir.create(results_dir)
+}
+
+source(file.path(root_dir, "figures", "theme_for_plots.R"))
+```
+
+Set file paths
+
+```{r}
+tej_file <- file.path(root_dir, "analyses",
+                                  "03-tesj-differential-splicing",
+                                  "results",
+                                  "tumor-enriched-oncofetal-diff-splice-junctions.qs2")
+
+hist_file <- file.path(root_dir, "analyses",
+                       "00-create-cohort-histologies",
+                       "results",
+                       "cohort-histologies.tsv")
+```
+
+Wrangle data
+
+```{r}
+tej_df <- qs2::qs_read(tej_file)
+
+hist <- read_tsv(hist_file)
+```
+
+Filter TEJ df for samples in cohort hist, and append relevant metadata
+
+```{r}
+tej_df <- tej_df %>%
+  dplyr::filter(Kids_First_Biospecimen_ID %in% hist$Kids_First_Biospecimen_ID) %>%
+  left_join(hist %>% 
+              dplyr::select(Kids_First_Biospecimen_ID,
+                            sample_type,
+                            tumor_descriptor,
+                            composition,
+                            molecular_subtype,
+                            RNA_library,
+                            plot_group,
+                            plot_group_hex),
+            by = "Kids_First_Biospecimen_ID")
+```
+
+Filter TEJs for those in primary independent specimens
+
+```{r}
+primary_independent_specimens <- hist %>%
+  dplyr::filter(is_independent_primary == "Yes") %>%
+  pull(Kids_First_Biospecimen_ID)
+
+primary_tej_df <- tej_df %>%
+  dplyr::filter(Kids_First_Biospecimen_ID %in% primary_independent_specimens)
+```
+
+Identify most recurrent exon-exon junction for each TEJ boundary (prioritizing those that are most recurrent in primary tumors), and filter full and primary df for these TEJs
+
+```{r}
+# get most recurrent exon-exon jc for boundaries in primary tumors
+top_primary_bounds <- primary_tej_df %>%
+  # count TEJ N per boundary
+  dplyr::count(boundary, junction) %>%
+  # arrange in descending n order
+  arrange(desc(n)) %>%
+  # keep most prevalent TEJ per boundary
+  distinct(boundary, .keep_all = TRUE) %>%
+  pull(junction)
+
+# for TEJs in non-primary tumors only, get most recurrent exon-exon jc
+top_other_bounds <- tej_df %>%
+  dplyr::filter(!boundary %in% primary_tej_df$boundary) %>%
+  # count TEJ N per boundary
+  dplyr::count(boundary, junction) %>%
+  # arrange in descending n order
+  arrange(desc(n)) %>%
+  # keep most prevalent TEJ per boundary
+  distinct(boundary, .keep_all = TRUE) %>%
+  pull(junction)
+
+# filter TEJ df
+tej_df <- tej_df %>%
+  dplyr::filter(junction %in% c(top_primary_bounds,
+                                top_other_bounds)) 
+
+# save to output
+write_tsv(tej_df,
+          file.path(results_dir,
+                    "tumor-enriched-oncofetal-splice-junctions-cohort-filtered.tsv.gz"))
+
+primary_tej_df <- primary_tej_df %>%
+  dplyr::filter(junction %in% c(top_primary_bounds,
+                                top_other_bounds)) 
+```
+
+
+Filter for recurrent events (i.e., event observed in >10% of tumor histologies)
+
+```{r}
+# Get number of patients per histology
+n_per_hist <- primary_tej_df %>%
+  distinct(Kids_First_Biospecimen_ID, .keep_all = TRUE) %>%
+  count(plot_group) %>%
+  dplyr::rename(n_hist = n)
+
+# obtain frequency of splice events by hist
+n_per_hist_jc <- primary_tej_df %>%
+  count(plot_group, junction) %>%
+  dplyr::rename(n_hist_jc = n) %>%
+  left_join(n_per_hist) %>%
+  dplyr::mutate(freq = n_hist_jc/n_hist * 100) %>%
+  # filter for events in >5% of samples in histology
+  dplyr::filter(freq >= 5 & n_hist_jc >= 3)
+
+# retain only recurrent events
+recurrent_primary_tej_df <- primary_tej_df %>%
+  dplyr::filter(glue::glue("{plot_group}-{junction}") %in% glue::glue("{n_per_hist_jc$plot_group}-{n_per_hist_jc$junction}"))
+```
+
+Plot total and recurrent tej n by histology
+
+```{r}
+total_tej_hist_n <- primary_tej_df %>%
+  distinct(plot_group, junction) %>%
+  dplyr::count(plot_group) %>%
+  dplyr::rename(total_tej_n = n)
+
+recurrent_tej_hist_n <- recurrent_primary_tej_df %>%
+  distinct(plot_group, junction) %>%
+  dplyr::count(plot_group) %>%
+  dplyr::rename(recurrent_tej_n = n) %>%
+  dplyr::arrange(recurrent_tej_n)
+
+# order based on N recurrent events
+hist_order <- recurrent_tej_hist_n$plot_group
+
+tej_n_plot_df <- total_tej_hist_n %>%
+  left_join(recurrent_tej_hist_n) %>%
+  dplyr::mutate(nonrecurrent_tej_n = total_tej_n - recurrent_tej_n) %>%
+  dplyr::select(-total_tej_n) %>%
+  pivot_longer(-plot_group,
+               names_to = "tej_group",
+               values_to = "n") %>%
+  dplyr::mutate(tej_group = case_when(
+    tej_group == "recurrent_tej_n" ~ "Recurrent",
+    tej_group == "nonrecurrent_tej_n" ~ "Non-recurrent"
+  )) %>%
+  dplyr::mutate(plot_group = fct_relevel(plot_group,
+                                         hist_order)) %>%
+  dplyr::arrange(plot_group)
+
+# generate plot
+tej_n_barplot <- tej_n_plot_df %>%
+  ggplot(aes(y = factor(plot_group), x = n, fill = tej_group)) +
+  geom_bar(stat = "identity", color = "black", show.legend = TRUE) + 
+  scale_fill_npg() +
+  theme_Publication() +
+  labs(x = "N TEJs",
+     y = NULL,
+     fill = NULL)
+
+# save to output
+ggsave(file.path(plot_dir,
+                 "tej-n-by-hist-barplot.pdf"),
+       tej_n_barplot,
+       width = 7, height = 6)
+
+tej_n_barplot
+```
+
+Plot number of total TEJs by sample and histology
+
+```{r}
+# obtain number of events by sample
+hist_tej_ct <- primary_tej_df %>%
+  count(plot_group, Kids_First_Biospecimen_ID) %>%
+  dplyr::rename(tej_n = n) %>%
+  dplyr::mutate(plot_group = fct_relevel(plot_group,
+                                        unique(plot_group)))
+
+# define plot group palette
+plotgroup_palette <- unique(hist$plot_group_hex)
+names(plotgroup_palette) <- unique(hist$plot_group)
+plotgroup_palette <- plotgroup_palette[!is.na(names(plotgroup_palette))]
+
+plotgroup_palette["Non-neoplastic tumor"] <- "black"
+
+total_tej_n_plot <- hist_tej_ct %>%
+  dplyr::mutate(plot_group = fct_relevel(plot_group,
+                                        as.character(hist_order))) %>%
+  
+  ggplot(aes(y = plot_group, x = tej_n)) +
+  geom_sina(aes(color = plot_group), shape = 20, 
+              width = 0.1, size = 2, alpha = 0.5,
+              show.legend = FALSE) +
+    geom_boxplot(fill = NA, alpha = 0.3, size = 0.4, outlier.shape = NA,
+               show.legend = FALSE) +
+  scale_color_manual(values = plotgroup_palette, 
+                     breaks = sort(names(plotgroup_palette))) +
+  theme_Publication() +
+  labs(x = "N TEJs/sample",
+     y = NULL)
+
+ggsave(file.path(plot_dir,
+                 "total-tej-n-by-sample-hist.pdf"),
+       total_tej_n_plot,
+       width = 5, height = 6)
+
+total_tej_n_plot
+```
+
+Plot number of recurrent TEJs by sample and histology
+
+```{r}
+set.seed(2025)
+# obtain number of events by sample
+histology_jc_ct <- recurrent_primary_tej_df %>%
+  count(plot_group, Kids_First_Biospecimen_ID) %>%
+  dplyr::rename(jc_n = n) %>%
+  dplyr::mutate(plot_group = fct_relevel(plot_group,
+                                        unique(plot_group)))
+
+recurrent_tej_n_plot <- histology_jc_ct %>%
+  dplyr::mutate(plot_group = fct_relevel(plot_group,
+                                        as.character(hist_order))) %>%
+  
+  ggplot(aes(y = plot_group, x = jc_n)) +
+  geom_sina(aes(color = plot_group), shape = 20, 
+              width = 0.1, size = 2, alpha = 0.5,
+              show.legend = FALSE) +
+    geom_boxplot(fill = NA, alpha = 0.3, size = 0.4, outlier.shape = NA,
+               show.legend = FALSE) +
+  scale_color_manual(values = plotgroup_palette, 
+                     breaks = sort(names(plotgroup_palette))) +
+  xlim(c(0, 1300)) +
+  theme_Publication() +
+  labs(x = "N recurrent TEJs",
+     y = NULL)
+
+ggsave(file.path(plot_dir,
+                 "recurrent-tej-n-by-sample-hist.pdf"),
+       recurrent_tej_n_plot,
+       width = 4.5, height = 6)
+
+recurrent_tej_n_plot
+```
+
+
+Plot distribution of TEJ splice event types by histology
+
+```{r}
+recurrent_primary_tej_df <- recurrent_primary_tej_df %>%
+  dplyr::mutate(preference_code = case_when(
+    consensus_jc_event_type == "exon skipping" ~ "ES",
+    consensus_jc_event_type == "exon inclusion" ~ "EI",
+    consensus_jc_event_type == "intron retention" ~ "RI",
+    consensus_jc_event_type == "A3SS+" ~ "A3+",
+    consensus_jc_event_type == "A3SS-" ~ "A3-",
+    consensus_jc_event_type == "A5SS+" ~ "A5+",
+    consensus_jc_event_type == "A5SS-" ~ "A5-"
+  ))
+
+# define tumor preference palette
+preference_palette <- c("EI" = "#56B4E9",
+                        "ES" = "#0072B2",
+                        "RI" = "#009E73",
+                        "A3-" = "#E69F00",
+                        "A3+" = "#F0E442",
+                        "A5-" = "#D55E00",
+                        "A5+" = "#CC79A7")
+
+unique_hist_event_ct <- recurrent_primary_tej_df %>%
+  distinct(plot_group, junction) %>%
+  dplyr::count(plot_group) %>%
+  dplyr::rename(hist_event_n = n)
+
+hist_event_type_ct <- recurrent_primary_tej_df %>%
+  distinct(junction, plot_group, .keep_all = TRUE) %>%
+  dplyr::count(plot_group, preference_code) %>%
+  left_join(unique_hist_event_ct) %>%
+  dplyr::mutate(n_norm = n/hist_event_n)
+
+event_type_freq_barplot <- hist_event_type_ct %>%
+  dplyr::mutate(plot_group = fct_relevel(plot_group,
+                                        as.character(hist_order))) %>%
+  ggplot(aes(y = plot_group, x = n_norm, fill = preference_code)) +
+  geom_bar(stat = "identity", color = "black", show.legend = TRUE) + 
+  scale_fill_manual(values = preference_palette, 
+                     breaks = sort(names(preference_palette))) +
+  theme_Publication() +
+  labs(x = "Proportion TEJs",
+     y = NULL,
+     fill = NULL)
+
+ggsave(file.path(plot_dir,
+                 "tejs-by-event-type-hist-barplot.pdf"),
+       event_type_freq_barplot,
+       width = 6, height = 6)
+
+event_type_freq_barplot
+```
+
+Plot frequency of splice events by specificity (tumor-specific vs. onco-fetal)
+
+```{r}
+# pull all junctions annotated as oncofetal
+of_tejs <- recurrent_primary_tej_df %>%
+  dplyr::filter(junction_preference == "Oncofetal") %>%
+  pull(junction)
+
+# define consensus specificity; if no oncofetal assignment, assign as tumor-specific 
+recurrent_primary_tej_df <- recurrent_primary_tej_df %>%
+  dplyr::mutate(consensus_specificity = case_when(
+    junction %in% of_tejs ~ "Oncofetal",
+    TRUE ~ "Tumor-specific"
+  ))
+
+hist_tej_spec_ct <- recurrent_primary_tej_df %>%
+  distinct(junction, plot_group, .keep_all = TRUE) %>%
+  count(plot_group, consensus_specificity) %>%
+  left_join(unique_hist_event_ct) %>%
+  dplyr::mutate(n_norm = n/hist_event_n)
+
+tej_spec_barplot <- hist_tej_spec_ct %>%
+  dplyr::mutate(plot_group = fct_relevel(plot_group,
+                                        as.character(hist_order))) %>%
+  ggplot(aes(y = plot_group, x = n_norm, fill = consensus_specificity)) +
+  geom_bar(stat = "identity", color = "black", show.legend = TRUE) + 
+  scale_fill_npg() +
+  theme_Publication() +
+  labs(x = "Proportion TEJs",
+     y = NULL,
+     fill = NULL)
+
+ggsave(file.path(plot_dir,
+                 "tej-by-specificity-hist-barplot.pdf"),
+       width = 7, height = 6)
+
+tej_spec_barplot
+```
+
+Save recurrent splice event df to output
+
+```{r}
+write_tsv(recurrent_primary_tej_df,
+          file.path(results_dir,
+          "recurrent-primary-tumor-enriched-oncofetal-splice-junctions.tsv.gz"))
+```
+
+Print session info
+
+```{r}
+sessionInfo()
+```
