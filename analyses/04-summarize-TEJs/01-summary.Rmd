@@ -82,28 +82,6 @@ tej_df <- tej_df %>%
             by = "Kids_First_Biospecimen_ID")
 ```
 
-Identify most recurrent exon-exon junction for each TEJ boundary, and filter full df for these TEJs
-
-```{r}
-top_bounds <- tej_df %>%
-  # count TEJ N per boundary
-  dplyr::count(boundary, junction) %>%
-  # arrange in descending n order
-  arrange(desc(n)) %>%
-  # keep most prevalent TEJ per boundary
-  distinct(boundary, .keep_all = TRUE) %>%
-  pull(junction)
-
-# filter TEJ df
-tej_df <- tej_df %>%
-  dplyr::filter(junction %in% top_bounds) 
-
-# save to output
-write_tsv(tej_df,
-          file.path(results_dir,
-                    "tumor-enriched-oncofetal-splice-junctions-cohort-filtered.tsv.gz"))
-```
-
 Filter TEJs for those in primary independent specimens
 
 ```{r}
@@ -114,6 +92,46 @@ primary_independent_specimens <- hist %>%
 primary_tej_df <- tej_df %>%
   dplyr::filter(Kids_First_Biospecimen_ID %in% primary_independent_specimens)
 ```
+
+Identify most recurrent exon-exon junction for each TEJ boundary (prioritizing those that are most recurrent in primary tumors), and filter full and primary df for these TEJs
+
+```{r}
+# get most recurrent exon-exon jc for boundaries in primary tumors
+top_primary_bounds <- primary_tej_df %>%
+  # count TEJ N per boundary
+  dplyr::count(boundary, junction) %>%
+  # arrange in descending n order
+  arrange(desc(n)) %>%
+  # keep most prevalent TEJ per boundary
+  distinct(boundary, .keep_all = TRUE) %>%
+  pull(junction)
+
+# for TEJs in non-primary tumors only, get most recurrent exon-exon jc
+top_other_bounds <- tej_df %>%
+  dplyr::filter(!boundary %in% primary_tej_df$boundary) %>%
+  # count TEJ N per boundary
+  dplyr::count(boundary, junction) %>%
+  # arrange in descending n order
+  arrange(desc(n)) %>%
+  # keep most prevalent TEJ per boundary
+  distinct(boundary, .keep_all = TRUE) %>%
+  pull(junction)
+
+# filter TEJ df
+tej_df <- tej_df %>%
+  dplyr::filter(junction %in% c(top_primary_bounds,
+                                top_other_bounds)) 
+
+# save to output
+write_tsv(tej_df,
+          file.path(results_dir,
+                    "tumor-enriched-oncofetal-splice-junctions-cohort-filtered.tsv.gz"))
+
+primary_tej_df <- primary_tej_df %>%
+  dplyr::filter(junction %in% c(top_primary_bounds,
+                                top_other_bounds)) 
+```
+
 
 Filter for recurrent events (i.e., event observed in >10% of tumor histologies)
 
@@ -185,6 +203,8 @@ ggsave(file.path(plot_dir,
                  "tej-n-by-hist-barplot.pdf"),
        tej_n_barplot,
        width = 7, height = 6)
+
+tej_n_barplot
 ```
 
 Plot number of total TEJs by sample and histology
@@ -224,6 +244,8 @@ ggsave(file.path(plot_dir,
                  "total-tej-n-by-sample-hist.pdf"),
        total_tej_n_plot,
        width = 5, height = 6)
+
+total_tej_n_plot
 ```
 
 Plot number of recurrent TEJs by sample and histology
@@ -258,6 +280,8 @@ ggsave(file.path(plot_dir,
                  "recurrent-tej-n-by-sample-hist.pdf"),
        recurrent_tej_n_plot,
        width = 4.5, height = 6)
+
+recurrent_tej_n_plot
 ```
 
 
@@ -311,6 +335,8 @@ ggsave(file.path(plot_dir,
                  "tejs-by-event-type-hist-barplot.pdf"),
        event_type_freq_barplot,
        width = 6, height = 6)
+
+event_type_freq_barplot
 ```
 
 Plot frequency of splice events by specificity (tumor-specific vs. onco-fetal)
@@ -339,6 +365,7 @@ tej_spec_barplot <- hist_tej_spec_ct %>%
                                         as.character(hist_order))) %>%
   ggplot(aes(y = plot_group, x = n_norm, fill = consensus_specificity)) +
   geom_bar(stat = "identity", color = "black", show.legend = TRUE) + 
+  scale_fill_npg() +
   theme_Publication() +
   labs(x = "Proportion TEJs",
      y = NULL,
@@ -347,6 +374,8 @@ tej_spec_barplot <- hist_tej_spec_ct %>%
 ggsave(file.path(plot_dir,
                  "tej-by-specificity-hist-barplot.pdf"),
        width = 7, height = 6)
+
+tej_spec_barplot
 ```
 
 Save recurrent splice event df to output

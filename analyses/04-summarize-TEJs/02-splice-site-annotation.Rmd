@@ -45,9 +45,6 @@ Set file paths
 
 ```{r}
 tej_file <- file.path(results_dir,
-                       "tumor-enriched-oncofetal-splice-junctions-cohort-filtered.tsv.gz")
-
-recurrent_tej_file <- file.path(results_dir,
                        "recurrent-primary-tumor-enriched-oncofetal-splice-junctions.tsv.gz")
 
 gtf_file <- file.path(data_dir,
@@ -59,27 +56,10 @@ Wrangle data
 ```{r}
 tej_df <- read_tsv(tej_file)
 
-recurrent_tej_df <- read_tsv(recurrent_tej_file)
-
 gtf <- rtracklayer::import(gtf_file)
 
 gtf_df <- as.data.frame(gtf) %>%
   dplyr::filter(type == "exon") 
-```
-
-Define preference codes in the full TEJ file
-
-```{r}
-tej_df <- tej_df %>%
-  dplyr::mutate(preference_code = case_when(
-    consensus_jc_event_type == "exon skipping" ~ "ES",
-    consensus_jc_event_type == "exon inclusion" ~ "EI",
-    consensus_jc_event_type == "intron retention" ~ "RI",
-    consensus_jc_event_type == "A3SS+" ~ "A3+",
-    consensus_jc_event_type == "A3SS-" ~ "A3-",
-    consensus_jc_event_type == "A5SS+" ~ "A5+",
-    consensus_jc_event_type == "A5SS-" ~ "A5-"
-  ))
 ```
 
 Determine if TEJ exons map to GTF-annotated exons
@@ -131,7 +111,7 @@ Run `annotate_junctions()` function to annotate junctions to transcripts, exons,
 ```{r}
 # Subset gtf to make for easier filtering within function
 gtf_sub_df <- gtf_df %>%
-  dplyr::filter(start %in% tej_annot_df$down_exon_start | end %in% tej_annot_df$up_exon_end)
+  dplyr::filter(start %in% tej_annot_df$down_jc_start | end %in% tej_annot_df$up_jc_end)
 
 # run annotation
 system.time({
@@ -161,20 +141,19 @@ system.time({
 })
 ```
 
-Join annotation to full and recurrent TEJ data frames
+Join annotation to recurrent TEJ data frame
 
 ```{r}
 tej_df <- tej_df %>%
   left_join(tej_annot_df %>%
               dplyr::select(junction,
                             novel_ss,
-                            junction_name))
-
-recurrent_tej_df <- recurrent_tej_df %>%
-  left_join(tej_annot_df %>%
-              dplyr::select(junction,
-                            novel_ss,
-                            junction_name))
+                            junction_name)) %>%
+  dplyr::mutate(status = case_when(
+    grepl("novel", junction_name) ~ "Novel splice site",
+    !grepl(":exon|, intron|:intron", junction_name) ~ "Novel junction",
+    TRUE ~ "Annotated junction"
+  ))
 ```
 
 Plot novel splice site usage frequency among tejs by histology
@@ -187,7 +166,7 @@ unique_hist_tej_ct <- tej_df %>%
 
 hist_tej_novelss_ct <- tej_df %>%
   distinct(junction, plot_group, .keep_all = TRUE) %>%
-  dplyr::count(plot_group, novel_ss) %>%
+  dplyr::count(plot_group, status) %>%
   left_join(unique_hist_tej_ct) %>%
   dplyr::mutate(n_norm = n/hist_tej_n)
 
@@ -205,28 +184,24 @@ hist_order <- c("Oligodendroglioma", "Neurofibroma plexiform",
 novelss_freq_barplot <- hist_tej_novelss_ct %>%
   dplyr::mutate(plot_group = fct_relevel(plot_group,
                                         as.character(hist_order))) %>%
-  ggplot(aes(y = plot_group, x = n_norm, fill = novel_ss)) +
+  ggplot(aes(y = plot_group, x = n_norm, fill = status)) +
   geom_bar(stat = "identity", color = "black", show.legend = TRUE) + 
   scale_fill_npg() +
   theme_Publication() +
   labs(x = "Proportion TEJs",
      y = NULL,
-     fill = "Novel SS Usage")
+     fill = "Junction annotation")
 
 ggsave(file.path(plot_dir,
-                 "tejs-by-novelss-hist-barplot.pdf"),
+                 "tejs-by-junction-status-hist-barplot.pdf"),
        novelss_freq_barplot,
-       width = 7, height = 6)
+       width = 8, height = 6)
 ```
 
 Write annotation results to output
 
 ```{r}
 write_tsv(tej_df,
-          file.path(results_dir,
-                    "all-tumor-enriched-oncofetal-splice-junctions-annotated.tsv.gz"))
-
-write_tsv(recurrent_tej_df,
           file.path(results_dir,
                     "recurrent-primary-tumor-enriched-oncofetal-splice-junctions-annotated.tsv.gz"))
 ```
