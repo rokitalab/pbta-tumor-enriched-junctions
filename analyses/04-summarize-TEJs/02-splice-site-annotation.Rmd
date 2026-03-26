@@ -182,6 +182,7 @@ hist_order <- c("Oligodendroglioma", "Neurofibroma plexiform",
 
 # generate plot
 novelss_freq_barplot <- hist_tej_novelss_ct %>%
+  dplyr::filter(status != "Annotated junction") %>%
   dplyr::mutate(plot_group = fct_relevel(plot_group,
                                         as.character(hist_order))) %>%
   ggplot(aes(y = plot_group, x = n_norm, fill = status)) +
