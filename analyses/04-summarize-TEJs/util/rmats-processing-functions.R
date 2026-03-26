@@ -366,7 +366,7 @@ generate_norm_junction_mat <- function(junction_df,
   
   # in rare cases where junctions are duplicated, calculate median junction counts
   junction_df <- junction_df[
-    , .(junction_count = median(junction_ct)),
+    , .(junction_count = max(junction_ct)),
     by = .(sample_id, geneSymbol, junction)
   ]
   
