@@ -49,7 +49,7 @@ Set file paths
 tej_file <- file.path(root_dir, "analyses",
                                   "03-tesj-differential-splicing",
                                   "results",
-                                  "tumor-enriched-oncofetal-diff-splice-junctions.qs2")
+                                  "tumor-enriched-oncofetal-diff-splice-junctions-test.qs2")
 
 hist_file <- file.path(root_dir, "analyses",
                        "00-create-cohort-histologies",
