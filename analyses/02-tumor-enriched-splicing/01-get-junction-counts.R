@@ -68,7 +68,7 @@ se_df <- qs2::qs_read(se_file) %>%
                 downstreamES = downstreamES + 1) %>%
   # rm low-quality RNA samples, events with low junction counts
   dplyr::filter(!sample_id %in% samples_to_rm,
-                (upstream_to_target_count >= 10 | target_to_downstream_count >= 10 | upstream_to_downstream_count >= 10))
+                (upstream_to_target_count >= 3 | target_to_downstream_count >= 3 | upstream_to_downstream_count >= 3))
 
 # Build the long-form junction table, merging data from:
 # upstream-exon
@@ -79,7 +79,7 @@ print("Creating SE junction df...")
 se_junction_df <- create_junction_df(se_df,
                                      event_type = "SE") %>%
   # filter out low junction counts
-  dplyr::filter(junction_ct >= 10)
+  dplyr::filter(junction_ct >= 3)
 
 rm(se_df)
 
@@ -101,7 +101,7 @@ ri_df <- qs2::qs_read(ri_file) %>%
                 upstreamES = upstreamES + 1,
                 downstreamES = downstreamES + 1) %>%
   dplyr::filter(!sample_id %in% samples_to_rm,
-                (upstream_to_intron_count >= 10 | intron_to_downstream_count >= 10 | upstream_to_downstream_count >= 10))
+                (upstream_to_intron_count >= 3 | intron_to_downstream_count >= 3 | upstream_to_downstream_count >= 3))
 
 # Build the long-form junction table, merging data from:
 # upstream-intron
@@ -111,7 +111,7 @@ print("Creating RI junction df...")
 
 ri_junction_df <- create_junction_df(ri_df,
                                      event_type = "RI") %>%
-  dplyr::filter(junction_ct >= 10)
+  dplyr::filter(junction_ct >= 3)
 
 rm(ri_df)
 
@@ -133,13 +133,13 @@ a3ss_df <- qs2::qs_read(a3ss_file) %>%
                 longExonStart_0base = longExonStart_0base + 1,
                 shortES = shortES + 1) %>%
   dplyr::filter(!sample_id %in% samples_to_rm,
-                (long_to_flanking_count >= 10 | short_to_flanking_count >= 10))
+                (long_to_flanking_count >= 3 | short_to_flanking_count >= 3))
 
 # pivot longer for single row per unique sample & junction
 print("Creating A3SS junction df...")
 a3ss_junction_df <- create_junction_df(a3ss_df,
                                        event_type = "A3SS") %>%
-  dplyr::filter(junction_ct >= 10)
+  dplyr::filter(junction_ct >= 3)
 
 rm(a3ss_df)
 
@@ -162,14 +162,14 @@ a5ss_df <- qs2::qs_read(a5ss_file) %>%
                 longExonStart_0base = longExonStart_0base + 1,
                 shortES = shortES + 1) %>%
   dplyr::filter(!sample_id %in% samples_to_rm,
-                (long_to_flanking_count >= 10 | short_to_flanking_count >= 10))
+                (long_to_flanking_count >= 3 | short_to_flanking_count >= 3))
 
 
 # pivot longer for single row per unique sample & junction
 print("Creating A5SS junction df...")
 a5ss_junction_df <- create_junction_df(a5ss_df,
                                        event_type = "A5SS") %>%
-  dplyr::filter(junction_ct >= 10)
+  dplyr::filter(junction_ct >= 3)
 
 ### Normalize junction counts
 
