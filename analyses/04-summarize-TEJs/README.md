@@ -19,6 +19,7 @@ bash run_module.sh
 * `run_module.sh` shell script to run analysis
 * `01-summary.Rmd`: Identify primary & recurrent TEJs in PBTA, and generate summary plots 
 * `02-splice-site-annotation.Rmd`: Annotate all TEJs to transcript isoforms, exons, and introns when annotation exists
+* `03-generate-recurrent-tej-cpm-matrix.R: create PBTA TEJ CPM matrix
 
 ## Directory structure
 ```
@@ -27,6 +28,7 @@ bash run_module.sh
 ├── 01-summary.nb.html
 ├── 02-splice-site-annotation.Rmd
 ├── 02-splice-site-annotation.nb.html
+├── 03-create-recurrent-tej-cpm-matrix.R
 ├── README.md
 ├── plots
 │   ├── recurrent-tej-n-by-sample-hist.pdf
@@ -39,8 +41,10 @@ bash run_module.sh
 │   ├── all-tumor-enriched-oncofetal-splice-junctions-annotated.tsv.gz
 │   ├── recurrent-primary-tumor-enriched-oncofetal-splice-junctions-annotated.tsv.gz
 │   ├── recurrent-primary-tumor-enriched-oncofetal-splice-junctions.tsv.gz
+│   ├── tumor-enriched-oncofetal-splice-junction-cpm.rds
 │   └── tumor-enriched-oncofetal-splice-junctions-cohort-filtered.tsv.gz
 ├── run_module.sh
 └── util
-    └── annotation_functions.R
+    ├── annotation_functions.R
+    └── rmats-processing-functions.R
 ```
