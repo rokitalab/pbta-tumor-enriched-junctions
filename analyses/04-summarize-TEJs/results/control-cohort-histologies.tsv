@@ -1,0 +1,242 @@
+sample_id	cohort	subgroup	group
+GTEX-11ZUS-0011-R8a-SM-5BC73	GTEx	Brain - Hypothalamus	NA
+GTEX-11ZUS-0011-R9b-SM-5BC76	GTEx	Brain - Spinal cord (cervical c-1)	NA
+GTEX-11ZUS-2826-SM-5EQKW	GTEx	Brain - Cerebellum	NA
+GTEX-11ZUS-2926-SM-5FQSL	GTEx	Brain - Cortex	NA
+GTEX-12126-0011-R10b-SM-5BC6T	GTEx	Brain - Frontal Cortex (BA9)	NA
+GTEX-12126-0011-R11a-SM-5BC6X	GTEx	Brain - Cerebellum	NA
+GTEX-12126-0011-R9b-SM-5BC6P	GTEx	Brain - Spinal cord (cervical c-1)	NA
+GTEX-12126-0926-SM-5FQTW	GTEx	Brain - Cerebellum	NA
+GTEX-12126-1026-SM-5P9JJ	GTEx	Brain - Cortex	NA
+GTEX-12WSE-0011-R10b-SM-5P9JV	GTEx	Brain - Frontal Cortex (BA9)	NA
+GTEX-12WSE-0011-R11b-SM-5P9JW	GTEx	Brain - Cerebellum	NA
+GTEX-12WSE-0011-R1b-SM-5GU4V	GTEx	Brain - Hippocampus	NA
+GTEX-12WSE-0011-R6b-SM-5LZV5	GTEx	Brain - Nucleus accumbens (basal ganglia)	NA
+GTEX-12WSE-0011-R7a-SM-5PNWF	GTEx	Brain - Putamen (basal ganglia)	NA
+GTEX-12WSE-2926-SM-5RQJ9	GTEx	Brain - Cerebellum	NA
+GTEX-15ER7-0011-R11a-SM-6LPIL	GTEx	Brain - Cerebellum	NA
+GTEX-15ER7-0011-R1b-SM-7KUE1	GTEx	Brain - Hippocampus	NA
+GTEX-15ER7-0011-R2a-SM-6M46O	GTEx	Brain - Substantia nigra	NA
+GTEX-15ER7-0011-R3a-SM-6LPIK	GTEx	Brain - Anterior cingulate cortex (BA24)	NA
+GTEX-15ER7-0011-R4a-SM-6M46S	GTEx	Brain - Amygdala	NA
+GTEX-15ER7-0011-R5b-SM-6M46T	GTEx	Brain - Caudate (basal ganglia)	NA
+GTEX-15ER7-0011-R6a-SM-6M46M	GTEx	Brain - Nucleus accumbens (basal ganglia)	NA
+GTEX-15ER7-0011-R7a-SM-6M46N	GTEx	Brain - Putamen (basal ganglia)	NA
+GTEX-15ER7-0011-R8a-SM-7KUL2	GTEx	Brain - Hypothalamus	NA
+GTEX-15ER7-0011-R9b-SM-6PALF	GTEx	Brain - Spinal cord (cervical c-1)	NA
+GTEX-15ER7-3026-SM-6M47W	GTEx	Brain - Cerebellum	NA
+GTEX-15ER7-3126-SM-7KUGH	GTEx	Brain - Cortex	NA
+GTEX-16YQH-0011-R10b-SM-7LT8U	GTEx	Brain - Frontal Cortex (BA9)	NA
+GTEX-16YQH-0011-R11b-SM-7LT98	GTEx	Brain - Cerebellum	NA
+GTEX-16YQH-0011-R1a-SM-7LT8R	GTEx	Brain - Hippocampus	NA
+GTEX-16YQH-0011-R3a-SM-7EPGM	GTEx	Brain - Anterior cingulate cortex (BA24)	NA
+GTEX-16YQH-0011-R4a-SM-7EPGI	GTEx	Brain - Amygdala	NA
+GTEX-16YQH-0011-R5b-SM-7938U	GTEx	Brain - Caudate (basal ganglia)	NA
+GTEX-16YQH-0011-R6b-SM-7938T	GTEx	Brain - Nucleus accumbens (basal ganglia)	NA
+GTEX-16YQH-0011-R7a-SM-79ON1	GTEx	Brain - Putamen (basal ganglia)	NA
+GTEX-16YQH-0011-R8a-SM-7DUFB	GTEx	Brain - Hypothalamus	NA
+GTEX-16YQH-2926-SM-6LPJE	GTEx	Brain - Cerebellum	NA
+GTEX-16YQH-3026-SM-79OMM	GTEx	Brain - Cortex	NA
+GTEX-17HG3-0011-R10b-SM-7LT97	GTEx	Brain - Frontal Cortex (BA9)	NA
+GTEX-17HG3-0011-R11b-SM-7KFT4	GTEx	Brain - Cerebellum	NA
+GTEX-17HG3-0011-R1a-SM-7LG6H	GTEx	Brain - Hippocampus	NA
+GTEX-17HG3-0011-R2a-SM-7MGVX	GTEx	Brain - Substantia nigra	NA
+GTEX-17HG3-0011-R4a-SM-7IGLL	GTEx	Brain - Amygdala	NA
+GTEX-17HG3-0011-R5a-SM-7DUEW	GTEx	Brain - Caudate (basal ganglia)	NA
+GTEX-17HG3-0011-R6b-SM-79OK8	GTEx	Brain - Nucleus accumbens (basal ganglia)	NA
+GTEX-17HG3-0011-R7b-SM-7EPGR	GTEx	Brain - Putamen (basal ganglia)	NA
+GTEX-17HG3-0011-R8a-SM-79OK7	GTEx	Brain - Hypothalamus	NA
+GTEX-17HG3-2826-SM-7EPGO	GTEx	Brain - Cerebellum	NA
+GTEX-17HG3-2926-SM-79ON8	GTEx	Brain - Cortex	NA
+GTEX-1F7RK-0011-R10b-SM-ARU7Y	GTEx	Brain - Frontal Cortex (BA9)	NA
+GTEX-1F7RK-0011-R11b-SM-9QEI2	GTEx	Brain - Cerebellum	NA
+GTEX-1F7RK-0011-R3b-SM-9OSWJ	GTEx	Brain - Anterior cingulate cortex (BA24)	NA
+GTEX-1F7RK-0011-R4b-SM-9QEI7	GTEx	Brain - Amygdala	NA
+GTEX-1F7RK-0011-R5b-SM-9WG5S	GTEx	Brain - Caudate (basal ganglia)	NA
+GTEX-1F7RK-0011-R6b-SM-ARZMG	GTEx	Brain - Nucleus accumbens (basal ganglia)	NA
+GTEX-1F7RK-1826-SM-7RHI4	GTEx	Brain - Cortex	NA
+GTEX-1HT8W-0011-R1b-SM-CJI3V	GTEx	Brain - Hippocampus	NA
+GTEX-1HT8W-0011-R2a-SM-CMKH9	GTEx	Brain - Substantia nigra	NA
+GTEX-1HT8W-0011-R5b-SM-CJI3P	GTEx	Brain - Caudate (basal ganglia)	NA
+GTEX-1HT8W-0011-R6a-SM-CM2SY	GTEx	Brain - Nucleus accumbens (basal ganglia)	NA
+GTEX-1HT8W-0011-R7b-SM-CMKH8	GTEx	Brain - Putamen (basal ganglia)	NA
+GTEX-1HT8W-0011-R8b-SM-CM2SX	GTEx	Brain - Hypothalamus	NA
+GTEX-1HT8W-3026-SM-CGQEO	GTEx	Brain - Cortex	NA
+GTEX-1JMPZ-0011-R3a-SM-EYYWX	GTEx	Brain - Anterior cingulate cortex (BA24)	NA
+GTEX-1JMPZ-0011-R5b-SM-EYYWY	GTEx	Brain - Caudate (basal ganglia)	NA
+GTEX-1JMPZ-2726-SM-ARZNF	GTEx	Brain - Cortex	NA
+GTEX-1JMPZ-2826-SM-C1YRA	GTEx	Brain - Cerebellum	NA
+GTEX-1KWVE-2226-SM-CXZKN	GTEx	Brain - Cerebellum	NA
+GTEX-1KWVE-2326-SM-D4P3N	GTEx	Brain - Cortex	NA
+GTEX-1PIIG-2726-SM-E76PQ	GTEx	Brain - Cortex	NA
+GTEX-1PIIG-2826-SM-DTX7O	GTEx	Brain - Cerebellum	NA
+GTEX-1POEN-2726-SM-E9U6B	GTEx	Brain - Cerebellum	NA
+GTEX-QDT8-0011-R10A-SM-32PKG	GTEx	Brain - Frontal Cortex (BA9)	NA
+GTEX-QDT8-0011-R11A-SM-32PKD	GTEx	Brain - Cerebellum	NA
+GTEX-QDT8-0011-R2A-SM-32PKQ	GTEx	Brain - Substantia nigra	NA
+GTEX-QDT8-0011-R3A-SM-32PKR	GTEx	Brain - Anterior cingulate cortex (BA24)	NA
+GTEX-QDT8-0011-R5A-SM-32PKN	GTEx	Brain - Caudate (basal ganglia)	NA
+GTEX-QDT8-0011-R6A-SM-32PKI	GTEx	Brain - Nucleus accumbens (basal ganglia)	NA
+GTEX-QDT8-0011-R7A-SM-32PKF	GTEx	Brain - Putamen (basal ganglia)	NA
+GTEX-QDT8-0011-R9A-SM-CYPRD	GTEx	Brain - Spinal cord (cervical c-1)	NA
+GTEX-QDT8-2926-SM-32PKC	GTEx	Brain - Cortex	NA
+GTEX-QDT8-3026-SM-32PKB	GTEx	Brain - Cerebellum	NA
+GTEX-R55E-0011-R11A-SM-2TC6I	GTEx	Brain - Cerebellum	NA
+GTEX-R55E-0011-R2A-SM-EYYV9	GTEx	Brain - Substantia nigra	NA
+GTEX-R55E-0011-R6A-SM-2TC5T	GTEx	Brain - Nucleus accumbens (basal ganglia)	NA
+GTEX-R55E-2526-SM-2TC6H	GTEx	Brain - Cerebellum	NA
+GTEX-T2IS-0011-R11A-SM-32QPC	GTEx	Brain - Cerebellum	NA
+GTEX-T2IS-0011-R2A-SM-32QPF	GTEx	Brain - Substantia nigra	NA
+GTEX-T2IS-0011-R3A-SM-32QPB	GTEx	Brain - Anterior cingulate cortex (BA24)	NA
+GTEX-T2IS-0011-R5A-SM-32QP4	GTEx	Brain - Caudate (basal ganglia)	NA
+GTEX-T2IS-0011-R6A-SM-32QP2	GTEx	Brain - Nucleus accumbens (basal ganglia)	NA
+GTEX-T2IS-2926-SM-32QPO	GTEx	Brain - Cerebellum	NA
+GTEX-T2IS-3026-SM-32QPM	GTEx	Brain - Cortex	NA
+GTEX-T5JC-0011-R10A-SM-32PM2	GTEx	Brain - Frontal Cortex (BA9)	NA
+GTEX-T5JC-0011-R11A-SM-32PMB	GTEx	Brain - Cerebellum	NA
+GTEX-T5JC-0011-R5A-SM-32PLK	GTEx	Brain - Caudate (basal ganglia)	NA
+GTEX-T5JC-0011-R6A-SM-D3L87	GTEx	Brain - Nucleus accumbens (basal ganglia)	NA
+GTEX-T5JC-0011-R7A-SM-32PME	GTEx	Brain - Putamen (basal ganglia)	NA
+GTEX-T5JC-0011-R8A-SM-32PLM	GTEx	Brain - Hypothalamus	NA
+GTEX-T5JC-0011-R9A-SM-32PLV	GTEx	Brain - Spinal cord (cervical c-1)	NA
+GTEX-T5JC-2326-SM-32PMR	GTEx	Brain - Cerebellum	NA
+GTEX-T5JC-2426-SM-3NMDB	GTEx	Brain - Cortex	NA
+GTEX-WHSE-0011-R10A-SM-EYYVG	GTEx	Brain - Frontal Cortex (BA9)	NA
+GTEX-WHSE-0011-R11A-SM-3P5YY	GTEx	Brain - Cerebellum	NA
+GTEX-WHSE-0011-R1A-SM-3P5ZK	GTEx	Brain - Hippocampus	NA
+GTEX-WHSE-0011-R2A-SM-3P5ZL	GTEx	Brain - Substantia nigra	NA
+GTEX-WHSE-0011-R3A-SM-3P5ZM	GTEx	Brain - Anterior cingulate cortex (BA24)	NA
+GTEX-WHSE-0011-R4A-SM-3P5ZN	GTEx	Brain - Amygdala	NA
+GTEX-WHSE-0011-R6A-SM-3P5ZP	GTEx	Brain - Nucleus accumbens (basal ganglia)	NA
+GTEX-WHSE-0011-R7A-SM-3P5YZ	GTEx	Brain - Putamen (basal ganglia)	NA
+GTEX-WHSE-0011-R8A-SM-3P5Z1	GTEx	Brain - Hypothalamus	NA
+GTEX-WHSE-2926-SM-3NMBG	GTEx	Brain - Cerebellum	NA
+GTEX-WHSE-3026-SM-3P5ZH	GTEx	Brain - Cortex	NA
+SAMEA4689978	Evo-devo	Hindbrain-10 Week Post Conception	NA
+SAMEA4689973	Evo-devo	Forebrain-10 Week Post Conception	NA
+SAMEA4689979	Evo-devo	Hindbrain-10 Week Post Conception	NA
+SAMEA4689991	Evo-devo	Forebrain-11 Week Post Conception	NA
+SAMEA4689999	Evo-devo	Hindbrain-11 Week Post Conception	NA
+SAMEA4690000	Evo-devo	Hindbrain-11 Week Post Conception	NA
+SAMEA4689992	Evo-devo	Forebrain-11 Week Post Conception	NA
+SAMEA4690001	Evo-devo	Hindbrain-11 Week Post Conception	NA
+SAMEA4690002	Evo-devo	Hindbrain-11 Week Post Conception	NA
+SAMEA4689993	Evo-devo	Forebrain-11 Week Post Conception	NA
+SAMEA4689994	Evo-devo	Forebrain-11 Week Post Conception	NA
+SAMEA4690014	Evo-devo	Hindbrain-12 Week Post Conception	NA
+SAMEA4690011	Evo-devo	Forebrain-12 Week Post Conception	NA
+SAMEA4690016	Evo-devo	Hindbrain-12 Week Post Conception	NA
+SAMEA4690015	Evo-devo	Hindbrain-12 Week Post Conception	NA
+SAMEA4690031	Evo-devo	Hindbrain-13 Week Post Conception	NA
+SAMEA4690024	Evo-devo	Forebrain-13 Week Post Conception	NA
+SAMEA4690032	Evo-devo	Hindbrain-13 Week Post Conception	NA
+SAMEA4690025	Evo-devo	Forebrain-13 Week Post Conception	NA
+SAMEA4690033	Evo-devo	Hindbrain-13 Week Post Conception	NA
+SAMEA4690026	Evo-devo	Forebrain-13 Week Post Conception	NA
+SAMEA4690042	Evo-devo	Forebrain-16 Week Post Conception	NA
+SAMEA4690047	Evo-devo	Hindbrain-16 Week Post Conception	NA
+SAMEA4690048	Evo-devo	Hindbrain-16 Week Post Conception	NA
+SAMEA4690049	Evo-devo	Hindbrain-16 Week Post Conception	NA
+SAMEA4690043	Evo-devo	Forebrain-16 Week Post Conception	NA
+SAMEA4690059	Evo-devo	Forebrain-18 Week Post Conception	NA
+SAMEA4690072	Evo-devo	Forebrain-19 Week Post Conception	NA
+SAMEA4690070	Evo-devo	Forebrain-19 Week Post Conception	NA
+SAMEA4690071	Evo-devo	Forebrain-19 Week Post Conception	NA
+SAMEA4690073	Evo-devo	Forebrain-19 Week Post Conception	NA
+SAMEA4690074	Evo-devo	Forebrain-19 Week Post Conception	NA
+SAMEA4690086	Evo-devo	Forebrain-4 Week Post Conception	NA
+SAMEA4690091	Evo-devo	Hindbrain-4 Week Post Conception	NA
+SAMEA4690087	Evo-devo	Forebrain-4 Week Post Conception	NA
+SAMEA4690092	Evo-devo	Hindbrain-4 Week Post Conception	NA
+SAMEA4690088	Evo-devo	Forebrain-4 Week Post Conception	NA
+SAMEA4690093	Evo-devo	Hindbrain-4 Week Post Conception	NA
+SAMEA4690102	Evo-devo	Forebrain-5 Week Post Conception	NA
+SAMEA4690106	Evo-devo	Hindbrain-5 Week Post Conception	NA
+SAMEA4690103	Evo-devo	Forebrain-5 Week Post Conception	NA
+SAMEA4690107	Evo-devo	Hindbrain-5 Week Post Conception	NA
+SAMEA4690117	Evo-devo	Hindbrain-6 Week Post Conception	NA
+SAMEA4690119	Evo-devo	Hindbrain-6 Week Post Conception	NA
+SAMEA4690118	Evo-devo	Hindbrain-6 Week Post Conception	NA
+SAMEA4690120	Evo-devo	Hindbrain-6 Week Post Conception	NA
+SAMEA4690128	Evo-devo	Forebrain-7 Week Post Conception	NA
+SAMEA4690134	Evo-devo	Hindbrain-7 Week Post Conception	NA
+SAMEA4690130	Evo-devo	Forebrain-7 Week Post Conception	NA
+SAMEA4690136	Evo-devo	Hindbrain-7 Week Post Conception	NA
+SAMEA4690129	Evo-devo	Forebrain-7 Week Post Conception	NA
+SAMEA4690135	Evo-devo	Hindbrain-7 Week Post Conception	NA
+SAMEA4690157	Evo-devo	Hindbrain-8 Week Post Conception	NA
+SAMEA4690158	Evo-devo	Hindbrain-8 Week Post Conception	NA
+SAMEA4690148	Evo-devo	Forebrain-8 Week Post Conception	NA
+SAMEA4690151	Evo-devo	Forebrain-8 Week Post Conception	NA
+SAMEA4690160	Evo-devo	Hindbrain-8 Week Post Conception	NA
+SAMEA4690149	Evo-devo	Forebrain-8 Week Post Conception	NA
+SAMEA4690159	Evo-devo	Hindbrain-8 Week Post Conception	NA
+SAMEA4690150	Evo-devo	Forebrain-8 Week Post Conception	NA
+SAMEA4690179	Evo-devo	Hindbrain-9 Week Post Conception	NA
+SAMEA4690173	Evo-devo	Forebrain-9 Week Post Conception	NA
+SAMEA4690174	Evo-devo	Forebrain-9 Week Post Conception	NA
+SAMEA4690180	Evo-devo	Hindbrain-9 Week Post Conception	NA
+SAMEA4690175	Evo-devo	Forebrain-9 Week Post Conception	NA
+SAMEA4690194	Evo-devo	Hindbrain-Adolescent	NA
+SAMEA4690192	Evo-devo	Forebrain-Adolescent	NA
+SAMEA4690189	Evo-devo	Forebrain-Adolescent	NA
+SAMEA4690196	Evo-devo	Hindbrain-Adolescent	NA
+SAMEA4690190	Evo-devo	Forebrain-Adolescent	NA
+SAMEA4690195	Evo-devo	Hindbrain-Adolescent	NA
+SAMEA4690191	Evo-devo	Forebrain-Adolescent	NA
+SAMEA4690197	Evo-devo	Hindbrain-Adolescent	NA
+SAMEA4690218	Evo-devo	Hindbrain-Infant	NA
+SAMEA4690211	Evo-devo	Forebrain-Infant	NA
+SAMEA4690216	Evo-devo	Hindbrain-Infant	NA
+SAMEA4690217	Evo-devo	Hindbrain-Infant	NA
+SAMEA4690210	Evo-devo	Forebrain-Infant	NA
+SAMEA4690244	Evo-devo	Hindbrain-Neonate	NA
+SAMEA4690245	Evo-devo	Hindbrain-Neonate	NA
+SAMEA4690241	Evo-devo	Hindbrain-Neonate	NA
+SAMEA4690236	Evo-devo	Forebrain-Neonate	NA
+SAMEA4690242	Evo-devo	Hindbrain-Neonate	NA
+SAMEA4690237	Evo-devo	Forebrain-Neonate	NA
+SAMEA4690243	Evo-devo	Hindbrain-Neonate	NA
+SAMEA4690235	Evo-devo	Forebrain-Neonate	NA
+SAMEA4690254	Evo-devo	Hindbrain-School Age Child	NA
+SAMEA4690252	Evo-devo	Forebrain-School Age Child	NA
+SAMEA4690251	Evo-devo	Forebrain-School Age Child	NA
+SAMEA4690253	Evo-devo	Hindbrain-School Age Child	NA
+SAMEA4690255	Evo-devo	Hindbrain-School Age Child	NA
+SAMEA4690258	Evo-devo	Forebrain-Toddler	NA
+SAMEA4690263	Evo-devo	Hindbrain-Toddler	NA
+SAMEA4690259	Evo-devo	Forebrain-Toddler	NA
+SAMEA4690264	Evo-devo	Hindbrain-Toddler	NA
+SAMEA4690260	Evo-devo	Forebrain-Toddler	NA
+SAMEA4690271	Evo-devo	Forebrain-Young Adult	NA
+SAMEA4690275	Evo-devo	Hindbrain-Young Adult	NA
+SAMEA4690269	Evo-devo	Forebrain-Young Adult	NA
+SAMEA4690276	Evo-devo	Hindbrain-Young Adult	NA
+SAMEA4690270	Evo-devo	Forebrain-Young Adult	NA
+SAMEA4690277	Evo-devo	Hindbrain-Young Adult	NA
+SAMEA4690278	Evo-devo	Hindbrain-Young Adult	NA
+SAMEA4690272	Evo-devo	Forebrain-Young Adult	NA
+SAMEA4690279	Evo-devo	Hindbrain-Young Adult	NA
+SAMEA4690273	Evo-devo	Forebrain-Young Adult	NA
+SRR26129178	Pediatric brain	Cerebellum	NA
+SRR26129084	Pediatric brain	Cerebellum	NA
+SRR26129078	Pediatric brain	Cerebellum	NA
+SRR26129066	Pediatric brain	Pons	NA
+SRR26129064	Pediatric brain	Pituitary	NA
+SRR26129063	Pediatric brain	Pituitary	NA
+SRR26129123	Pediatric brain	Cortex	NA
+SRR2557083	Pediatric brain cell type	NA	Astrocyte
+SRR2557093	Pediatric brain cell type	NA	Astrocyte
+SRR2557094	Pediatric brain cell type	NA	Astrocyte
+SRR2557105	Pediatric brain cell type	NA	Astrocyte
+SRR2557106	Pediatric brain cell type	NA	Astrocyte
+SRR2557113	Pediatric brain cell type	NA	Neuron
+SRR2557114	Pediatric brain cell type	NA	Oligodendrocyte
+SRR2557084	Pediatric brain cell type	NA	Astrocyte
+SRR2557085	Pediatric brain cell type	NA	Astrocyte
+SRR2557086	Pediatric brain cell type	NA	Astrocyte
+SRR2557087	Pediatric brain cell type	NA	Astrocyte
+SRR2557089	Pediatric brain cell type	NA	Astrocyte
+SRR2557090	Pediatric brain cell type	NA	Astrocyte
+SRR2557091	Pediatric brain cell type	NA	Astrocyte
+SRR2557092	Pediatric brain cell type	NA	Astrocyte

@@ -8,3 +8,6 @@ R -e "rmarkdown::render('02-splice-site-annotation.Rmd')"
 
 # Create PBTA cpm matrix
 Rscript --vanilla 03-create-recurrent-tej-cpm-matrix.R
+
+# Create PBTA cpm matrix
+Rscript --vanilla 04-create-control-tej-cpm-matrix.R
