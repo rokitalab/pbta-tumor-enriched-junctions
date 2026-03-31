@@ -113,8 +113,8 @@ define_junctions_targets <- function(df, event_type){
 create_target_df <- function(df){
   
   target_df <- df[
-    # in rare cases that target coordinates are duplicated, calculate median
-    , .(target_count = median(target_count, na.rm = TRUE)),
+    # in rare cases that target coordinates are duplicated, calculate max
+    , .(target_count = max(target_count, na.rm = TRUE)),
     by = .(sample_id, geneSymbol, strand, target)
   ]
   
@@ -364,9 +364,9 @@ generate_norm_junction_mat <- function(junction_df,
                                        read_cts,
                                        group_col){
   
-  # in rare cases where junctions are duplicated, calculate median junction counts
+  # in rare cases where junctions are duplicated, calculate max junction counts
   junction_df <- junction_df[
-    , .(junction_count = median(junction_ct)),
+    , .(junction_count = max(junction_ct)),
     by = .(sample_id, geneSymbol, junction)
   ]
   
