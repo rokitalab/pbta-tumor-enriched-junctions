@@ -130,7 +130,8 @@ gtex_brain_under40_hist <- read_tsv(hist_file) %>%
   dplyr::filter(id %in% pts_under40,
                 !Kids_First_Biospecimen_ID %in% gtex_v10_rm_samples) %>%
   # only need BS ID, subgroup columns
-  dplyr::select(Kids_First_Biospecimen_ID, gtex_subgroup) %>%
+  dplyr::select(Kids_First_Biospecimen_ID, gtex_subgroup,
+                RNA_library) %>%
   dplyr::rename(sample_id = Kids_First_Biospecimen_ID,
                 subgroup = gtex_subgroup) %>%
   dplyr::mutate(cohort = "GTEx")
@@ -145,7 +146,8 @@ evodevo_hist <- read_tsv(evodevo_hist_file) %>%
   # define subgroups (region + stage)
   dplyr::mutate(evodevo_subgroup = glue::glue("{primary_site}-{pathology_free_text_diagnosis}")) %>%
   # only need BS ID, subgroup columns
-  dplyr::select(Kids_First_Biospecimen_ID, evodevo_subgroup) %>%
+  dplyr::select(Kids_First_Biospecimen_ID, evodevo_subgroup,
+                RNA_library) %>%
   dplyr::rename(sample_id = Kids_First_Biospecimen_ID,
                 subgroup = evodevo_subgroup) %>%
   dplyr::mutate(cohort = "Evo-devo")
@@ -159,7 +161,7 @@ pedbrain_hist <- read_tsv(pedbrain_hist_file) %>%
   # filter out tumor-infiltrated pons
   dplyr::filter(sample_id != "7316-7585") %>%
   # only need sample ID, primary_site columns
-  dplyr::select(sample_id, primary_site) %>%
+  dplyr::select(sample_id, primary_site, RNA_library) %>%
   dplyr::rename(subgroup = primary_site) %>%
   dplyr::mutate(cohort = "Pediatric brain")
 
@@ -172,8 +174,9 @@ celltype_hist <- read_csv(celltype_hist_file) %>%
   # only need run ID, cell type columns
   distinct(Run, cell_type) %>%
   dplyr::rename(sample_id = Run,
-                group = cell_type) %>%
-  dplyr::mutate(cohort = "Pediatric brain cell type")
+                subgroup = cell_type) %>%
+  dplyr::mutate(cohort = "Pediatric brain cell type") %>%
+  dplyr::mutate(RNA_library = "stranded")
 
 celltype_read_cts <- read_tsv(celltype_read_file) %>%
   dplyr::mutate(sample_id = str_remove(sample_id, "_[^_]+$"))
