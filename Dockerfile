@@ -67,6 +67,7 @@ RUN R -e 'BiocManager::install(c( \
   "R.utils", \
   "survival", \
   "survminer", \
+  "sva", \
   "tidytext", \
   "UpSetR" \
 ))'
