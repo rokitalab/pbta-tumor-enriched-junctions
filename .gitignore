@@ -115,5 +115,8 @@ analyses/hgg-enriched-splicing/results/survival/*RDS
 analyses/02-tumor-enriched-splicing/results/pbta-merged-norm-junction-cts.qs2
 analyses/02-tumor-enriched-splicing/results/tumor-enriched-oncofetal-splice-junctions.tsv.gz
 
+# combat-corrected TPM matrices
+analyses/06-TEJ-expr-determinants/results/*.qs2
+
 # pepMLM summary generated FASTA files
 analyses/pepMLM-summary/results/input_fastas/
