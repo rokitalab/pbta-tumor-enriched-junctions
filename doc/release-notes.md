@@ -1,12 +1,119 @@
 # release notes
 
-## current release (v9)
+## current release (v10)
+- Data release date: 2026-04-20
+- OpenPedCan data release date: 2024-03-01 (v15)
+- status: available
+
+New files: 
+* `normal-brain-isoform-expression-rsem-tpm.rds`: TPM matrix including normal ped brain and cell type samples. Generated in https://cavatica.sbgenomics.com/u/harenzaj/pediatric-normal-brain-harmonization, copied from s3://bti-openaccess-us-east-1-prd-rokita-lab/data-merges/v4/
+* `normal-brain.gene-expression-rsem-tpm-collapsed.all.rds`: TPM matrix including normal ped brain and cell type samples. Generated in https://cavatica.sbgenomics.com/u/harenzaj/pediatric-normal-brain-harmonization, copied from s3://bti-openaccess-us-east-1-prd-rokita-lab/data-merges/v4/
+* `pbta-gene-expr-log2-tpm-combat-corrected.qs2`: generated in tumor-enriched-splicing repository, commit 1cefce467a56197f3d10a79c0897848e6a872ba8
+* `pbta-isoform-expr-log2-tpm-combat-corrected.qs2`: generated in tumor-enriched-splicing repository, commit 1cefce467a56197f3d10a79c0897848e6a872ba8
+* `tumor-enriched-oncofetal-diff-splice-junctions.qs2`: generated in tumor-enriched-splicing repository, commit 9464fd106ea06cbabe3d9efd0a18252d2ec0b9db
+* `tumor-enriched-oncofetal-junction-diff-splice-event-annotation.tsv.gz`: generated in tumor-enriched-splicing repository, commit 9464fd106ea06cbabe3d9efd0a18252d2ec0b9db
+
+```
+v10
+.
+├── GSE73721-normal-histologies.tsv
+├── brain_cell_type-rmats_merged_raw_A3SS.qs2
+├── brain_cell_type-rmats_merged_raw_A5SS.qs2
+├── brain_cell_type-rmats_merged_raw_RI.qs2
+├── brain_cell_type-rmats_merged_raw_SE.qs2
+├── brain_cell_type_input_read_counts.tsv
+├── cptac-protein-imputed-phospho-expression-log2-ratio.tsv.gz
+├── cptac-protein-imputed-prot-expression-abundance.tsv.gz
+├── evodevo-histologies.tsv
+├── evodevo-rmats_merged_raw_A3SS.qs2
+├── evodevo-rmats_merged_raw_A5SS.qs2
+├── evodevo-rmats_merged_raw_RI.qs2
+├── evodevo-rmats_merged_raw_SE.qs2
+├── evodevo_gene-expression-rsem-tpm-collapsed.all.rds
+├── evodevo_input_read_counts.tsv
+├── evodevo_rna-isoform-expression-rsem-tpm.rds
+├── gbm-protein-imputed-phospho-expression-abundance.tsv.gz
+├── gbm-protein-imputed-prot-expression-abundance.tsv.gz
+├── gtex-harmonized-gene-expression-rsem-tpm-collapsed.brain-under40.rds
+├── gtex-harmonized-isoform-expression-rsem-tpm.rds
+├── gtex-rmats_merged_raw_A3SS.qs2
+├── gtex-rmats_merged_raw_A5SS.qs2
+├── gtex-rmats_merged_raw_RI.qs2
+├── gtex-rmats_merged_raw_SE.qs2
+├── gtex_input_read_counts.tsv
+├── histologies.tsv
+├── hope-protein-imputed-phospho-expression-abundance.tsv.gz
+├── hope-protein-imputed-prot-expression-abundance.tsv.gz
+├── independent-specimens.methyl.primary-plus.eachcohort.tsv
+├── independent-specimens.methyl.primary-plus.tsv
+├── independent-specimens.methyl.primary.eachcohort.tsv
+├── independent-specimens.methyl.primary.tsv
+├── independent-specimens.methyl.relapse.eachcohort.tsv
+├── independent-specimens.methyl.relapse.tsv
+├── independent-specimens.rnaseq.primary-plus-pre-release.tsv
+├── independent-specimens.rnaseq.primary-pre-release.tsv
+├── independent-specimens.rnaseq.relapse-pre-release.tsv
+├── independent-specimens.rnaseqpanel.primary-plus.eachcohort.tsv
+├── independent-specimens.rnaseqpanel.primary-plus.tsv
+├── independent-specimens.rnaseqpanel.primary.eachcohort.tsv
+├── independent-specimens.rnaseqpanel.primary.tsv
+├── independent-specimens.rnaseqpanel.relapse.eachcohort.tsv
+├── independent-specimens.rnaseqpanel.relapse.tsv
+├── independent-specimens.wgs.primary-plus.eachcohort.tsv
+├── independent-specimens.wgs.primary-plus.tsv
+├── independent-specimens.wgs.primary.eachcohort.tsv
+├── independent-specimens.wgs.primary.tsv
+├── independent-specimens.wgs.relapse.eachcohort.tsv
+├── independent-specimens.wgs.relapse.tsv
+├── independent-specimens.wgswxspanel.primary-plus.eachcohort.prefer.wgs.tsv
+├── independent-specimens.wgswxspanel.primary-plus.eachcohort.prefer.wxs.tsv
+├── independent-specimens.wgswxspanel.primary-plus.prefer.wgs.tsv
+├── independent-specimens.wgswxspanel.primary-plus.prefer.wxs.tsv
+├── independent-specimens.wgswxspanel.primary.eachcohort.prefer.wgs.tsv
+├── independent-specimens.wgswxspanel.primary.eachcohort.prefer.wxs.tsv
+├── independent-specimens.wgswxspanel.primary.prefer.wgs.tsv
+├── independent-specimens.wgswxspanel.primary.prefer.wxs.tsv
+├── independent-specimens.wgswxspanel.relapse.eachcohort.prefer.wgs.tsv
+├── independent-specimens.wgswxspanel.relapse.eachcohort.prefer.wxs.tsv
+├── independent-specimens.wgswxspanel.relapse.prefer.wgs.tsv
+├── independent-specimens.wgswxspanel.relapse.prefer.wxs.tsv
+├── md5sum.txt
+├── normal-brain-isoform-expression-rsem-tpm.rds
+├── normal-brain.gene-expression-rsem-tpm-collapsed.all.rds
+├── normal_ped_brain-rmats_merged_raw_A3SS.qs2
+├── normal_ped_brain-rmats_merged_raw_A5SS.qs2
+├── normal_ped_brain-rmats_merged_raw_RI.qs2
+├── normal_ped_brain-rmats_merged_raw_SE.qs2
+├── normal_ped_brain_input_read_counts.tsv
+├── pbta-gene-expr-log2-tpm-combat-corrected.qs2
+├── pbta-isoform-expr-log2-tpm-combat-corrected.qs2
+├── pbta-rmats_merged_raw_A3SS.qs2
+├── pbta-rmats_merged_raw_A5SS.qs2
+├── pbta-rmats_merged_raw_RI.qs2
+├── pbta-rmats_merged_raw_SE.qs2
+├── pbta_gene-expression-rsem-tpm-collapsed.rds
+├── pbta_input_read_counts.tsv
+├── ped-normal-brain-histologies.tsv
+├── release-notes.md
+├── rna-isoform-expression-rsem-tpm.rds
+├── snv-consensus-plus-hotspots.maf.tsv.gz
+├── snv-mutation-tmb-all.tsv
+├── snv-mutation-tmb-coding.tsv
+├── snv-mutect2-tumor-only-plus-hotspots.maf.tsv.gz
+├── tumor-enriched-oncofetal-diff-splice-junctions.qs2
+├── tumor-enriched-oncofetal-junction-diff-splice-event-annotation.tsv.gz
+├── unipLocCytopl.hg38.col.txt
+├── unipLocExtra.hg38.col.txt
+└── unipLocTransMemb.hg38.col.txt
+```
+
+
+## archived release (v9)
 - Data release date: 2026-01-09
 - OpenPedCan data release date: 2024-03-01 (v15)
-- status:available
+- status: available
 
 This data release adds rMATS-turbo v4.3 output by splicing case for PBTA, GTEx, Evo-Devo, and pediatric brain and brain cell type cohorts. Each cohort contains an `*input_read_counts.tsv` indicating the number of input reads used by rMATS-turbo.  
-
 New files: 
 `brain_cell_type-rmats_merged_raw_A3SS.qs2`
 `brain_cell_type-rmats_merged_raw_A5SS.qs2`
