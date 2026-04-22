@@ -131,7 +131,7 @@ primary_tej_df <- primary_tej_df %>%
 ```
 
 
-Filter for recurrent events (i.e., event observed in >10% of tumor histologies)
+Filter for recurrent events (i.e., event observed in >5% of tumor histologies)
 
 ```{r}
 # Get number of patients per histology
