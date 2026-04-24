@@ -46,10 +46,8 @@ source(file.path(root_dir, "figures", "theme_for_plots.R"))
 Set file paths
 
 ```{r}
-tej_file <- file.path(root_dir, "analyses",
-                                  "03-tesj-differential-splicing",
-                                  "results",
-                                  "tumor-enriched-oncofetal-diff-splice-junctions-test.qs2")
+tej_file <- file.path(data_dir,
+                      "tumor-enriched-oncofetal-diff-splice-junctions.qs2")
 
 hist_file <- file.path(root_dir, "analyses",
                        "00-create-cohort-histologies",
@@ -133,11 +131,12 @@ primary_tej_df <- primary_tej_df %>%
 ```
 
 
-Filter for recurrent events (i.e., event observed in >10% of tumor histologies)
+Filter for recurrent events (i.e., event observed in >5% of tumor histologies)
 
 ```{r}
 # Get number of patients per histology
-n_per_hist <- primary_tej_df %>%
+n_per_hist <- hist %>%
+  dplyr::filter(is_independent_primary == "Yes") %>%
   distinct(Kids_First_Biospecimen_ID, .keep_all = TRUE) %>%
   count(plot_group) %>%
   dplyr::rename(n_hist = n)
