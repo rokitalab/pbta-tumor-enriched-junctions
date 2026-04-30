@@ -48,6 +48,7 @@ RUN R -e 'BiocManager::install(c( \
   "ComplexHeatmap", \
   "data.table", \
   "DBI", \
+  "EnhancedVolcano", \
   "ensembldb", \
   "GenomicFeatures", \
   "GenomicRanges", \
@@ -93,6 +94,42 @@ RUN python3 -m pip install --upgrade pip
 
 RUN pip3 install \
     "rpg==2.0.3"
+    
+ENV MEME_VERSION=5.5.9
+ENV MEME_PREFIX=/opt/meme
+
+# 1. Install build + runtime dependencies
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    perl \
+    python3 \
+    default-jre \
+    wget \
+    ca-certificates \
+    libxml2-dev \
+    libxslt1-dev \
+    zlib1g-dev \
+    libcurl4-openssl-dev \
+    pkg-config \
+    && rm -rf /var/lib/apt/lists/*
+
+# 2. Download MEME source
+WORKDIR /tmp
+RUN wget https://meme-suite.org/meme/meme-software/${MEME_VERSION}/meme-${MEME_VERSION}.tar.gz \
+    && tar -xzf meme-${MEME_VERSION}.tar.gz
+
+# 3. Build and install MEME
+WORKDIR /tmp/meme-${MEME_VERSION}
+RUN ./configure --prefix=${MEME_PREFIX} \
+    && make -j$(nproc) \
+    && make install
+
+# 4. Put MEME on PATH
+ENV PATH="${MEME_PREFIX}/bin:${PATH}"
+
+# Optional: clean up build artifacts
+WORKDIR /
+RUN rm -rf /tmp/meme-${MEME_VERSION} /tmp/meme-${MEME_VERSION}.tar.gz
 
 WORKDIR /rocker-build/
 
