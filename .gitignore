@@ -120,3 +120,6 @@ analyses/06-TEJ-expr-determinants/results/*.qs2
 
 # pepMLM summary generated FASTA files
 analyses/pepMLM-summary/results/input_fastas/
+
+analyses/exon-inclusion-analyses/results/survival/*
+analyses/exon-inclusion-analyses/plots/survival/*
