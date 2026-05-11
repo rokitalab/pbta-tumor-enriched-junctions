@@ -120,3 +120,7 @@ analyses/06-TEJ-expr-determinants/results/*.qs2
 
 # pepMLM summary generated FASTA files
 analyses/pepMLM-summary/results/input_fastas/
+
+# motif enrichment files
+analyses/06-TEJ-expr-determinants/results/*dna-seqs.fa
+analyses/06-TEJ-expr-determinants/results/ame/*
