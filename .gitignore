@@ -124,3 +124,7 @@ analyses/pepMLM-summary/results/input_fastas/
 # motif enrichment files
 analyses/06-TEJ-expr-determinants/results/*dna-seqs.fa
 analyses/06-TEJ-expr-determinants/results/ame/*
+
+# survival analysis results, plots
+analyses/exon-inclusion-analyses/results/survival/*
+analyses/exon-inclusion-analyses/plots/survival/*
