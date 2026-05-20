@@ -105,12 +105,6 @@ cohort_hist <- hist %>%
     is.na(plot_group) ~ "Other tumor",
     TRUE ~ plot_group
   )) %>%
-  # update plot group hex codes
-  dplyr::mutate(plot_group_hex = case_when(
-    plot_group == "Oligodendroglioma" ~ "tan",
-    is.na(plot_group_hex) ~ "#b5b5b5",
-    TRUE ~ plot_group_hex
-  )) %>%
   dplyr::mutate(plot_group = case_when(
     Kids_First_Biospecimen_ID == "BS_N7VQ1GQB" ~ "Low-grade glioma",
     TRUE ~ plot_group
@@ -118,6 +112,13 @@ cohort_hist <- hist %>%
   dplyr::mutate(molecular_subtype = case_when(
     Kids_First_Biospecimen_ID == "BS_N7VQ1GQB" ~ "LGG, KIAA1549-BRAF",
     TRUE ~ molecular_subtype
+  )) %>%
+  # update plot group hex codes
+  dplyr::mutate(plot_group_hex = case_when(
+    plot_group == "Oligodendroglioma" ~ "tan",
+    Kids_First_Biospecimen_ID == "BS_N7VQ1GQB" ~ "#8f8fbf",
+    is.na(plot_group_hex) ~ "#b5b5b5",
+    TRUE ~ plot_group_hex
   )) %>%
   # add missing age dx for following patients
   mutate(age_at_diagnosis_days = case_when(Kids_First_Participant_ID == "PT_AEDWCP8Z" ~
