@@ -118,9 +118,7 @@ analyses/02-tumor-enriched-splicing/results/tumor-enriched-oncofetal-splice-junc
 # combat-corrected TPM matrices
 analyses/06-TEJ-expr-determinants/results/*.qs2
 
-# pepMLM summary generated FASTA files and AlphaFold generated output
-analyses/pepMLM-summary/input/AlphaFold-tumor-enriched-splice-junction-predictions/
-analyses/pepMLM-summary/results/iPTM-filtered-AlphaFold-predictions/*.result.zip
+# pepMLM summary generated FASTA files
 analyses/pepMLM-summary/results/input_fastas/
 
 # motif enrichment files
