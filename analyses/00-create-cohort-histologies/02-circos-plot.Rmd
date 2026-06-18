@@ -170,15 +170,15 @@ circle_size = unit(1, "snpc")
 
 # Create legends
 lgd_list1 = packLegend(lgd_group, max_height = unit(0.9*h, "inch"), direction = "horizontal")
-lgd_list2 = packLegend(lgd_event, max_height = unit(0.9*h, "inch"), direction = "horizontal")
-lgd_list3 = packLegend(lgd_comp, max_height = unit(0.9*h, "inch"), direction = "horizontal")
+lgd_list2 = packLegend(lgd_comp, max_height = unit(0.9*h, "inch"), direction = "horizontal")
+lgd_list3 = packLegend(lgd_event, max_height = unit(0.9*h, "inch"), direction = "horizontal")
 lgd_list4 = packLegend(lgd_rna, max_height = unit(0.9*h, "inch"), direction = "horizontal")
 
 # Add legends on plot
 draw(lgd_list1, x = unit(75, "mm"), y = unit(88, "mm"))
-draw(lgd_list2, x = unit(125, "mm"), y = unit(107, "mm"))
-draw(lgd_list3, x = unit(122, "mm"), y = unit(84, "mm"))
-draw(lgd_list4, x = unit(124, "mm"), y = unit(66, "mm"))
+draw(lgd_list2, x = unit(122, "mm"), y = unit(120, "mm"))
+draw(lgd_list3, x = unit(125, "mm"), y = unit(97, "mm"))
+draw(lgd_list4, x = unit(124, "mm"), y = unit(71, "mm"))
 
 circos.clear()
 dev.off()
