@@ -13,7 +13,8 @@ bash run_module.sh
 
 ## Folder content
 * `run_module.sh` shell script to run analysis
-* `01-create-histologies.R` create cohort histologies file that includes data from OPC v15 histologies, somalier genetic ancestry prediction, and updated opc survival data from Sep 2025. 
+* `01-create-histologies.R` create cohort histologies file that includes data from OPC v15 histologies, somalier genetic ancestry prediction, and updated opc survival data from Mar 2026. 
+* `02-circos-plot.Rmd` generate cohort circos plot split by plot group 
 
 ## Input files
 * `plot-mapping.tsv` curated cancer groups for plotting based on `broad_histology` and `cancer_group` field values. 
@@ -24,11 +25,15 @@ bash run_module.sh
 ```
 .
 ├── 01-create-histologies.R
+├── 02-circos-plot.Rmd
+├── 02-circos-plot.nb.html
 ├── README.md
 ├── input
-│   ├── openpedcan_histologies_20250924.csv
+│   ├── openpedcan_histologies0311.csv
 │   ├── plot-mapping.tsv
 │   └── somalier-ancestry-prediction-superpopulation.tsv
+├── plots
+│   └── cohort-circos-plot.pdf
 ├── results
 │   ├── cohort-histologies.tsv
 │   └── cohort-somalier-genetic-ancestry-prediction.tsv
