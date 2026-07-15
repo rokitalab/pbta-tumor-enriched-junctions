@@ -46,6 +46,7 @@ RUN R -e 'BiocManager::install(c( \
   "BSgenome.Hsapiens.UCSC.hg38", \
   "circlize", \
   "ComplexHeatmap", \
+  "ComplexUpset", \
   "data.table", \
   "DBI", \
   "EnhancedVolcano", \
@@ -115,7 +116,8 @@ RUN apt-get update && apt-get install -y \
 
 # 2. Download MEME source
 WORKDIR /tmp
-RUN wget https://meme-suite.org/meme/meme-software/${MEME_VERSION}/meme-${MEME_VERSION}.tar.gz \
+RUN wget --no-check-certificate \
+    https://meme-suite.org/meme/meme-software/${MEME_VERSION}/meme-${MEME_VERSION}.tar.gz \
     && tar -xzf meme-${MEME_VERSION}.tar.gz
 
 # 3. Build and install MEME
