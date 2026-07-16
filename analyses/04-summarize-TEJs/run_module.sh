@@ -14,3 +14,6 @@ Rscript --vanilla 04-create-control-tej-cpm-matrix.R
 
 # summarize TEJ functional consequences
 R -e "rmarkdown::render('05-tej-functional-summary.Rmd')"
+
+# summarize TEJ functional consequences
+R -e "rmarkdown::render('06-generate-tej-psi-matrix.Rmd')"
