@@ -23,6 +23,7 @@ bash run_module.sh
 * `03-create-recurrent-tej-cpm-matrix.R`: create PBTA TEJ CPM matrix
 * `04-create-control-tej-cpm-matrix.R`: create PBTA TEJ CPM matrix
 * `05-tej-functional-summary.Rmd`: assess number of TEJs associated with protein pfam and extracellular domains. 
+* `06-generate-tej-psi-matrix.Rmd`: extract PSIs for all TEJ-associated splice events and save as matrix. 
 
 
 ## Directory structure
@@ -36,6 +37,8 @@ bash run_module.sh
 ├── 04-create-control-tej-cpm-matrix.R
 ├── 05-tej-functional-summary.Rmd
 ├── 05-tej-functional-summary.nb.html
+├── 06-generate-tej-psi-matrix.Rmd
+├── 06-generate-tej-psi-matrix.nb.html
 ├── README.md
 ├── plots
 │   ├── ATRT-recurrent-ec-tejs-by-gene.pdf
@@ -67,6 +70,8 @@ bash run_module.sh
 ├── results
 │   ├── all-tumor-enriched-oncofetal-splice-junctions-annotated.tsv.gz
 │   ├── control-cohort-histologies.tsv
+│   ├── recurrent-primary-tej-associated-splice-events.tsv
+│   ├── recurrent-primary-tumor-enriched-oncofetal-splice-event-psis.rds
 │   ├── recurrent-primary-tumor-enriched-oncofetal-splice-junctions-annotated-domain-updated.tsv.gz
 │   ├── recurrent-primary-tumor-enriched-oncofetal-splice-junctions-annotated.tsv.gz
 │   ├── recurrent-primary-tumor-enriched-oncofetal-splice-junctions.tsv.gz
