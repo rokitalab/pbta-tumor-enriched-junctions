@@ -8,14 +8,15 @@ else
     Rscript 01-get-junction-counts.R
 fi
 
-# identify tumor-enriched junctions
-Rscript --vanilla 02-calculate-tumor-enriched-splicing.R
+# identify tumor-enriched junctions and classify oncofetal junctions
+Rscript --vanilla 02-classify-tumor-enriched-junctions.R
+Rscript --vanilla 03-classify-oncofetal-junctions.R
 
 # uniprot domain annotation
-bash 03-uniprot-domain-annotation.sh
+bash 04-uniprot-domain-annotation.sh
 
 # pfam domain annotation
-Rscript --vanilla 04-pfam-annotation.R
+Rscript --vanilla 05-pfam-annotation.R
 
 # domain and expression filtering
-Rscript --vanilla 05-domain-expression-filtering.R
+Rscript --vanilla 06-domain-expression-filtering.R
