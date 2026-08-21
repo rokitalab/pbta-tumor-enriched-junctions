@@ -33,7 +33,7 @@ gtex_psi_file <- file.path(root_dir, "analyses",
 evodevo_psi_file <- file.path(root_dir, "analyses",
                               "01-ctrl-rmats-processing",
                               "results",
-                              "evodevo-merged-broadgroup-psi-mat.qs2")
+                              "evodevo-merged-postnatal-psi-mat.qs2")
 
 pedbrain_psi_file <- file.path(root_dir, "analyses",
                                "01-ctrl-rmats-processing",
