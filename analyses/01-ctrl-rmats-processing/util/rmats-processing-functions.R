@@ -169,12 +169,13 @@ create_junction_df <- function(df, event_type){
   
 }
 
-# generate mean normalized target cpm matrices 
+# generate aggregated normalized target cpm matrices
 generate_norm_target_mat <- function(target_df, 
                                      read_cts,
                                      hist,
                                      group_col = "gtex_subgroup",
-                                     id_col = "Kids_First_Biospecimen_ID"){
+                                     id_col = "Kids_First_Biospecimen_ID",
+                                     aggregation_fun = mean){
   
   # Merge histology info
   target_df <- merge(
@@ -199,9 +200,9 @@ generate_norm_target_mat <- function(target_df,
               target_count / used_read_count * 1000000
   ]
   
-  # Group and compute means
+  # Group and summarize values
   agg_target_df <- target_df[
-    , .(mean_target_cpm = mean(target_cpm, na.rm = TRUE)),
+    , .(summary_target_cpm = aggregation_fun(target_cpm, na.rm = TRUE)),
     by = c(group_col, "target")
   ]
   
@@ -209,7 +210,7 @@ generate_norm_target_mat <- function(target_df,
   norm_target_mat <- dcast(
     agg_target_df,
     as.formula(paste("target ~", group_col)),
-    value.var = "mean_target_cpm"
+    value.var = "summary_target_cpm"
   )
   
   # return mat
@@ -218,12 +219,13 @@ generate_norm_target_mat <- function(target_df,
 }
 
 
-# generate mean normalized junction cpm matrices 
+# generate aggregated normalized junction cpm matrices
 generate_norm_junction_mat <- function(junction_df, 
                                        read_cts,
                                        hist,
                                        group_col = "gtex_subgroup",
-                                       id_col = "Kids_First_Biospecimen_ID"){
+                                       id_col = "Kids_First_Biospecimen_ID",
+                                       aggregation_fun = mean){
   
   # in rare cases where junctions are duplicated, calculate max junction counts
   junction_df <- junction_df[
@@ -254,9 +256,9 @@ generate_norm_junction_mat <- function(junction_df,
                 junction_count / used_read_count * 1000000
   ]
   
-  # Group and compute means
+  # Group and summarize values
   agg_junction_df <- junction_df[
-    , .(mean_junction_cpm = mean(junction_cpm, na.rm = TRUE)),
+    , .(summary_junction_cpm = aggregation_fun(junction_cpm, na.rm = TRUE)),
     by = c(group_col, "junction")
   ]
   
@@ -264,7 +266,7 @@ generate_norm_junction_mat <- function(junction_df,
   norm_junction_mat <- dcast(
     agg_junction_df,
     as.formula(paste("junction ~", group_col)),
-    value.var = "mean_junction_cpm"
+    value.var = "summary_junction_cpm"
   )
   
   # return mat
@@ -333,7 +335,8 @@ create_psi_matrix <- function(df,
                               event_type,
                               hist,
                               id_col,
-                              group_col){
+                              group_col,
+                              aggregation_fun = mean){
   
   
   if (event_type == "SE"){
@@ -368,9 +371,9 @@ create_psi_matrix <- function(df,
     all.x = TRUE
   )
   
-  # Group and compute means
+  # Group and summarize values
   agg_psi_df <- psi_df[
-    , .(mean_psi = mean(psi, na.rm = TRUE)),
+    , .(summary_psi = aggregation_fun(psi, na.rm = TRUE)),
     by = c(group_col, "splice_id")
   ]
   
@@ -378,7 +381,7 @@ create_psi_matrix <- function(df,
   psi_mat <- dcast(
     agg_psi_df,
     as.formula(paste("splice_id ~", group_col)),
-    value.var = "mean_psi"
+    value.var = "summary_psi"
   )
   
   # return mat

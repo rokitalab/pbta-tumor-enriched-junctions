@@ -14,7 +14,7 @@ bash run_module.sh
 ## Folder content
 * `run_module.sh` shell script to run analysis
 * `01-create-gtex-matrices.R` generate splice event matrices from GTEx <40 samples
-* `02-create-evodevo-matrices.R` generate splice event matrices from Evo-Devo brain samples (excluding middle adult, elderly participants); calculate separate junction count stats for 1) narrow evo-devo subgroups (region + age) and 2) broad subgroups (region + broad stage, fetal or postnatal)
+* `02-create-evodevo-matrices.R` generates splice-event matrices from Evo-Devo forebrain and hindbrain samples, excluding middle-adult and elderly participants. Postnatal matrices are grouped by region and recorded stage and use mean PSI/CPM values; prenatal matrices are grouped by region and gestational-age bins (4–5, 6–7, 8–12, 13–16, and 17–19 post-conception weeks) and use median PSI/CPM values. The script also writes the derived prenatal-bin metadata.
 * `03-create-pedbrain-matrices.R` generated splice event matrices from normal pediatric brain samples
 * `04-create-brain-celltype-matrices.R` generated splice event matrices from normal pediatric brain cell types
 * `util/rmats-processing-functions.R` scripts containing functions to process raw rMATS data, normal junction and target counts, calculate mean CPMs by subgroups, and generate matrices. 
@@ -35,12 +35,13 @@ bash run_module.sh
 │   ├── GTEx_Analysis_v8_Annotations_SubjectPhenotypesDS.txt
 │   └── gtex-v10-removed-samples.tsv
 ├── results
-│   ├── evodevo-merged-broadgroup-psi-mat.qs2
-│   ├── evodevo-merged-broadgroup-norm-junction-ct-mat.qs2
-│   ├── evodevo-merged-broadgroup-norm-junction-sd-mat.qs2
-│   ├── evodevo-merged-subgroup-norm-junction-ct-mat.qs2
-│   ├── evodevo-merged-subgroup-norm-junction-sd-mat.qs2
-│   ├── evodevo-merged-subgroup-psi-mat.qs2
+│   ├── evodevo-brain-prenatal-week-binned-metadata.tsv
+│   ├── evodevo-merged-postnatal-norm-junction-ct-mat.qs2
+│   ├── evodevo-merged-postnatal-norm-junction-sd-mat.qs2
+│   ├── evodevo-merged-postnatal-psi-mat.qs2
+│   ├── evodevo-merged-prenatal-week-binned-norm-junction-ct-mat.qs2
+│   ├── evodevo-merged-prenatal-week-binned-norm-junction-sd-mat.qs2
+│   ├── evodevo-merged-prenatal-week-binned-psi-mat.qs2
 │   ├── gtex-merged-norm-junction-ct-mat.qs2
 │   ├── gtex-merged-norm-junction-sd-mat.qs2
 │   ├── gtex-merged-psi-mat.qs2
