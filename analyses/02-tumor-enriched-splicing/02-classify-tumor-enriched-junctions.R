@@ -79,6 +79,11 @@ pbta_junction_df <- pbta_junction_df %>%
 print(glue::glue("Retained {length(atrt_sample_ids)} ATRT samples and ",
                  "{nrow(pbta_junction_df)} PBTA junction rows."))
 
+# Define the novel-junction prevalence cutoff for the cohort currently being
+# surveyed. A junction must occur in fewer than 10% of retained samples.
+n_samples_surveyed <- dplyr::n_distinct(pbta_junction_df$sample_id)
+novel_junction_sample_cutoff <- 0.10 * n_samples_surveyed
+
 # Load ctrl matrices 
 
 # GTEx mean cpms
@@ -298,8 +303,9 @@ ts_junctions <- pbta_junction_df %>%
 # get ts junction counts
 ts_junction_ct_df <- pbta_junction_df %>%
   dplyr::filter(junction %in% ts_junctions$junction) %>%
-  dplyr::count(junction) %>% 
-  dplyr::arrange(desc(n))
+  dplyr::group_by(junction) %>%
+  dplyr::summarise(n_samples = dplyr::n_distinct(sample_id), .groups = "drop") %>%
+  dplyr::arrange(desc(n_samples))
 
 # import gtf, convert to df, filter for exons
 gtf <- rtracklayer::import(file.path(data_dir,
@@ -333,7 +339,8 @@ ts_junction_annot <- ts_junctions %>%
     TRUE ~ "No"
   ))
 
-# filter ts junctions for those using novel SSs and in <10% of cohort
+# Filter novel splice-site junctions to those present in <10% of the
+# currently surveyed cohort.
 ts_junction_ct_df <- ts_junction_ct_df %>%
   left_join(ts_junction_annot) %>%
   dplyr::mutate(novel_ss_usage = case_when(
@@ -341,8 +348,8 @@ ts_junction_ct_df <- ts_junction_ct_df %>%
     up_bound_annotated == "No" & down_bound_annotated == "No" ~ "Yes",
     TRUE ~ "No"
   )) %>%
-  # filter for junctions in <10% of cohort
-  dplyr::filter(n < 250 & novel_ss_usage == "Yes") 
+  dplyr::filter(n_samples < novel_junction_sample_cutoff,
+                novel_ss_usage == "Yes")
 
 # get all ts junctions meeting criteria above
 tesjs_na_ctrl <- pbta_junction_df %>%
