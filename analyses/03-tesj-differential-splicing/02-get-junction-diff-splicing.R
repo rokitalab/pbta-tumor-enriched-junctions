@@ -35,6 +35,11 @@ evodevo_psi_file <- file.path(root_dir, "analyses",
                               "results",
                               "evodevo-merged-postnatal-psi-mat.qs2")
 
+evodevo_metadata_file <- file.path(root_dir, "analyses",
+                                   "01-ctrl-rmats-processing",
+                                   "results",
+                                   "evodevo-brain-prenatal-week-binned-metadata.tsv")
+
 pedbrain_psi_file <- file.path(root_dir, "analyses",
                                "01-ctrl-rmats-processing",
                                "results",
@@ -50,7 +55,54 @@ enr_jc_splice_event_df <- qs2::qs_read(enr_jc_splice_events_file)
 
 gtex_psi_mat <- qs2::qs_read(gtex_psi_file)
 
-evodevo_psi_mat <- qs2::qs_read(evodevo_psi_file) 
+# Collapse the stage-specific postnatal Evo-Devo PSI summaries into one
+# sample-size-weighted reference per brain region. This mirrors the
+# postnatal CPM references used for tumor-enriched-junction classification.
+collapse_evodevo_postnatal_psi <- function(psi_mat, group_sizes) {
+  reference_groups <- c("Forebrain" = "Forebrain",
+                        "Hindbrain" = "Hindbrain")
+  collapsed_mat <- psi_mat %>%
+    dplyr::select(splice_id, splicing_case)
+
+  for (region in names(reference_groups)) {
+    stage_groups <- group_sizes %>%
+      dplyr::filter(region == .env$region) %>%
+      dplyr::pull(evodevo_postnatal_group)
+
+    if (!all(stage_groups %in% names(psi_mat))) {
+      stop(glue::glue("Missing {region} stage group(s) in the Evo-Devo PSI matrix."))
+    }
+
+    stage_n <- group_sizes$n[match(stage_groups,
+                                   group_sizes$evodevo_postnatal_group)]
+    stage_means <- psi_mat %>%
+      dplyr::select(dplyr::all_of(stage_groups)) %>%
+      as.matrix()
+    observed <- !is.na(stage_means)
+    total_n <- rowSums(sweep(observed, 2, stage_n, `*`))
+    stage_means[!observed] <- 0
+
+    collapsed_mat[[reference_groups[[region]]]] <-
+      rowSums(sweep(stage_means, 2, stage_n, `*`)) / total_n
+    collapsed_mat[[reference_groups[[region]]]][total_n == 0] <- NA_real_
+  }
+
+  collapsed_mat
+}
+
+evodevo_group_sizes <- readr::read_tsv(evodevo_metadata_file,
+                                       show_col_types = FALSE) %>%
+  dplyr::filter(!is.na(evodevo_postnatal_group)) %>%
+  dplyr::transmute(
+    evodevo_postnatal_group,
+    region = sub("-.*", "", evodevo_postnatal_group)
+  ) %>%
+  dplyr::count(region, evodevo_postnatal_group, name = "n")
+
+evodevo_psi_mat <- collapse_evodevo_postnatal_psi(
+  qs2::qs_read(evodevo_psi_file),
+  evodevo_group_sizes
+)
 
 pedbrain_psi_mat <- qs2::qs_read(pedbrain_psi_file)
 
