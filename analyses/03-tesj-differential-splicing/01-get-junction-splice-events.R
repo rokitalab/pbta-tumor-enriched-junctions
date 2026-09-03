@@ -39,7 +39,7 @@ a5ss_file <- file.path(data_dir,
 enr_jc_file <- file.path(root_dir, "analyses",
                          "02-tumor-enriched-splicing",
                          "results",
-                         "tumor-enriched-oncofetal-splice-junctions-domain-expr-annotated.tsv.gz")
+                         "tumor-enriched-oncofetal-splice-junctions-domain-expr-annotated-atrt.tsv.gz")
 
 # Wrangle data
 enr_jc_df <- read_tsv(enr_jc_file)
@@ -127,8 +127,7 @@ merged_enr_jc_event_df <- event_list[["SE"]] %>%
 # write to output
 qs2::qs_save(merged_enr_jc_event_df,
              file.path(results_dir,
-                       "tumor-enriched-oncofetal-junction-splice-events.qs2"))
+                       "tumor-enriched-oncofetal-junction-splice-events-atrt.qs2"))
 
 # print session info
 sessionInfo()
-
