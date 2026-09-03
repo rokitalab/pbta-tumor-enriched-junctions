@@ -46,7 +46,9 @@ source(file.path(root_dir, "figures", "theme_for_plots.R"))
 Set file paths
 
 ```{r}
-tej_file <- file.path(data_dir,
+tej_file <- file.path(root_dir, "analyses",
+                      "03-tesj-differential-splicing",
+                      "results",
                       "tumor-enriched-oncofetal-diff-splice-junctions.qs2")
 
 hist_file <- file.path(root_dir, "analyses",
@@ -338,31 +340,19 @@ ggsave(file.path(plot_dir,
 event_type_freq_barplot
 ```
 
-Plot frequency of splice events by specificity (tumor-specific vs. onco-fetal)
+Plot frequency of tumor-enriched and oncofetal TEJs by histology
 
 ```{r}
-# pull all junctions annotated as oncofetal
-of_tejs <- recurrent_primary_tej_df %>%
-  dplyr::filter(junction_preference == "Oncofetal") %>%
-  pull(junction)
-
-# define consensus specificity; if no oncofetal assignment, assign as tumor-specific 
-recurrent_primary_tej_df <- recurrent_primary_tej_df %>%
-  dplyr::mutate(consensus_specificity = case_when(
-    junction %in% of_tejs ~ "Oncofetal",
-    TRUE ~ "Tumor-specific"
-  ))
-
 hist_tej_spec_ct <- recurrent_primary_tej_df %>%
-  distinct(junction, plot_group, .keep_all = TRUE) %>%
-  count(plot_group, consensus_specificity) %>%
+  distinct(junction, plot_group, junction_preference) %>%
+  count(plot_group, junction_preference) %>%
   left_join(unique_hist_event_ct) %>%
   dplyr::mutate(n_norm = n/hist_event_n)
 
 tej_spec_barplot <- hist_tej_spec_ct %>%
   dplyr::mutate(plot_group = fct_relevel(plot_group,
                                         as.character(hist_order))) %>%
-  ggplot(aes(y = plot_group, x = n_norm, fill = consensus_specificity)) +
+  ggplot(aes(y = plot_group, x = n_norm, fill = junction_preference)) +
   geom_bar(stat = "identity", color = "black", show.legend = TRUE) + 
   scale_fill_npg() +
   theme_Publication() +
@@ -372,6 +362,7 @@ tej_spec_barplot <- hist_tej_spec_ct %>%
 
 ggsave(file.path(plot_dir,
                  "tej-by-specificity-hist-barplot.pdf"),
+       tej_spec_barplot,
        width = 7, height = 6)
 
 tej_spec_barplot
@@ -382,7 +373,7 @@ Save recurrent splice event df to output
 ```{r}
 write_tsv(recurrent_primary_tej_df,
           file.path(results_dir,
-          "recurrent-primary-tumor-enriched-oncofetal-splice-junctions.tsv.gz"))
+          "recurrent-primary-tumor-enriched-oncofetal-splice-junctions-reclassified.tsv.gz"))
 ```
 
 Print session info
