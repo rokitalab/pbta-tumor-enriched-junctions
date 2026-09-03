@@ -32,16 +32,16 @@ source(file.path(analysis_dir, "util", "add-tpm-values.R"))
 
 # Set file paths
 enr_jc_file <- file.path(results_dir, 
-                         "tumor-enriched-oncofetal-splice-junctions.tsv.gz")
+                         "tumor-enriched-oncofetal-splice-junctions-atrt.tsv.gz")
 
 cds_file <- file.path(results_dir, 
-                      "tumor-enriched-oncofetal-splice-junctions-cds.bed")
+                      "tumor-enriched-oncofetal-splice-junctions-cds-atrt.bed")
 
 pfam_file <- file.path(results_dir,
-                       "tumor-enriched-oncofetal-splice-junctions-pfam-annotated.tsv.gz")
+                       "tumor-enriched-oncofetal-splice-junctions-pfam-annotated-atrt.tsv.gz")
 
 domain_file <- file.path(results_dir,
-                         "tumor-enriched-oncofetal-splice-junctions-domain-anno.uniq.tsv")
+                         "tumor-enriched-oncofetal-splice-junctions-domain-anno-atrt.uniq.tsv")
 
 exp_file <- file.path(data_dir, 
                       "pbta_gene-expression-rsem-tpm-collapsed.rds")
@@ -132,7 +132,7 @@ enr_jc_domain_expr_df <- enr_jc_domain_expr_df %>%
 # write to output
 write_tsv(enr_jc_domain_expr_df,
           file.path(results_dir,
-                    "tumor-enriched-oncofetal-splice-junctions-domain-expr-annotated.tsv.gz"))
+                    "tumor-enriched-oncofetal-splice-junctions-domain-expr-annotated-atrt.tsv.gz"))
 
 # Print session info
 sessionInfo()

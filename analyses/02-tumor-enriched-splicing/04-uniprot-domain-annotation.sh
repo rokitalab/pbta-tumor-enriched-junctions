@@ -5,14 +5,14 @@ output_dir="results"
 
 # set file names
 # input
-input_filename="$output_dir/tumor-enriched-oncofetal-splice-junctions.bed"
+input_filename="$output_dir/tumor-enriched-oncofetal-splice-junctions-atrt.bed"
 
 # output files
-output_cds_filename="$output_dir/tumor-enriched-oncofetal-splice-junctions-cds.bed"
-output_cds_ec_filename="${output_dir%.*}/tumor-enriched-oncofetal-splice-junctions.unipLocExtra.bed"
-output_cds_tmem_filename="${output_dir%.*}/tumor-enriched-oncofetal-splice-junctions.unipLocTransMemb.bed"
-output_cds_cyto_filename="${output_dir%.*}/tumor-enriched-oncofetal-splice-junctions.unipLocCytopl.bed"
-output_target_list_filename="${output_dir%.*}/tumor-enriched-oncofetal-splice-junctions-domain-anno.uniq.tsv"
+output_cds_filename="$output_dir/tumor-enriched-oncofetal-splice-junctions-cds-atrt.bed"
+output_cds_ec_filename="${output_dir%.*}/tumor-enriched-oncofetal-splice-junctions-atrt.unipLocExtra.bed"
+output_cds_tmem_filename="${output_dir%.*}/tumor-enriched-oncofetal-splice-junctions-atrt.unipLocTransMemb.bed"
+output_cds_cyto_filename="${output_dir%.*}/tumor-enriched-oncofetal-splice-junctions-atrt.unipLocCytopl.bed"
+output_target_list_filename="${output_dir%.*}/tumor-enriched-oncofetal-splice-junctions-domain-anno-atrt.uniq.tsv"
 
 ## Filter tumor-enriched junction bed for coding exons only
 bedtools intersect -wo -a "$input_filename" -b <(zgrep 'CDS.*transcript_type "protein_coding"' ../../data/gencode.v39.primary_assembly.annotation.gtf.gz) | awk '{print $1"\t"$2"\t"$3"\t"$4"\t"$5"\t"$6"\t"$7}' | sort -u > "$output_cds_filename"

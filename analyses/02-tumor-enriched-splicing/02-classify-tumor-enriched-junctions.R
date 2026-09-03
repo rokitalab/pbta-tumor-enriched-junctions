@@ -24,6 +24,10 @@ pbta_junction_file <- file.path(root_dir, "analyses",
                                 "02-tumor-enriched-splicing",
                                 "results",
                                 "pbta-merged-norm-junction-cts.qs2")
+cohort_histologies_file <- file.path(root_dir, "analyses",
+                                     "00-create-cohort-histologies",
+                                     "results",
+                                     "cohort-histologies.tsv")
 
 # GTEx
 gtex_junction_mat_file <- file.path(root_dir, "analyses",
@@ -35,7 +39,7 @@ gtex_junction_sd_file <- file.path(root_dir, "analyses",
                                    "results",
                                    "gtex-merged-norm-junction-sd-mat.qs2")
 
-# Evo-devo postnatal brain (region/stage-specific groups)
+# Evo-devo postnatal brain (collapsed to forebrain and hindbrain reference groups)
 evodevo_junction_mat_file <- file.path(root_dir, "analyses",
                                        "01-ctrl-rmats-processing",
                                        "results",
@@ -44,6 +48,10 @@ evodevo_junction_sd_file <- file.path(root_dir, "analyses",
                                       "01-ctrl-rmats-processing",
                                       "results",
                                       "evodevo-merged-postnatal-norm-junction-sd-mat.qs2")
+evodevo_metadata_file <- file.path(root_dir, "analyses",
+                                   "01-ctrl-rmats-processing",
+                                   "results",
+                                   "evodevo-brain-prenatal-week-binned-metadata.tsv")
 
 # pediatric normal brain
 pedbrain_junction_mat_file <- file.path(root_dir, "analyses",
@@ -58,6 +66,18 @@ pedbrain_junction_sd_file <- file.path(root_dir, "analyses",
 ## Wrangle data
 print("Loading PBTA junctions...")
 pbta_junction_df <- qs2::qs_read(pbta_junction_file)
+
+# Restrict this test run to ATRT samples.
+atrt_sample_ids <- read_tsv(cohort_histologies_file,
+                            show_col_types = FALSE) %>%
+  dplyr::filter(plot_group == "Atypical Teratoid Rhabdoid Tumor") %>%
+  dplyr::pull(Kids_First_Biospecimen_ID) %>%
+  unique()
+
+pbta_junction_df <- pbta_junction_df %>%
+  dplyr::filter(sample_id %in% atrt_sample_ids)
+print(glue::glue("Retained {length(atrt_sample_ids)} ATRT samples and ",
+                 "{nrow(pbta_junction_df)} PBTA junction rows."))
 
 # Load ctrl matrices 
 
@@ -78,18 +98,73 @@ gtex_sd_mat <- qs2::qs_read(gtex_junction_sd_file) %>%
     -junction
   )
 
-# Evo-devo
-evodevo_junction_mat <- qs2::qs_read(evodevo_junction_mat_file) %>%
-  rename_with(
-    ~ paste0("mean_cpm_", .x),
-    -junction
-  )
+# Collapse the stage-specific postnatal Evo-Devo summaries into one reference
+# group per brain region.  The paired mean and SD matrices, together with the
+# number of samples in each original stage group, allow pooled region-level
+# means and SDs to be calculated without loading the per-sample junction data.
+collapse_evodevo_postnatal_groups <- function(mean_mat, sd_mat, group_sizes) {
+  if (!setequal(mean_mat$junction, sd_mat$junction)) {
+    stop("Evo-Devo mean and SD matrices do not contain the same junctions.")
+  }
 
-evodevo_sd_mat <- qs2::qs_read(evodevo_junction_sd_file) %>%
-  rename_with(
-    ~ paste0("sd_cpm_", .x),
-    -junction
-  )
+  sd_mat <- sd_mat[match(mean_mat$junction, sd_mat$junction), ]
+  reference_groups <- c("Forebrain" = "postnatal-forebrain",
+                        "Hindbrain" = "postnatal-hindbrain")
+  collapsed_mat <- tibble(junction = mean_mat$junction)
+
+  for (region in names(reference_groups)) {
+    stage_groups <- group_sizes %>%
+      dplyr::filter(region == .env$region) %>%
+      dplyr::pull(evodevo_postnatal_group)
+
+    if (!all(stage_groups %in% names(mean_mat)) ||
+        !all(stage_groups %in% names(sd_mat))) {
+      stop(glue::glue("Missing {region} stage group(s) in an Evo-Devo matrix."))
+    }
+
+    stage_n <- group_sizes$n[match(stage_groups,
+                                   group_sizes$evodevo_postnatal_group)]
+    stage_means <- as.matrix(mean_mat[, stage_groups, drop = FALSE])
+    stage_sds <- as.matrix(sd_mat[, stage_groups, drop = FALSE])
+    observed <- !is.na(stage_means)
+    total_n <- rowSums(sweep(observed, 2, stage_n, `*`))
+
+    # Pooled mean and sample SD across the original stage groups.
+    stage_means[!observed] <- 0
+    pooled_mean <- rowSums(sweep(stage_means, 2, stage_n, `*`)) / total_n
+    stage_sds[is.na(stage_sds)] <- 0
+    within_ss <- rowSums(sweep(stage_sds^2, 2, stage_n - 1, `*`) * observed)
+    mean_deviation <- sweep(stage_means, 1, pooled_mean, `-`)
+    mean_deviation[!observed] <- 0
+    between_ss <- rowSums(sweep(mean_deviation^2, 2, stage_n, `*`))
+    pooled_sd <- sqrt((within_ss + between_ss) / (total_n - 1))
+    pooled_sd[total_n <= 1] <- NA_real_
+
+    collapsed_mat[[paste0("mean_cpm_", reference_groups[[region]])]] <- pooled_mean
+    collapsed_mat[[paste0("sd_cpm_", reference_groups[[region]])]] <- pooled_sd
+  }
+
+  collapsed_mat
+}
+
+evodevo_group_sizes <- readr::read_tsv(evodevo_metadata_file,
+                                       show_col_types = FALSE) %>%
+  dplyr::filter(!is.na(evodevo_postnatal_group)) %>%
+  dplyr::transmute(
+    evodevo_postnatal_group,
+    region = sub("-.*", "", evodevo_postnatal_group)
+  ) %>%
+  dplyr::count(region, evodevo_postnatal_group, name = "n")
+
+evodevo_postnatal_ref <- collapse_evodevo_postnatal_groups(
+  qs2::qs_read(evodevo_junction_mat_file),
+  qs2::qs_read(evodevo_junction_sd_file),
+  evodevo_group_sizes
+)
+evodevo_junction_mat <- evodevo_postnatal_ref %>%
+  dplyr::select(junction, starts_with("mean_cpm_"))
+evodevo_sd_mat <- evodevo_postnatal_ref %>%
+  dplyr::select(junction, starts_with("sd_cpm_"))
 
 # Normal ped brain
 pedbrain_junction_mat <- qs2::qs_read(pedbrain_junction_mat_file) %>%
@@ -282,7 +357,7 @@ merged_enr_jc_df <- merged_enr_jc_df %>%
  
 # Save the intermediate tumor-enriched calls for the next pipeline stage.
 qs2::qs_save(merged_enr_jc_df,
-             file.path(results_dir, "tumor-enriched-junctions.qs2"))
+             file.path(results_dir, "tumor-enriched-junctions-atrt.qs2"))
 
 # print session info
 sessionInfo()
