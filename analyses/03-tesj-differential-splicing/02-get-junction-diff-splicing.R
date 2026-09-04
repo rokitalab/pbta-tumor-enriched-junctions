@@ -53,6 +53,14 @@ enr_jcs_annotated_file <- file.path(root_dir, "analyses",
 # Wrangle data
 enr_jc_splice_event_df <- qs2::qs_read(enr_jc_splice_events_file)
 
+# Retain the original tumor-enrichment classification in each module output.
+# The splice-event table is generated from rMATS records, so it does not
+# itself contain this junction-level annotation.
+enr_jcs_annotated_df <- read_tsv(enr_jcs_annotated_file)
+criteria_by_id <- enr_jcs_annotated_df %>%
+  dplyr::transmute(id = glue::glue("{sample_id}-{junction}"), criteria) %>%
+  distinct()
+
 gtex_psi_mat <- qs2::qs_read(gtex_psi_file)
 
 # Collapse the stage-specific postnatal Evo-Devo PSI summaries into one
@@ -255,7 +263,8 @@ consensus_jc_df <- merged_resolved_df %>%
 merged_resolved_df <- merged_resolved_df %>%
   left_join(consensus_jc_df %>%
               dplyr::select(junction, 
-                            consensus_jc_event_type))
+                            consensus_jc_event_type)) %>%
+  left_join(criteria_by_id, by = "id")
 
 # write tsv
 write_tsv(merged_resolved_df,
@@ -263,7 +272,7 @@ write_tsv(merged_resolved_df,
                     "tumor-enriched-oncofetal-junction-diff-splice-event-annotation-atrt.tsv.gz"))
 
 # load domain-annotated, expression filtered junction df
-enr_jcs_annotated_filtered_df <- read_tsv(enr_jcs_annotated_file) %>%
+enr_jcs_annotated_filtered_df <- enr_jcs_annotated_df %>%
   dplyr::mutate(id = glue::glue("{sample_id}-{junction}")) %>%
   dplyr::filter(id %in% merged_resolved_df$id) %>%
   left_join(merged_resolved_df %>%

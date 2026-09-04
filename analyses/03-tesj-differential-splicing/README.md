@@ -37,6 +37,7 @@ bash run_module.sh
    - Across resolved sample-level calls, select the most frequent event type for each junction.
    - Break ties using the largest absolute median dPSI.
    - Only TEJs with a resolved differential-splicing event are retained in the final differential-splicing output.
+   - The original tumor-enrichment `criteria` annotation is retained in the differential-splicing event annotation.
 
 ## Folder content
 * `run_module.sh` shell script to run analysis
