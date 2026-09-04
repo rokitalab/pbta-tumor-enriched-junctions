@@ -32,7 +32,8 @@ cohort_histologies_file <- file.path(root_dir, "analyses",
                                      "00-create-cohort-histologies",
                                      "results",
                                      "cohort-histologies.tsv")
-control_sj_file <- file.path(analysis_dir, "input",
+
+control_sj_file <- file.path(data_dir,
                              "SJ.merged.control-cohort.tsv.gz")
 
 # GTEx
@@ -253,6 +254,15 @@ junctions_in_ctrl_df <- pbta_junction_df %>%
 ts_junctions <- pbta_junction_df %>%
   distinct(junction) %>%
   dplyr::filter(!junction %in% ctrl_sd_mat$junction) %>%
+  # Exclude retained introns, represented as zero-length junctions whose two
+  # splice boundaries are identical (fields 3 and 4).
+  dplyr::mutate(
+    junction_fields = strsplit(junction, ":|-|_"),
+    up_boundary_coord = vapply(junction_fields, `[[`, character(1), 3),
+    down_boundary_coord = vapply(junction_fields, `[[`, character(1), 4)
+  ) %>%
+  dplyr::filter(up_boundary_coord != down_boundary_coord) %>%
+  dplyr::select(-junction_fields, -up_boundary_coord, -down_boundary_coord) %>%
   dplyr::mutate(boundary = sub(".*-(.*)-.*", "\\1", junction)) %>%
   dplyr::filter(!boundary %in% junctions_in_ctrl_df$boundary)
 
