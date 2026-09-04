@@ -138,7 +138,7 @@ jc_annot <- read_tsv(file.path(results_dir, "junction-annot.tsv.gz")) %>%
 
 merged_enr_jc_annot_df <- merged_enr_jc_df %>%
   dplyr::select(junction, sample_id, junction_count, junction_cpm, boundary,
-                junction_preference, min_cpm_fc_all, min_cpm_snr_all,
+                criteria, junction_preference, min_cpm_fc_all, min_cpm_snr_all,
                 max_mean_cpm_all, max_prenatal_min_cpm_fc,
                 max_prenatal_min_cpm_snr, oncofetal_prenatal_group) %>%
   left_join(jc_annot, by = "junction")

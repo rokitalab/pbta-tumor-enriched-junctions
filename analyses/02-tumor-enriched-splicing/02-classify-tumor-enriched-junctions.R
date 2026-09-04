@@ -17,6 +17,8 @@ data_dir <- file.path(root_dir, "data")
 analysis_dir <- file.path(root_dir, "analyses", "02-tumor-enriched-splicing")
 results_dir <- file.path(analysis_dir, "results")
 
+source(file.path(analysis_dir, "util", "other-functions.R"))
+
 ## file paths
 
 # PBTA
@@ -24,10 +26,14 @@ pbta_junction_file <- file.path(root_dir, "analyses",
                                 "02-tumor-enriched-splicing",
                                 "results",
                                 "pbta-merged-norm-junction-cts.qs2")
+
+# Control
 cohort_histologies_file <- file.path(root_dir, "analyses",
                                      "00-create-cohort-histologies",
                                      "results",
                                      "cohort-histologies.tsv")
+control_sj_file <- file.path(analysis_dir, "input",
+                             "SJ.merged.control-cohort.tsv.gz")
 
 # GTEx
 gtex_junction_mat_file <- file.path(root_dir, "analyses",
@@ -64,8 +70,6 @@ pedbrain_junction_sd_file <- file.path(root_dir, "analyses",
                                        "normal-pedbrain-merged-norm-junction-sd-mat.qs2")
 
 ## Wrangle data
-print("Loading PBTA junctions...")
-pbta_junction_df <- qs2::qs_read(pbta_junction_file)
 
 # Restrict this test run to ATRT samples.
 atrt_sample_ids <- read_tsv(cohort_histologies_file,
@@ -74,7 +78,8 @@ atrt_sample_ids <- read_tsv(cohort_histologies_file,
   dplyr::pull(Kids_First_Biospecimen_ID) %>%
   unique()
 
-pbta_junction_df <- pbta_junction_df %>%
+print("Loading PBTA junctions...")
+pbta_junction_df <- qs2::qs_read(pbta_junction_file) %>%
   dplyr::filter(sample_id %in% atrt_sample_ids)
 print(glue::glue("Retained {length(atrt_sample_ids)} ATRT samples and ",
                  "{nrow(pbta_junction_df)} PBTA junction rows."))
@@ -102,55 +107,6 @@ gtex_sd_mat <- qs2::qs_read(gtex_junction_sd_file) %>%
     ~ paste0("sd_cpm_", .x),
     -junction
   )
-
-# Collapse the stage-specific postnatal Evo-Devo summaries into one reference
-# group per brain region.  The paired mean and SD matrices, together with the
-# number of samples in each original stage group, allow pooled region-level
-# means and SDs to be calculated without loading the per-sample junction data.
-collapse_evodevo_postnatal_groups <- function(mean_mat, sd_mat, group_sizes) {
-  if (!setequal(mean_mat$junction, sd_mat$junction)) {
-    stop("Evo-Devo mean and SD matrices do not contain the same junctions.")
-  }
-
-  sd_mat <- sd_mat[match(mean_mat$junction, sd_mat$junction), ]
-  reference_groups <- c("Forebrain" = "postnatal-forebrain",
-                        "Hindbrain" = "postnatal-hindbrain")
-  collapsed_mat <- tibble(junction = mean_mat$junction)
-
-  for (region in names(reference_groups)) {
-    stage_groups <- group_sizes %>%
-      dplyr::filter(region == .env$region) %>%
-      dplyr::pull(evodevo_postnatal_group)
-
-    if (!all(stage_groups %in% names(mean_mat)) ||
-        !all(stage_groups %in% names(sd_mat))) {
-      stop(glue::glue("Missing {region} stage group(s) in an Evo-Devo matrix."))
-    }
-
-    stage_n <- group_sizes$n[match(stage_groups,
-                                   group_sizes$evodevo_postnatal_group)]
-    stage_means <- as.matrix(mean_mat[, stage_groups, drop = FALSE])
-    stage_sds <- as.matrix(sd_mat[, stage_groups, drop = FALSE])
-    observed <- !is.na(stage_means)
-    total_n <- rowSums(sweep(observed, 2, stage_n, `*`))
-
-    # Pooled mean and sample SD across the original stage groups.
-    stage_means[!observed] <- 0
-    pooled_mean <- rowSums(sweep(stage_means, 2, stage_n, `*`)) / total_n
-    stage_sds[is.na(stage_sds)] <- 0
-    within_ss <- rowSums(sweep(stage_sds^2, 2, stage_n - 1, `*`) * observed)
-    mean_deviation <- sweep(stage_means, 1, pooled_mean, `-`)
-    mean_deviation[!observed] <- 0
-    between_ss <- rowSums(sweep(mean_deviation^2, 2, stage_n, `*`))
-    pooled_sd <- sqrt((within_ss + between_ss) / (total_n - 1))
-    pooled_sd[total_n <= 1] <- NA_real_
-
-    collapsed_mat[[paste0("mean_cpm_", reference_groups[[region]])]] <- pooled_mean
-    collapsed_mat[[paste0("sd_cpm_", reference_groups[[region]])]] <- pooled_sd
-  }
-
-  collapsed_mat
-}
 
 evodevo_group_sizes <- readr::read_tsv(evodevo_metadata_file,
                                        show_col_types = FALSE) %>%
@@ -193,7 +149,7 @@ ctrl_junction_mat <- gtex_junction_mat %>%
 keep_cols <- !grepl("junction", colnames(ctrl_junction_mat))
 
 ctrl_junction_mat <- ctrl_junction_mat[
-  rowSums(ctrl_junction_mat[, keep_cols, drop = FALSE] >= 10) == 0,
+  rowSums(as.data.frame(ctrl_junction_mat)[, keep_cols, drop = FALSE] >= 10) == 0,
 ]
 
 # merge control sd cpm matrices
@@ -300,6 +256,19 @@ ts_junctions <- pbta_junction_df %>%
   dplyr::mutate(boundary = sub(".*-(.*)-.*", "\\1", junction)) %>%
   dplyr::filter(!boundary %in% junctions_in_ctrl_df$boundary)
 
+# Remove junctions that were absent from the rMATS control matrices but are
+# observed in the independent control STAR SJ data.  Save the matched pairs
+# for auditability before excluding them from the tumor-specific set.
+control_sj_matches <- find_control_sj_matches(ts_junctions$junction,
+                                              control_sj_file)
+
+print(glue::glue(
+  "Removing {dplyr::n_distinct(control_sj_matches$junction)} tumor-specific ",
+  "junction(s) observed in the control SJ file."
+))
+ts_junctions <- ts_junctions %>%
+  dplyr::filter(!junction %in% control_sj_matches$junction)
+
 # get ts junction counts
 ts_junction_ct_df <- pbta_junction_df %>%
   dplyr::filter(junction %in% ts_junctions$junction) %>%
@@ -347,14 +316,21 @@ ts_junction_ct_df <- ts_junction_ct_df %>%
     (up_bound_annotated == "No" | down_bound_annotated == "No") & up_bound != down_bound ~ "Yes",
     up_bound_annotated == "No" & down_bound_annotated == "No" ~ "Yes",
     TRUE ~ "No"
-  )) %>%
-  dplyr::filter(n_samples < novel_junction_sample_cutoff,
-                novel_ss_usage == "Yes")
+  ))
+#  dplyr::filter(novel_ss_usage == "Yes")
 
 # get all ts junctions meeting criteria above
 tesjs_na_ctrl <- pbta_junction_df %>%
   dplyr::filter(junction %in% ts_junction_ct_df$junction) %>%
-  dplyr::mutate(criteria = "No ctrl expr, novel SS usage",
+  left_join(ts_junction_ct_df %>% dplyr::select(junction,
+                                                novel_ss_usage)) %>%
+  # Define the shared splice boundary here too, so it is retained after these
+  # no-control junctions are appended to the control-compared calls.
+  dplyr::mutate(boundary = sub(".*-(.*)-.*", "\\1", junction),
+                criteria = case_when(
+                  novel_ss_usage == "Yes" ~ "No ctrl expr, novel SS usage",
+                  TRUE ~ "No ctrl expr"
+                  ),
                 junction_preference = "Tumor-enriched")
 
 # append above junctions to merged enr jc df 
