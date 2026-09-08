@@ -8,6 +8,8 @@
 
 New files: 
 * `depmap-splice-events-rmats.tsv.gz`
+* `depmap-gene-expression-rsem-tpm-collapsed.rds`
+* `depmap-rna-isoform-expression-rsem-tpm.rds`
 * `depmap-rna-metadata.tsv`; depmap RNA-seq sample metadata with Bioassay IDs
 * `SJ.merged.control-cohort.tsv.gz`; STAR junction counts, filtered for normal brain control cohort samples
 
@@ -25,6 +27,10 @@ v13
 ├── consensus_wgs_plus_cnvkit_wxs_plus_freec_tumor_only_x_and_y.tsv.gz
 ├── cptac-protein-imputed-phospho-expression-log2-ratio.tsv.gz
 ├── cptac-protein-imputed-prot-expression-abundance.tsv.gz
+├── depmap-gene-expression-rsem-tpm-collapsed.rds
+├── depmap-rna-isoform-expression-rsem-tpm.rds
+├── depmap-rna-metadata.tsv
+├── depmap-splice-events-rmats.tsv.gz
 ├── evodevo-histologies.tsv
 ├── evodevo-rmats_merged_raw_A3SS.qs2
 ├── evodevo-rmats_merged_raw_A5SS.qs2
@@ -98,6 +104,7 @@ v13
 ├── ped-normal-brain-histologies.tsv
 ├── release-notes.md
 ├── rna-isoform-expression-rsem-tpm.rds
+├── SJ.merged.control-cohort.tsv.gz
 ├── snv-consensus-plus-hotspots.maf.tsv.gz
 ├── snv-mutation-tmb-all.tsv
 ├── snv-mutation-tmb-coding.tsv
