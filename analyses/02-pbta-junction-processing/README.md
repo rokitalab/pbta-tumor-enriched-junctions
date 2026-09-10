@@ -22,7 +22,7 @@ bash run_module.sh
 ## Input files
 * `data/pbta-rmats_merged_raw_{SE,RI,A3SS,A5SS}.qs2` PBTA rMATS splice-event data.
 * `data/pbta_input_read_counts.tsv` PBTA input-read counts used to normalize junction counts.
-* `analyses/02-tumor-enriched-splicing/input/pbta-rna-high-intron-samples.tsv` PBTA samples excluded because of high intronic read fraction.
+* `analyses/00-create-cohort-histologies/input/pbta-rna-high-intron-samples.tsv` PBTA samples excluded because of high intronic read fraction.
 * `analyses/00-create-cohort-histologies/results/cohort-histologies.tsv` PBTA sample identifiers used to select samples for the CPM matrix.
 * `analyses/01-ctrl-rmats-processing/results/*-merged-norm-junction-ct-mat.qs2` normal control-cohort junction CPM matrices used to exclude expressed junctions.
 
