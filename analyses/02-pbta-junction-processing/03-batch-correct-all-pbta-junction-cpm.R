@@ -21,10 +21,6 @@ root_dir <- find_root(has_dir(".git"))
 analysis_dir <- file.path(root_dir, "analyses", "02-pbta-junction-processing")
 results_dir <- file.path(analysis_dir, "results")
 
-## Test settings. Set test_mode to FALSE for the complete matrix.
-test_mode <- FALSE
-test_n_junctions <- 1000000L
-
 ## Exclude junctions observed in fewer than this many samples.
 min_non_na_values <- 10L
 min_non_na_per_batch <- 2L
@@ -47,11 +43,7 @@ pbta_merged_file <- file.path(
 )
 output_file <- file.path(
   results_dir,
-  if (test_mode) {
-    "all-pbta-splice-junction-log2-cpm-combat-corrected-test.qs2"
-  } else {
-    "all-pbta-splice-junction-log2-cpm-combat-corrected.qs2"
-  }
+  "all-pbta-splice-junction-log2-cpm-combat-corrected.qs2"
 )
 batch_corrected_pbta_file <- file.path(
   results_dir,
@@ -74,19 +66,10 @@ if (!length(sample_ids)) {
   stop("The input matrix contains no sample columns.")
 }
 
-## Randomize row indices without copying the full CPM matrix. The randomized
-## order is used for both test-row selection and ComBat chunk formation.
+## Randomize row indices without copying the full CPM matrix so each ComBat
+## chunk is broadly representative.
 set.seed(random_seed)
 junction_indices <- sample.int(nrow(junction_cpm))
-
-if (test_mode) {
-  n_test_junctions <- min(test_n_junctions, length(junction_indices))
-  message(
-    "Test mode: retaining ", n_test_junctions,
-    " randomly selected junctions."
-  )
-  junction_indices <- junction_indices[seq_len(n_test_junctions)]
-}
 
 cohort_hist <- readr::read_tsv(cohort_hist_file, show_col_types = FALSE)
 required_columns <- c("Kids_First_Biospecimen_ID", "RNA_library")
