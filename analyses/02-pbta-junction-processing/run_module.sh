@@ -16,3 +16,6 @@ fi
 
 # Create the all-PBTA junction CPM matrix.
 Rscript --vanilla 02-create-all-pbta-junction-cpm-matrix.R
+
+# Correct all-PBTA junction CPMs for RNA library-preparation batch effects.
+Rscript --vanilla 03-batch-correct-all-pbta-junction-cpm.R
