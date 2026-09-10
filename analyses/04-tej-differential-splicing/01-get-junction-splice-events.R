@@ -17,7 +17,7 @@ library(data.table)
 ### Set directory paths
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
 data_dir <- file.path(root_dir, "data")
-analysis_dir <- file.path(root_dir, "analyses", "03-tesj-differential-splicing")
+analysis_dir <- file.path(root_dir, "analyses", "04-tej-differential-splicing")
 results_dir <- file.path(analysis_dir, "results")
 
 if (!dir.exists(results_dir)) {
@@ -37,7 +37,7 @@ a5ss_file <- file.path(data_dir,
                        "pbta-rmats_merged_raw_A5SS.qs2")
 
 enr_jc_file <- file.path(root_dir, "analyses",
-                         "02-tumor-enriched-splicing",
+                         "03-classify-tejs",
                          "results",
                          "tumor-enriched-oncofetal-splice-junctions-domain-expr-annotated-atrt.tsv.gz")
 
