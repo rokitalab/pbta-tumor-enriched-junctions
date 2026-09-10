@@ -19,11 +19,11 @@ library(data.table)
 ### Set directory paths
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
 data_dir <- file.path(root_dir, "data")
-analysis_dir <- file.path(root_dir, "analyses", "02-tumor-enriched-splicing")
-input_dir <- file.path(analysis_dir, "input")
-results_dir <- file.path(analysis_dir, "results")
+module_dir <- file.path(root_dir, "analyses", "02-pbta-junction-processing")
+input_dir <- file.path(root_dir, "analyses", "02-tumor-enriched-splicing", "input")
+results_dir <- file.path(module_dir, "results")
 
-source(file.path(analysis_dir, "util", "rmats-processing-functions.R"))
+source(file.path(module_dir, "util", "rmats-processing-functions.R"))
 
 # Set file paths
 se_file <- file.path(data_dir,
