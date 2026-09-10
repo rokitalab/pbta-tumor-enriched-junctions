@@ -1,7 +1,123 @@
 # release notes
 
 
-## current release (v12)
+## current release (v13)
+- Data release date: 2026-09-04
+- OpenPedCan data release date: 2024-03-01 (v15)
+- status: available
+
+New files: 
+* `depmap-splice-events-rmats.tsv.gz`
+* `depmap-gene-expression-rsem-tpm-collapsed.rds`
+* `depmap-rna-isoform-expression-rsem-tpm.rds`
+* `depmap-rna-metadata.tsv`; depmap RNA-seq sample metadata with Bioassay IDs
+* `SJ.merged.control-cohort.tsv.gz`; STAR junction counts, filtered for normal brain control cohort samples
+
+```
+v13
+.
+├── AlphaFold-tumor-enriched-splice-junction-predictions.zip
+├── GSE73721-normal-histologies.tsv
+├── brain_cell_type-rmats_merged_raw_A3SS.qs2
+├── brain_cell_type-rmats_merged_raw_A5SS.qs2
+├── brain_cell_type-rmats_merged_raw_RI.qs2
+├── brain_cell_type-rmats_merged_raw_SE.qs2
+├── brain_cell_type_input_read_counts.tsv
+├── consensus_wgs_plus_cnvkit_wxs_plus_freec_tumor_only_autosomes.tsv.gz
+├── consensus_wgs_plus_cnvkit_wxs_plus_freec_tumor_only_x_and_y.tsv.gz
+├── cptac-protein-imputed-phospho-expression-log2-ratio.tsv.gz
+├── cptac-protein-imputed-prot-expression-abundance.tsv.gz
+├── depmap-gene-expression-rsem-tpm-collapsed.rds
+├── depmap-rna-isoform-expression-rsem-tpm.rds
+├── depmap-rna-metadata.tsv
+├── depmap-splice-events-rmats.tsv.gz
+├── evodevo-histologies.tsv
+├── evodevo-rmats_merged_raw_A3SS.qs2
+├── evodevo-rmats_merged_raw_A5SS.qs2
+├── evodevo-rmats_merged_raw_RI.qs2
+├── evodevo-rmats_merged_raw_SE.qs2
+├── evodevo_gene-expression-rsem-tpm-collapsed.all.rds
+├── evodevo_input_read_counts.tsv
+├── evodevo_rna-isoform-expression-rsem-tpm.rds
+├── gbm-protein-imputed-phospho-expression-abundance.tsv.gz
+├── gbm-protein-imputed-prot-expression-abundance.tsv.gz
+├── gtex-harmonized-gene-expression-rsem-tpm-collapsed.brain-under40.rds
+├── gtex-harmonized-isoform-expression-rsem-tpm.rds
+├── gtex-rmats_merged_raw_A3SS.qs2
+├── gtex-rmats_merged_raw_A5SS.qs2
+├── gtex-rmats_merged_raw_RI.qs2
+├── gtex-rmats_merged_raw_SE.qs2
+├── gtex_input_read_counts.tsv
+├── histologies.tsv
+├── hope-protein-imputed-phospho-expression-abundance.tsv.gz
+├── hope-protein-imputed-prot-expression-abundance.tsv.gz
+├── independent-specimens.methyl.primary-plus.eachcohort.tsv
+├── independent-specimens.methyl.primary-plus.tsv
+├── independent-specimens.methyl.primary.eachcohort.tsv
+├── independent-specimens.methyl.primary.tsv
+├── independent-specimens.methyl.relapse.eachcohort.tsv
+├── independent-specimens.methyl.relapse.tsv
+├── independent-specimens.rnaseq.primary-plus-pre-release.tsv
+├── independent-specimens.rnaseq.primary-pre-release.tsv
+├── independent-specimens.rnaseq.relapse-pre-release.tsv
+├── independent-specimens.rnaseqpanel.primary-plus.eachcohort.tsv
+├── independent-specimens.rnaseqpanel.primary-plus.tsv
+├── independent-specimens.rnaseqpanel.primary.eachcohort.tsv
+├── independent-specimens.rnaseqpanel.primary.tsv
+├── independent-specimens.rnaseqpanel.relapse.eachcohort.tsv
+├── independent-specimens.rnaseqpanel.relapse.tsv
+├── independent-specimens.wgs.primary-plus.eachcohort.tsv
+├── independent-specimens.wgs.primary-plus.tsv
+├── independent-specimens.wgs.primary.eachcohort.tsv
+├── independent-specimens.wgs.primary.tsv
+├── independent-specimens.wgs.relapse.eachcohort.tsv
+├── independent-specimens.wgs.relapse.tsv
+├── independent-specimens.wgswxspanel.primary-plus.eachcohort.prefer.wgs.tsv
+├── independent-specimens.wgswxspanel.primary-plus.eachcohort.prefer.wxs.tsv
+├── independent-specimens.wgswxspanel.primary-plus.prefer.wgs.tsv
+├── independent-specimens.wgswxspanel.primary-plus.prefer.wxs.tsv
+├── independent-specimens.wgswxspanel.primary.eachcohort.prefer.wgs.tsv
+├── independent-specimens.wgswxspanel.primary.eachcohort.prefer.wxs.tsv
+├── independent-specimens.wgswxspanel.primary.prefer.wgs.tsv
+├── independent-specimens.wgswxspanel.primary.prefer.wxs.tsv
+├── independent-specimens.wgswxspanel.relapse.eachcohort.prefer.wgs.tsv
+├── independent-specimens.wgswxspanel.relapse.eachcohort.prefer.wxs.tsv
+├── independent-specimens.wgswxspanel.relapse.prefer.wgs.tsv
+├── independent-specimens.wgswxspanel.relapse.prefer.wxs.tsv
+├── long-read-RNAseq.zip
+├── md5sum.txt
+├── normal-brain-isoform-expression-rsem-tpm.rds
+├── normal-brain.gene-expression-rsem-tpm-collapsed.all.rds
+├── normal_ped_brain-rmats_merged_raw_A3SS.qs2
+├── normal_ped_brain-rmats_merged_raw_A5SS.qs2
+├── normal_ped_brain-rmats_merged_raw_RI.qs2
+├── normal_ped_brain-rmats_merged_raw_SE.qs2
+├── normal_ped_brain_input_read_counts.tsv
+├── pbta-gene-expr-log2-tpm-combat-corrected.qs2
+├── pbta-isoform-expr-log2-tpm-combat-corrected.qs2
+├── pbta-rmats_merged_raw_A3SS.qs2
+├── pbta-rmats_merged_raw_A5SS.qs2
+├── pbta-rmats_merged_raw_RI.qs2
+├── pbta-rmats_merged_raw_SE.qs2
+├── pbta_gene-expression-rsem-tpm-collapsed.rds
+├── pbta_input_read_counts.tsv
+├── ped-normal-brain-histologies.tsv
+├── release-notes.md
+├── rna-isoform-expression-rsem-tpm.rds
+├── SJ.merged.control-cohort.tsv.gz
+├── snv-consensus-plus-hotspots.maf.tsv.gz
+├── snv-mutation-tmb-all.tsv
+├── snv-mutation-tmb-coding.tsv
+├── snv-mutect2-tumor-only-plus-hotspots.maf.tsv.gz
+├── tumor-enriched-oncofetal-diff-splice-junctions.qs2
+├── tumor-enriched-oncofetal-junction-diff-splice-event-annotation.tsv.gz
+├── unipLocCytopl.hg38.col.txt
+├── unipLocExtra.hg38.col.txt
+└── unipLocTransMemb.hg38.col.txt
+```
+
+
+## archived release (v12)
 - Data release date: 2026-07-28
 - OpenPedCan data release date: 2024-03-01 (v15)
 - status: available
