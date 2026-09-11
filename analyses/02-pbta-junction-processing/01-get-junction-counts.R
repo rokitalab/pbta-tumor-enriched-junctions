@@ -19,11 +19,16 @@ library(data.table)
 ### Set directory paths
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
 data_dir <- file.path(root_dir, "data")
-module_dir <- file.path(root_dir, "analyses", "02-pbta-junction-processing")
-input_dir <- file.path(root_dir, "analyses", "02-tumor-enriched-splicing", "input")
-results_dir <- file.path(module_dir, "results")
+analysis_dir <- file.path(root_dir, "analyses", "02-pbta-junction-processing")
+results_dir <- file.path(analysis_dir, "results")
 
-source(file.path(module_dir, "util", "rmats-processing-functions.R"))
+if (!dir.exists(results_dir)){
+  
+  dir.create(results_dir)
+  
+}
+
+source(file.path(analysis_dir, "util", "rmats-processing-functions.R"))
 
 # Set file paths
 se_file <- file.path(data_dir,
@@ -37,7 +42,9 @@ a5ss_file <- file.path(data_dir,
 read_file <- file.path(data_dir,
                        "pbta_input_read_counts.tsv")
 
-samples_to_rm_file <- file.path(input_dir,
+samples_to_rm_file <- file.path(root_dir, "analyses",
+                                "00-create-cohort-histologies",
+                                "input",
                                 "pbta-rna-high-intron-samples.tsv")
 
 # Load samples to remove (high intronic read count)
