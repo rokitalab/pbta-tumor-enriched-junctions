@@ -86,9 +86,9 @@ print(glue::glue("Retained {length(atrt_sample_ids)} ATRT samples and ",
                  "{nrow(pbta_junction_df)} PBTA junction rows."))
 
 # Define the novel-junction prevalence cutoff for the cohort currently being
-# surveyed. A junction must occur in fewer than 10% of retained samples.
+# surveyed. A junction must occur in fewer than 25% of retained samples.
 n_samples_surveyed <- dplyr::n_distinct(pbta_junction_df$sample_id)
-novel_junction_sample_cutoff <- 0.10 * n_samples_surveyed
+novel_junction_sample_cutoff <- 0.5 * n_samples_surveyed
 
 # Load ctrl matrices 
 
@@ -318,7 +318,7 @@ ts_junction_annot <- ts_junctions %>%
     TRUE ~ "No"
   ))
 
-# Filter novel splice-site junctions to those present in <10% of the
+# Filter novel splice-site junctions to those present in <25% of the
 # currently surveyed cohort.
 ts_junction_ct_df <- ts_junction_ct_df %>%
   left_join(ts_junction_annot) %>%
@@ -326,8 +326,9 @@ ts_junction_ct_df <- ts_junction_ct_df %>%
     (up_bound_annotated == "No" | down_bound_annotated == "No") & up_bound != down_bound ~ "Yes",
     up_bound_annotated == "No" & down_bound_annotated == "No" ~ "Yes",
     TRUE ~ "No"
-  ))
-#  dplyr::filter(novel_ss_usage == "Yes")
+  )) %>%
+  dplyr::filter(n_samples < novel_junction_sample_cutoff,
+                novel_ss_usage == "Yes")
 
 # get all ts junctions meeting criteria above
 tesjs_na_ctrl <- pbta_junction_df %>%
