@@ -27,9 +27,7 @@ plot_mapping_file <- file.path(input_dir,
 hist_file <- file.path(data_dir,
                        "histologies.tsv")
 
-samples_to_rm_file <- file.path(root_dir, "analyses",
-                                "02-tumor-enriched-splicing",
-                                "input",
+samples_to_rm_file <- file.path(input_dir,
                                 "pbta-rna-high-intron-samples.tsv")
 
 ancestry_file <- file.path(input_dir, 
@@ -37,6 +35,9 @@ ancestry_file <- file.path(input_dir,
 
 survival_file <- file.path(input_dir,
                            "openpedcan_histologies0311.csv")
+
+rare_cns_hist_file <- file.path(input_dir,
+                                "histologies-rare-subtypes.tsv")
 
 # Wrangle data 
 
@@ -95,31 +96,31 @@ cohort_hist <- hist %>%
                 germline_sex_estimate,
                 cancer_predispositions) %>%
   # add plot group & hex codes
-  left_join(plot_mapping_df %>%
-              dplyr::select(broad_histology,
-                            cancer_group,
-                            plot_group,
-                            plot_group_hex)) %>%
-  # resolve NA plot group assignments
-  dplyr::mutate(plot_group = case_when(
-    is.na(plot_group) ~ "Other tumor",
-    TRUE ~ plot_group
-  )) %>%
-  dplyr::mutate(plot_group = case_when(
-    Kids_First_Biospecimen_ID == "BS_N7VQ1GQB" ~ "Low-grade glioma",
-    TRUE ~ plot_group
-  )) %>%
-  dplyr::mutate(molecular_subtype = case_when(
-    Kids_First_Biospecimen_ID == "BS_N7VQ1GQB" ~ "LGG, KIAA1549-BRAF",
-    TRUE ~ molecular_subtype
-  )) %>%
-  # update plot group hex codes
-  dplyr::mutate(plot_group_hex = case_when(
-    plot_group == "Oligodendroglioma" ~ "tan",
-    Kids_First_Biospecimen_ID == "BS_N7VQ1GQB" ~ "#8f8fbf",
-    is.na(plot_group_hex) ~ "#b5b5b5",
-    TRUE ~ plot_group_hex
-  )) %>%
+  # left_join(plot_mapping_df %>%
+  #             dplyr::select(broad_histology,
+  #                           cancer_group,
+  #                           plot_group,
+  #                           plot_group_hex)) %>%
+  # # resolve NA plot group assignments
+  # dplyr::mutate(plot_group = case_when(
+  #   is.na(plot_group) ~ "Other tumor",
+  #   TRUE ~ plot_group
+  # )) %>%
+  # dplyr::mutate(plot_group = case_when(
+  #   Kids_First_Biospecimen_ID == "BS_N7VQ1GQB" ~ "Low-grade glioma",
+  #   TRUE ~ plot_group
+  # )) %>%
+  # dplyr::mutate(molecular_subtype = case_when(
+  #   Kids_First_Biospecimen_ID == "BS_N7VQ1GQB" ~ "LGG, KIAA1549-BRAF",
+  #   TRUE ~ molecular_subtype
+  # )) %>%
+  # # update plot group hex codes
+  # dplyr::mutate(plot_group_hex = case_when(
+  #   plot_group == "Oligodendroglioma" ~ "tan",
+  #   Kids_First_Biospecimen_ID == "BS_N7VQ1GQB" ~ "#8f8fbf",
+  #   is.na(plot_group_hex) ~ "#b5b5b5",
+  #   TRUE ~ plot_group_hex
+  # )) %>%
   # add missing age dx for following patients
   mutate(age_at_diagnosis_days = case_when(Kids_First_Participant_ID == "PT_AEDWCP8Z" ~
                                              as.integer(365.25*17),
@@ -141,6 +142,53 @@ cohort_hist <- hist %>%
     Kids_First_Biospecimen_ID %in% independent_specimens ~ "Yes",
     TRUE ~ "No"
   ))
+
+
+### Integrate rare CNS tumor subtyping 
+
+rare_cns_hist <- read_tsv(rare_cns_hist_file)
+
+## replace molecular_subtype from OPC v15 hist with column from hist with rare CNS subtypes
+
+cohort_hist <- cohort_hist %>%
+  dplyr::select(-molecular_subtype,
+                -molecular_subtype_methyl,
+                -cancer_group,
+                -broad_histology) %>%
+  left_join(rare_cns_hist %>%
+              dplyr::select(Kids_First_Biospecimen_ID,
+                            broad_histology,
+                            cancer_group,
+                            molecular_subtype,
+                            molecular_subtype_methyl))%>%
+  # add plot group & hex codes
+  left_join(plot_mapping_df %>%
+              dplyr::select(broad_histology,
+                            cancer_group,
+                            plot_group,
+                            plot_group_hex)) %>%
+  # resolve NA plot group assignments
+  dplyr::mutate(plot_group = case_when(
+    cancer_group == "Rare CNS tumor" ~ "Rare CNS tumor",
+    is.na(plot_group) ~ "Other tumor",
+    TRUE ~ plot_group
+  )) %>%
+  dplyr::mutate(plot_group = case_when(
+    Kids_First_Biospecimen_ID == "BS_N7VQ1GQB" ~ "Low-grade glioma",
+    TRUE ~ plot_group
+  )) %>%
+  dplyr::mutate(molecular_subtype = case_when(
+    Kids_First_Biospecimen_ID == "BS_N7VQ1GQB" ~ "LGG, KIAA1549-BRAF",
+    TRUE ~ molecular_subtype
+  )) %>%
+  # update plot group hex codes
+  dplyr::mutate(plot_group_hex = case_when(
+    plot_group == "Oligodendroglioma" ~ "tan",
+    plot_group == "Rare CNS tumor" ~ "black",
+    Kids_First_Biospecimen_ID == "BS_N7VQ1GQB" ~ "#8f8fbf",
+    is.na(plot_group_hex) ~ "#b5b5b5",
+    TRUE ~ plot_group_hex
+  )) 
 
 ### Append genetic ancestry data
 
@@ -193,7 +241,7 @@ cohort_hist <- cohort_hist %>%
 # write cohort hist to output
 write_tsv(cohort_hist,
           file.path(results_dir,
-                    "cohort-histologies.tsv"))
+                    "cohort-histologies-updated.tsv"))
 
 # print session info
 sessionInfo()
