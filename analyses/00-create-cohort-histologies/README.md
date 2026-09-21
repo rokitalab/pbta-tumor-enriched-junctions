@@ -20,21 +20,25 @@ bash run_module.sh
 * `plot-mapping.tsv` curated cancer groups for plotting based on `broad_histology` and `cancer_group` field values. 
 * `somalier-ancestry-prediction-superpopulation.tsv` somalier genetic ancestry predicition results with BS_IDs appended. From [germline-preprocessing repo](https://github.com/rokitalab/germline-preprocessing/blob/f1fdeced5ad59a29bc0dc88fcba4f4366ab7fa8e/analyses/collapse-tumor-histologies/results/somalier-ancestry-prediction-superpopulation.tsv)
 * `openpedcan_histologies_0311.csv` opc histologies warehouse pull dated Mar 11 2026
+* `histologies-rare-cns.tsv` histologies file with rare subtyping information pulled from [OpenPedCan](https://github.com/rokitalab/OpenPedCan-Project-CNH/blob/dev/analyses/molecular-subtyping-integrate/results/histologies.tsv) 
 
 ## Directory structure
 ```
 .
 ├── 01-create-histologies.R
-├── 02-circos-plot.Rmd
 ├── 02-circos-plot.nb.html
-├── README.md
+├── 02-circos-plot.Rmd
 ├── input
+│   ├── histologies-rare-cns.tsv
 │   ├── openpedcan_histologies0311.csv
+│   ├── pbta-rna-high-intron-samples.tsv
 │   ├── plot-mapping.tsv
 │   └── somalier-ancestry-prediction-superpopulation.tsv
 ├── plots
 │   └── cohort-circos-plot.pdf
+├── README.md
 ├── results
+│   ├── cohort-histologies-updated.tsv
 │   ├── cohort-histologies.tsv
 │   └── cohort-somalier-genetic-ancestry-prediction.tsv
 └── run_module.sh
