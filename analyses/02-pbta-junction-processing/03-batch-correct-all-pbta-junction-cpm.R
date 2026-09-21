@@ -72,7 +72,9 @@ set.seed(random_seed)
 junction_indices <- sample.int(nrow(junction_cpm))
 
 cohort_hist <- readr::read_tsv(cohort_hist_file, show_col_types = FALSE)
-required_columns <- c("Kids_First_Biospecimen_ID", "RNA_library")
+required_columns <- c(
+  "Kids_First_Biospecimen_ID", "RNA_library", "broad_group"
+)
 if (!all(required_columns %in% names(cohort_hist))) {
   stop(
     "The cohort-histologies file must contain: ",
@@ -81,14 +83,16 @@ if (!all(required_columns %in% names(cohort_hist))) {
   )
 }
 
-## Prepare the RNA-library batch variable in the exact order of matrix columns.
-batch_lookup <- cohort_hist %>%
-  dplyr::select(Kids_First_Biospecimen_ID, RNA_library) %>%
+## Prepare sample metadata in the exact order of matrix columns.
+sample_metadata <- cohort_hist %>%
+  dplyr::select(Kids_First_Biospecimen_ID, RNA_library, broad_group) %>%
   dplyr::distinct(Kids_First_Biospecimen_ID, .keep_all = TRUE)
 
-batch <- batch_lookup$RNA_library[
-  match(sample_ids, batch_lookup$Kids_First_Biospecimen_ID)
+sample_metadata <- sample_metadata[
+  match(sample_ids, sample_metadata$Kids_First_Biospecimen_ID),
 ]
+
+batch <- sample_metadata$RNA_library
 names(batch) <- sample_ids
 
 if (anyNA(batch)) {
@@ -102,14 +106,48 @@ if (anyNA(batch)) {
   )
 }
 
+if (anyNA(sample_metadata$broad_group)) {
+  missing_samples <- sample_metadata$Kids_First_Biospecimen_ID[
+    is.na(sample_metadata$broad_group)
+  ]
+  stop(
+    "Broad histology group is missing for ",
+    length(missing_samples), " matrix sample(s): ",
+    paste(missing_samples, collapse = ", "),
+    "."
+  )
+}
+
 batch <- as.factor(batch)
 batches <- lapply(levels(batch), function(level) which(batch == level))
 
+combat_mod <- stats::model.matrix(~ broad_group, data = sample_metadata)
+
+## Reproduce ComBat's design matrix so sparse junctions can be screened for
+## identifiability before ComBat reaches its row-wise NA-aware model fit.
+## ComBat removes all-one columns (the intercept in combat_mod) after binding
+## the batch indicators and covariates.
+combat_design <- cbind(stats::model.matrix(~ -1 + batch), combat_mod)
+combat_design <- combat_design[, !apply(
+  combat_design,
+  2L,
+  function(x) all(x == 1)
+), drop = FALSE]
+combat_design_rank <- qr(combat_design)$rank
+
+if (combat_design_rank < ncol(combat_design)) {
+  stop(
+    "The batch and broad_group covariates are confounded; ComBat's design ",
+    "matrix is not full rank."
+  )
+}
+
 ## ComBat cannot estimate a scale adjustment for a junction with zero
-## within-batch variance. Rows with this condition are retained in the output
-## but left as uncorrected log2(CPM + 1), consistent with ComBat's treatment
-## of uniform-expression rows.
-combat_eligible_rows <- function(cpm_mat, batches) {
+## within-batch variance. It also cannot fit a batch-plus-histology model for
+## a sparse junction when the samples with observed CPM values do not yield a
+## full-rank design. Those rows are retained in the output but left as
+## uncorrected log2(CPM + 1).
+combat_eligible_rows <- function(cpm_mat, batches, combat_design) {
   eligible <- rep(TRUE, nrow(cpm_mat))
 
   for (sample_indices in batches) {
@@ -120,6 +158,24 @@ combat_eligible_rows <- function(cpm_mat, batches) {
       na.rm = TRUE
     )
     eligible <- eligible & is.finite(batch_variance) & batch_variance > 0
+  }
+
+  ## ComBat uses a separate least-squares fit for rows containing NAs. Check
+  ## the exact design available for each such row to prevent solve() from
+  ## receiving a singular cross-product matrix.
+  missing_cpm <- is.na(cpm_mat)
+  rows_requiring_rank_check <- which(eligible & rowSums(missing_cpm) > 0L)
+
+  if (length(rows_requiring_rank_check)) {
+    eligible[rows_requiring_rank_check] <- vapply(
+      rows_requiring_rank_check,
+      function(row_index) {
+        observed_samples <- !missing_cpm[row_index, ]
+        qr(combat_design[observed_samples, , drop = FALSE])$rank ==
+          ncol(combat_design)
+      },
+      logical(1L)
+    )
   }
 
   eligible
@@ -189,21 +245,22 @@ for (i in seq_along(chunk_starts)) {
   cpm_chunk <- as.matrix(junction_cpm[row_indices, ..sample_ids])
   storage.mode(cpm_chunk) <- "double"
   log2_cpm_chunk <- log2(cpm_chunk + 1)
-  eligible_rows <- combat_eligible_rows(cpm_chunk, batches)
+  eligible_rows <- combat_eligible_rows(cpm_chunk, batches, combat_design)
   combat_chunk <- log2_cpm_chunk
 
   if (any(eligible_rows)) {
     combat_chunk[eligible_rows, ] <- sva::ComBat(
       dat = log2_cpm_chunk[eligible_rows, , drop = FALSE],
       batch = batch,
+      mod = combat_mod,
       par.prior = TRUE
     )
   }
   if (any(!eligible_rows)) {
     message(
-      "Leaving ", sum(!eligible_rows),
-      " junctions uncorrected because at least one library batch has ",
-      "zero within-batch variance."
+      "Leaving ", sum(!eligible_rows), " junctions uncorrected because ",
+      "at least one library batch has zero within-batch variance or the ",
+      "observed samples do not provide a full-rank ComBat design."
     )
   }
 
