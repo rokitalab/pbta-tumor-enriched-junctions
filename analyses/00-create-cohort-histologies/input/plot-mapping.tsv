@@ -52,33 +52,36 @@ Benign tumor	Adenoma	Benign tumor	Non-neoplastic tumor	#FFF5EB	Non-neoplastic tu
 Non-tumor	NA	Non-tumor	Non-neoplastic tumor	#FFF5EB	Non-neoplastic tumor	#FFF5EB	14	Non-neoplastic tumor
 Pre-cancerous lesion	NA	Benign tumor	Non-neoplastic tumor	#FFF5EB	Non-neoplastic tumor	#FFF5EB	14	Non-neoplastic tumor
 Tumor of cranial and paraspinal nerves	Intraneural perineuroma	Benign tumor	Non-neoplastic tumor	#FFF5EB	Non-neoplastic tumor	#FFF5EB	14	Non-neoplastic tumor
-Embryonal tumor	CNS Embryonal tumor	Embryonal tumor	Other CNS embryonal tumor	#220040	Other ET	#b08ccf	5	Embryonal tumor
-Embryonal tumor	Embryonal tumor	Embryonal tumor	Other CNS embryonal tumor	#220040	Other ET	#b08ccf	5	Embryonal tumor
-Embryonal tumor	Embryonal tumor with multilayer rosettes	Embryonal tumor	Other CNS embryonal tumor	#220040	ETMR	#b08ccf	5	Embryonal tumor
-Embryonal tumor	CNS neuroblastoma	Embryonal tumor	Other CNS embryonal tumor	#220040	Other ET	#b08ccf	5	Embryonal tumor
-Embryonal tumor	High-grade neuroepithelial tumor	Embryonal tumor	Other CNS embryonal tumor	#220040	Other ET	#b08ccf	5	Embryonal tumor
-Other tumor	Ganglioneuroma	Embryonal tumor	Other CNS embryonal tumor	#220040	Other ET	#b08ccf	5	Embryonal tumor
+Diffuse astrocytic and oligodendroglial tumor	Oligodendroglioma	Oligodendroglioma	Oligodendroglioma	tan	Oligodendroglioma	tan	1	Oligodendroglioma
+Embryonal tumor	CNS Embryonal tumor	Embryonal tumor	Other rare CNS tumor	#220040	Other ET	#b5b5b5	5	Embryonal tumor
+Embryonal tumor	Embryonal tumor	Embryonal tumor	Other rare CNS tumor	#220040	Other ET	#b5b5b5	5	Embryonal tumor
+Embryonal tumor	Embryonal tumor with multilayer rosettes	Embryonal tumor	Other rare CNS tumor	#220040	ETMR	#b5b5b5	5	Embryonal tumor
+Embryonal tumor	CNS neuroblastoma	Embryonal tumor	Other rare CNS tumor	#220040	Other ET	#b5b5b5	5	Embryonal tumor
+Embryonal tumor	High-grade neuroepithelial tumor	Embryonal tumor	Other rare CNS tumor	#220040	Other ET	#b5b5b5	5	Embryonal tumor
+Other tumor	Ganglioneuroma	Embryonal tumor	Other rare CNS tumor	#220040	Other ET	#b5b5b5	5	Embryonal tumor
+Embryonal tumor	Ganglioneuroblastoma	Other embryonal tumor	Other rare CNS tumor	#220040	Other ET	#b5b5b5	5	Embryonal tumor
+Embryonal tumor	Neuroblastoma	Other embryonal tumor	Other rare CNS tumor	#220040	Other ET	#b5b5b5	5	Embryonal tumor
 Diffuse astrocytic and oligodendroglial tumor	Gliosarcoma	High-grade glioma	Other high-grade glioma	#ffccf5	Other HGG	#ffccf5	3	High-grade glioma
 Diffuse astrocytic and oligodendroglial tumor	High-grade glioma	High-grade glioma	Other high-grade glioma	#ffccf5	Other HGG	#ffccf5	3	High-grade glioma
 Diffuse astrocytic and oligodendroglial tumor	Pleomorphic xanthoastrocytoma	High-grade glioma	Other high-grade glioma	#ffccf5	PXA	#ffccf5	3	High-grade glioma
-Diffuse astrocytic and oligodendroglial tumor	Congenital malignant brain tumor	Other tumor	Other tumor	#b5b5b5	Other tumor	#b5b5b5	13	Other tumor
 Diffuse astrocytic and oligodendroglial tumor	Diffuse hemispheric glioma	High-grade glioma	Other high-grade glioma	#ffccf5	Other HGG	#ffccf5	3	High-grade glioma
 Diffuse astrocytic and oligodendroglial tumor	Infant-type hemispheric glioma	High-grade glioma	Other high-grade glioma	#ffccf5	Other HGG	#ffccf5	3	High-grade glioma
-Diffuse astrocytic and oligodendroglial tumor	Oligodendroglioma	Oligodendroglioma	Oligodendroglioma	tan	Oligodendroglioma	tan	1	Oligodendroglioma
-Benign tumor	Cavernoma	Other tumor	Other tumor	#b5b5b5	Other tumor	#b5b5b5	13	Other tumor
-Embryonal tumor	Ganglioneuroblastoma	Other embryonal tumor	Other CNS embryonal tumor	#220040	Other ET	#b08ccf	5	Embryonal tumor
-Embryonal tumor	Ganglioneuroma	Other embryonal tumor	Other tumor	#8B008B	Other tumor	#b5b5b5	13	Other tumor
-Embryonal tumor	Neuroblastoma	Other embryonal tumor	Other CNS embryonal tumor	#220040	Other ET	#b08ccf	5	Embryonal tumor
-Epstein-Barr virus-related tumor	Epstein-Barr virus-related tumor	Other tumor	Other tumor	#b5b5b5	Other tumor	#b5b5b5	13	Other tumor
-Histiocytic tumor	Juvenile xanthogranuloma	Other tumor	Other tumor	#b5b5b5	JXG	#b5b5b5	13	Other tumor
-Histiocytic tumor	Langerhans Cell histiocytosis	Other tumor	Other tumor	#b5b5b5	Other tumor	#b5b5b5	13	Other tumor
-Histiocytic tumor	Rosai-Dorfman disease	Other tumor	Other tumor	#b5b5b5	Other tumor	#b5b5b5	13	Other tumor
-Lymphoma	CNS Burkitt's lymphoma	Other tumor	Other tumor	#b5b5b5	Other tumor	#b5b5b5	13	Other tumor
-Melanocytic tumor	Melanocytic tumor	Other tumor	Other tumor	#b5b5b5	Other tumor	#b5b5b5	13	Other tumor
-Metastatic tumors	Metastatic secondary tumors	Other tumor	Other tumor	#b5b5b5	Metastasis	#b5b5b5	13	Other tumor
-Non-CNS tumor	Myxoid spindle cell tumor	Other tumor	Other tumor	#b5b5b5	Other tumor	#b5b5b5	13	Other tumor
-Other tumor	Other tumor	Other tumor	Other tumor	#b5b5b5	Other tumor	#b5b5b5	13	Other tumor
-Tumor of pineal region	Pineoblastoma	Other tumor	Other tumor	#220040	Other ET	#b08ccf	5	Embryonal tumor
+Diffuse astrocytic and oligodendroglial tumor	Congenital malignant brain tumor	Other tumor	Other rare CNS tumor	#b5b5b5	Other rare CNS tumor	#b5b5b5	13	Other rare CNS tumor
+Benign tumor	Cavernoma	Other tumor	Other rare CNS tumor	#b5b5b5	Other rare CNS tumor	#b5b5b5	13	Other rare CNS tumor
+Embryonal tumor	Ganglioneuroma	Other embryonal tumor	Other rare CNS tumor	#8B008B	Other rare CNS tumor	#b5b5b5	13	Other rare CNS tumor
+Epstein-Barr virus-related tumor	Epstein-Barr virus-related tumor	Other tumor	Other rare CNS tumor	#b5b5b5	Other rare CNS tumor	#b5b5b5	13	Other rare CNS tumor
+Histiocytic tumor	Juvenile xanthogranuloma	Other tumor	Other rare CNS tumor	#b5b5b5	Other rare CNS tumor	#b5b5b5	13	Other rare CNS tumor
+Histiocytic tumor	Langerhans Cell histiocytosis	Other tumor	Other rare CNS tumor	#b5b5b5	Other rare CNS tumor	#b5b5b5	13	Other rare CNS tumor
+Histiocytic tumor	Rosai-Dorfman disease	Other tumor	Other rare CNS tumor	#b5b5b5	Other rare CNS tumor	#b5b5b5	13	Other rare CNS tumor
+Lymphoma	CNS Burkitt's lymphoma	Other tumor	Other rare CNS tumor	#b5b5b5	Other rare CNS tumor	#b5b5b5	13	Other rare CNS tumor
+Melanocytic tumor	Melanocytic tumor	Other tumor	Other rare CNS tumor	#b5b5b5	Other rare CNS tumor	#b5b5b5	13	Other rare CNS tumor
+Metastatic tumors	Metastatic secondary tumors	Other tumor	Other rare CNS tumor	#b5b5b5	Other rare CNS tumor	#b5b5b5	13	Other rare CNS tumor
+Non-CNS tumor	Myxoid spindle cell tumor	Other tumor	Other rare CNS tumor	#b5b5b5	Other rare CNS tumor	#b5b5b5	13	Other rare CNS tumor
+Other tumor	Other tumor	Other tumor	Other rare CNS tumor	#b5b5b5	Other rare CNS tumor	#b5b5b5	13	Other rare CNS tumor
+Tumor of pineal region	Pineoblastoma	Other tumor	Other rare CNS tumor	#220040	Other rare CNS tumor	#b5b5b5	5	Other rare CNS tumor
+Tumor of cranial and paraspinal nerves	Malignant peripheral nerve sheath tumor	Tumor of cranial and paraspinal nerves	Other rare CNS tumor	#b5b5b5	Other rare CNS tumor	#b5b5b5	13	Other rare CNS tumor
+Diffuse astrocytic and oligodendroglial tumor	Astroblastoma	NA	Other rare CNS tumor	#b5b5b5	Other rare CNS tumor	#b5b5b5	13	Other rare CNS tumor
 Tumor of cranial and paraspinal nerves	Schwannoma	Tumor of cranial and paraspinal nerves	Schwannoma	#ffaa00	Schwannoma	#ab7200	10	NF or peripheral nerve tumor
-Tumor of cranial and paraspinal nerves	Malignant peripheral nerve sheath tumor	Tumor of cranial and paraspinal nerves	Other tumor	#b5b5b5	Other tumor	#b5b5b5	13	Other tumor
-Diffuse astrocytic and oligodendroglial tumor	Astroblastoma	NA	Other tumor	#b5b5b5	Other tumor	#b5b5b5	13	Other tumor
+Mixed or intermediate tumor	Rare CNS tumor	Mixed or intermediate tumor	Other rare CNS tumor	#b5b5b5	Other rare CNS tumor	#b5b5b5	13	Other rare CNS tumor
+Mixed or intermediate tumor	Astroblastoma	Mixed or intermediate tumor	Other rare CNS tumor	#b5b5b5	Other rare CNS tumor	#b5b5b5	13	Other rare CNS tumor
+Embryonal tumor	Rare CNS tumor	Embryonal tumor	Other rare CNS tumor	#b5b5b5	Other rare CNS tumor	#b5b5b5	13	Other rare CNS tumor
