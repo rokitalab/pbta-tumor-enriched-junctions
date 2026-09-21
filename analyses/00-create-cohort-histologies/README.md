@@ -38,7 +38,6 @@ bash run_module.sh
 │   └── cohort-circos-plot.pdf
 ├── README.md
 ├── results
-│   ├── cohort-histologies-updated.tsv
 │   ├── cohort-histologies.tsv
 │   └── cohort-somalier-genetic-ancestry-prediction.tsv
 └── run_module.sh
