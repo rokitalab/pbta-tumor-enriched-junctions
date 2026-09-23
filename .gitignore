@@ -1,3 +1,4 @@
+
 # History files
 .Rhistory
 .Rapp.history
@@ -47,3 +48,83 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+
+# ignore
+.DS_Store
+.Rhistory
+.Rproj.user
+.snakemake
+ 
+# tmp files
+scratch/
+*tmp
+tmp*
+*tmp*
+
+# Result of running docker image locally. Should not be tracked
+.rstudio/
+
+# bed files for domains
+analyses/01-tumor-specific-variants/output/*/*unip*bed
+analyses/01-tumor-specific-variants/output/*/*cds.bed
+
+# control variant psi and stats
+analyses/process-ctrls-variants/output/*metrics.tsv
+analyses/tumor-specific-alt-splice-sites/output/*metrics.tsv
+
+# histology tumor-specific splicing files
+analyses/01-tumor-specific-variants/output/*splice-variants.tsv
+analyses/01-tumor-specific-variants/output/*splice-variants.bed
+analyses/01-tumor-specific-variants/output/tumor-specific-oncofetal-splice-variants-merged.bed
+analyses/tumor-specific-alt-splice-sites/output/*splice-variants.tsv
+analyses/tumor-specific-alt-splice-sites/output/*splice-variants.bed
+analyses/tumor-specific-retained-introns/output/*splice-variants.tsv
+analyses/tumor-specific-retained-introns/output/*splice-variants.bed
+
+# full processed rmats file
+analyses/01-tumor-specific-variants/output/pbta-splice-events-rmats.SE.processed.tsv.gz
+analyses/pepMLM-preprocessing/results/annotated_splice_events.tsv
+
+# Don’t commit downloaded reference data
+data/
+data/raw/
+
+# Don’t commit old scratch paths
+scratch/
+
+
+# merged TESE file
+analyses/summarize-tumor-enriched-splicing/results/merged-tumor-enriched-splice-events.tsv.gz
+analyses/summarize-tumor-enriched-splicing/results/tumor-enriched-oncofetal-splice-junctions.bed
+
+# 02-tumor-enriched-splicing output
+analyses/02-tumor-enriched-splicing/results/pbta-merged-norm-junction-cts.qs2
+analyses/02-tumor-enriched-splicing/results/tumor-enriched-oncofetal-splice-junctions.tsv.gz
+analyses/02-tumor-enriched-splicing/results/tumor-enriched-oncofetal-splice-junctions-domain-expr-annotated.tsv.gz
+analyses/02-tumor-enriched-splicing/results/junction-annot.tsv.gz
+
+# 03-tesj-differential-splicing output
+analyses/03-tesj-differential-splicing/results/tumor-enriched-oncofetal-junction-splice-events.qs2
+analyses/03-tesj-differential-splicing/results/tumor-enriched-oncofetal-junction-diff-splice-event-annotation.tsv.gz
+analyses/03-tesj-differential-splicing/results/tumor-enriched-oncofetal-diff-splice-junctions.qs2
+
+# survival analyses folder
+analyses/hgg-enriched-splicing/results/survival/*RDS
+
+# 02-tumor-enriched-splicing output
+analyses/02-tumor-enriched-splicing/results/pbta-merged-norm-junction-cts.qs2
+analyses/02-tumor-enriched-splicing/results/tumor-enriched-oncofetal-splice-junctions.tsv.gz
+
+# combat-corrected TPM matrices
+analyses/06-TEJ-expr-determinants/results/*.qs2
+
+# pepMLM summary generated FASTA files
+analyses/pepMLM-summary/results/input_fastas/
+
+# motif enrichment files
+analyses/06-TEJ-expr-determinants/results/*dna-seqs.fa
+analyses/06-TEJ-expr-determinants/results/ame/*
+
+# survival analysis results, plots
+analyses/exon-inclusion-analyses/results/survival/*
+analyses/exon-inclusion-analyses/plots/survival/*

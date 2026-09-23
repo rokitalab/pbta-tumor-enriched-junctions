@@ -1,0 +1,190 @@
+---
+title: "Generate cohort circos plot"
+output: 
+  html_notebook:
+    toc: TRUE
+    toc_float: TRUE
+author: Ryan Corbett
+date: 2026
+params:
+  plot_ci: TRUE
+---
+
+Load required packages
+
+```{r}
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(data.table)
+  library(rprojroot)
+  library(R.utils)
+  library(ggsci)
+  library(ggpubr)
+  library(circlize)
+  library(ComplexHeatmap)
+})
+```
+
+Set directory paths
+
+```{r}
+root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
+data_dir <- file.path(root_dir, "data")
+analysis_dir <- file.path(root_dir, "analyses", "00-create-cohort-histologies")
+results_dir <- file.path(analysis_dir, "results")
+plot_dir <- file.path(analysis_dir, "plots")
+
+if (!dir.exists(plot_dir)) {
+  dir.create(plot_dir)
+}
+```
+
+Set file paths
+
+```{r}
+hist_file <- file.path(root_dir, "analyses",
+                       "00-create-cohort-histologies",
+                       "results",
+                       "cohort-histologies.tsv")
+```
+
+Wrangle data
+
+```{r}
+cohort_hist <- read_tsv(hist_file)
+```
+
+Filter cohort hist for relevant columns, and reformat column values for plotting
+
+```{r}
+plot_df <- cohort_hist %>% 
+  dplyr::select(Kids_First_Biospecimen_ID,
+                Kids_First_Participant_ID,
+                tumor_descriptor,
+                composition,
+                plot_group,
+                plot_group_hex,
+                RNA_library) %>%
+  # shorten ATRT
+  dplyr::mutate(plot_group = case_when(
+    grepl("Atypical", plot_group) ~ "ATRT",
+    TRUE ~ plot_group
+  )) %>%
+  # merge Initial & Primary
+  dplyr::mutate(tumor_descriptor = case_when(
+    grepl("Initial|Primary", tumor_descriptor) ~ "Initial/Primary Tumor",
+    TRUE ~ tumor_descriptor
+  )) %>%
+  # stranded --> Total RNA stranded
+  dplyr::mutate(RNA_library = case_when(
+    RNA_library == "stranded" ~ "Total RNA stranded",
+    TRUE ~ RNA_library
+  )) %>%
+  arrange(composition,
+          tumor_descriptor)
+
+# get plot group counts
+plot_group_cts <- plot_df %>%
+  count(plot_group, plot_group_hex) %>%
+  dplyr::mutate(group_n = glue::glue("{plot_group} (n={n})")) %>%
+  distinct()
+
+# merge group counts to plot df
+plot_df <- plot_df %>%
+  left_join(plot_group_cts) %>%
+  dplyr::select(group_n, composition,
+                tumor_descriptor,
+                RNA_library)
+```
+
+Define column value color palettes
+
+```{r}
+group_cols <- plot_group_cts$plot_group_hex
+names(group_cols) <- plot_group_cts$group_n
+
+composition_cols <- c("Solid Tissue" = "black",
+                      "Derived Cell Line" = "aquamarine2")
+
+tumor_event_cols <- c("Initial/Primary Tumor" = "#CC6677",
+                      "Progressive" = "#DDCC77",
+                      "Recurrence" = "#117733",
+                      "Second Malignancy" = "#332288",
+                      "Deceased" = "#661100",
+                      "Unknown" = "gray30")
+
+rna_cols <- c("Total RNA stranded" = "purple4",
+              "poly-A" = "blue3",
+              "poly-A stranded" = "skyblue2")
+
+cols_all <- c(group_cols,
+              composition_cols, 
+              tumor_event_cols,
+              rna_cols)
+```
+
+Generate circos plot
+
+```{r}
+# split circos plot by plot group
+split <- factor(plot_df$group_n)
+
+pdf(NULL)
+
+# Generate circos plot
+pdf(file.path(plot_dir, "cohort-circos-plot.pdf"), width = 7, height = 7)
+
+circos.clear()
+circos.heatmap(plot_df,
+               split=split,
+               col = cols_all)
+
+# add border colors to sectors
+for(sn in get.all.sector.index()) {
+  set.current.cell(sector.index = sn, track.index = 1)
+  circos.rect(CELL_META$cell.xlim[1], CELL_META$cell.ylim[1],
+              CELL_META$cell.xlim[2], CELL_META$cell.ylim[2],
+              col = NA, border = "black")
+}
+
+## add legends
+lgd_group = Legend(title = "Histology", 
+                        at =  sort(names(group_cols)), 
+                        legend_gp = gpar(fill = group_cols[sort(names(group_cols))]))
+
+lgd_event = Legend(title = "Tumor event", 
+                    at =  names(tumor_event_cols), 
+                    legend_gp = gpar(fill = tumor_event_cols))
+
+lgd_comp = Legend(title = "Composition", 
+                 at =  names(composition_cols), 
+                 legend_gp = gpar(fill = composition_cols))
+
+lgd_rna = Legend(title = "RNA library type",
+                 at =  names(rna_cols),
+                 legend_gp = gpar(fill = rna_cols))
+
+## Placement of legend based on device size
+h = dev.size()[2]
+circle_size = unit(1, "snpc")
+
+# Create legends
+lgd_list1 = packLegend(lgd_group, max_height = unit(0.9*h, "inch"), direction = "horizontal")
+lgd_list2 = packLegend(lgd_comp, max_height = unit(0.9*h, "inch"), direction = "horizontal")
+lgd_list3 = packLegend(lgd_event, max_height = unit(0.9*h, "inch"), direction = "horizontal")
+lgd_list4 = packLegend(lgd_rna, max_height = unit(0.9*h, "inch"), direction = "horizontal")
+
+# Add legends on plot
+draw(lgd_list1, x = unit(75, "mm"), y = unit(88, "mm"))
+draw(lgd_list2, x = unit(122, "mm"), y = unit(120, "mm"))
+draw(lgd_list3, x = unit(125, "mm"), y = unit(97, "mm"))
+draw(lgd_list4, x = unit(124, "mm"), y = unit(71, "mm"))
+
+circos.clear()
+dev.off()
+```
+
+Print session info
+```{r}
+sessionInfo()
+```
