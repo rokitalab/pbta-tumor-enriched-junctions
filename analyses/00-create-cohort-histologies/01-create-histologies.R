@@ -136,13 +136,12 @@ cohort_hist <- cohort_hist %>%
                             cancer_group,
                             plot_group,
                             plot_group_hex)) %>%
-  # resolve NA plot group assignments
-  dplyr::mutate(plot_group = case_when(
-    is.na(plot_group) ~ "Other rare CNS tumor",
-    TRUE ~ plot_group
-  )) %>%
+  # Manual updates
+  # BS_N7VQ1GQB is confirmed LGG with BRAF fusion
+  # BS_3T0G8136 and BS_AKCQJ6XW are from the same patient with hybrid NFP/SWN, but initial is SWN
   dplyr::mutate(plot_group = case_when(
     Kids_First_Biospecimen_ID == "BS_N7VQ1GQB" ~ "Low-grade glioma",
+    Kids_First_Biospecimen_ID %in% c("BS_3T0G8136", "BS_AKCQJ6XW") ~ "Schwannoma/MPNST",
     TRUE ~ plot_group
   )) %>%
   dplyr::mutate(molecular_subtype = case_when(
@@ -152,9 +151,12 @@ cohort_hist <- cohort_hist %>%
   # update plot group hex codes
   dplyr::mutate(plot_group_hex = case_when(
     Kids_First_Biospecimen_ID == "BS_N7VQ1GQB" ~ "#8f8fbf",
+    Kids_First_Biospecimen_ID %in% c("BS_3T0G8136", "BS_AKCQJ6XW") ~ "#ab7200",
     is.na(plot_group_hex) ~ "#b5b5b5",
     TRUE ~ plot_group_hex
   )) %>%
+  # remove tumors classified into "Other" group
+  dplyr::filter(plot_group != "Other tumor") %>% 
   # create broad groupings for batch correction
   dplyr::mutate(broad_group = case_when(
     plot_group %in% c("Low-grade glioma",
