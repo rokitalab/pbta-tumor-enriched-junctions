@@ -149,7 +149,7 @@ if (combat_design_rank < ncol(combat_design)) {
 ## uncorrected log2(CPM + 1).
 combat_eligible_rows <- function(cpm_mat, batches, combat_design) {
   eligible <- rep(TRUE, nrow(cpm_mat))
-
+  
   for (sample_indices in batches) {
     batch_variance <- apply(
       cpm_mat[, sample_indices, drop = FALSE],
@@ -159,13 +159,13 @@ combat_eligible_rows <- function(cpm_mat, batches, combat_design) {
     )
     eligible <- eligible & is.finite(batch_variance) & batch_variance > 0
   }
-
+  
   ## ComBat uses a separate least-squares fit for rows containing NAs. Check
   ## the exact design available for each such row to prevent solve() from
   ## receiving a singular cross-product matrix.
   missing_cpm <- is.na(cpm_mat)
   rows_requiring_rank_check <- which(eligible & rowSums(missing_cpm) > 0L)
-
+  
   if (length(rows_requiring_rank_check)) {
     eligible[rows_requiring_rank_check] <- vapply(
       rows_requiring_rank_check,
@@ -177,7 +177,7 @@ combat_eligible_rows <- function(cpm_mat, batches, combat_design) {
       logical(1L)
     )
   }
-
+  
   eligible
 }
 
@@ -241,13 +241,13 @@ for (i in seq_along(chunk_starts)) {
     "Processing chunk ", i, "/", length(chunk_starts),
     " (", length(row_indices), " randomized junctions)..."
   )
-
+  
   cpm_chunk <- as.matrix(junction_cpm[row_indices, ..sample_ids])
   storage.mode(cpm_chunk) <- "double"
   log2_cpm_chunk <- log2(cpm_chunk + 1)
   eligible_rows <- combat_eligible_rows(cpm_chunk, batches, combat_design)
   combat_chunk <- log2_cpm_chunk
-
+  
   if (any(eligible_rows)) {
     combat_chunk[eligible_rows, ] <- sva::ComBat(
       dat = log2_cpm_chunk[eligible_rows, , drop = FALSE],
@@ -263,12 +263,12 @@ for (i in seq_along(chunk_starts)) {
       "observed samples do not provide a full-rank ComBat design."
     )
   }
-
+  
   combat_chunks[[i]] <- data.table::as.data.table(round(combat_chunk, 5))
   data.table::setnames(combat_chunks[[i]], sample_ids)
   combat_chunks[[i]][, junction := junction_cpm$junction[row_indices]]
   data.table::setcolorder(combat_chunks[[i]], c("junction", sample_ids))
-
+  
   rm(cpm_chunk, log2_cpm_chunk, eligible_rows, combat_chunk)
   gc()
 }
@@ -316,8 +316,8 @@ corrected_cpm_long <- data.table::melt(
 data.table::setkey(pbta_merged, junction, sample_id)
 data.table::setkey(corrected_cpm_long, junction, sample_id)
 pbta_merged[corrected_cpm_long,
-  junction_cpm := i.batch_corrected_junction_cpm,
-  on = .(junction, sample_id)
+            junction_cpm := i.batch_corrected_junction_cpm,
+            on = .(junction, sample_id)
 ]
 
 message("Saving PBTA junction table with batch-corrected CPMs...")
