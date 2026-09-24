@@ -27,7 +27,7 @@ if (!dir.exists(results_dir)) {
 }
 
 enr_jc_events_file <- file.path(results_dir,
-                                "tumor-enriched-oncofetal-splice-junctions-atrt.tsv.gz")
+                                "tumor-enriched-oncofetal-splice-junctions.tsv.gz")
 
 enr_jc_df <- read_tsv(enr_jc_events_file) %>%
   dplyr::rename(gene_symbol = geneSymbol) %>%
@@ -83,7 +83,7 @@ table(!is.na(enr_jc_events_w_pfam$junction_overlaps_domain))
 # write to output
 write_tsv(enr_jc_events_w_pfam,
           file.path(results_dir,
-                    "tumor-enriched-oncofetal-splice-junctions-pfam-annotated-atrt.tsv.gz"))
+                    "tumor-enriched-oncofetal-splice-junctions-pfam-annotated.tsv.gz"))
 
 # print session info
 sessionInfo()

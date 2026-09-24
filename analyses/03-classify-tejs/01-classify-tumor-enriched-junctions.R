@@ -27,12 +27,6 @@ pbta_junction_file <- file.path(root_dir, "analyses",
                                 "results",
                                 "pbta-merged-norm-batch-corrected-junction-cts.qs2")
 
-# Control
-cohort_histologies_file <- file.path(root_dir, "analyses",
-                                     "00-create-cohort-histologies",
-                                     "results",
-                                     "cohort-histologies.tsv")
-
 control_sj_file <- file.path(data_dir,
                              "SJ.merged.control-cohort.tsv.gz")
 
@@ -72,23 +66,15 @@ pedbrain_junction_sd_file <- file.path(root_dir, "analyses",
 
 ## Wrangle data
 
-# Restrict this test run to ATRT samples.
-atrt_sample_ids <- read_tsv(cohort_histologies_file,
-                            show_col_types = FALSE) %>%
-  dplyr::filter(plot_group == "Atypical Teratoid Rhabdoid Tumor") %>%
-  dplyr::pull(Kids_First_Biospecimen_ID) %>%
-  unique()
-
 print("Loading PBTA junctions...")
-pbta_junction_df <- qs2::qs_read(pbta_junction_file) %>%
-  dplyr::filter(sample_id %in% atrt_sample_ids)
-print(glue::glue("Retained {length(atrt_sample_ids)} ATRT samples and ",
+pbta_junction_df <- qs2::qs_read(pbta_junction_file)
+print(glue::glue("Loaded {dplyr::n_distinct(pbta_junction_df$sample_id)} PBTA samples and ",
                  "{nrow(pbta_junction_df)} PBTA junction rows."))
 
 # Define the novel-junction prevalence cutoff for the cohort currently being
 # surveyed. A junction must occur in fewer than 25% of retained samples.
 n_samples_surveyed <- dplyr::n_distinct(pbta_junction_df$sample_id)
-novel_junction_sample_cutoff <- 0.5 * n_samples_surveyed
+novel_junction_sample_cutoff <- 0.25 * n_samples_surveyed
 
 # Load ctrl matrices 
 
@@ -331,7 +317,7 @@ ts_junction_ct_df <- ts_junction_ct_df %>%
                 novel_ss_usage == "Yes")
 
 # get all ts junctions meeting criteria above
-tesjs_na_ctrl <- pbta_junction_df %>%
+tejs_na_ctrl <- pbta_junction_df %>%
   dplyr::filter(junction %in% ts_junction_ct_df$junction) %>%
   left_join(ts_junction_ct_df %>% dplyr::select(junction,
                                                 novel_ss_usage)) %>%
@@ -347,11 +333,11 @@ tesjs_na_ctrl <- pbta_junction_df %>%
 # append above junctions to merged enr jc df 
 merged_enr_jc_df <- merged_enr_jc_df %>%
   dplyr::mutate(criteria = "enriched expr vs. ctrls") %>%
-  bind_rows(tesjs_na_ctrl)
+  bind_rows(tejs_na_ctrl)
  
 # Save the intermediate tumor-enriched calls for the next pipeline stage.
 qs2::qs_save(merged_enr_jc_df,
-             file.path(results_dir, "tumor-enriched-junctions-atrt.qs2"))
+             file.path(results_dir, "tumor-enriched-junctions.qs2"))
 
 # print session info
 sessionInfo()

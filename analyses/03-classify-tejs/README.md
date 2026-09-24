@@ -23,7 +23,7 @@ bash run_module.sh
 2. Classify a junction as **tumor-enriched** when it is more than fivefold higher than every control group and has an SNR greater than 5 for every control group.
 
    - Retain a call only when no junction sharing either splice boundary is classified as non-specific in the same sample.
-   - Junctions absent from all control matrices are also classified as tumor-enriched when they use at least one unannotated splice site and occur in fewer than 250 PBTA samples (less than 10% of the cohort). Before this classification, these candidates are cross-checked against the control STAR junction file (`SJ.merged.control-cohort.tsv.gz`) and excluded when chromosome and intron coordinates match exactly: the STAR intron start is the upstream exon boundary plus one, and the intron end is the downstream exon boundary minus one.
+   - Junctions absent from all control matrices are also classified as tumor-enriched when they use at least one unannotated splice site and occur in less than 25% of cohort samples. Before this classification, these candidates are cross-checked against the control STAR junction file (`SJ.merged.control-cohort.tsv.gz`) and excluded when chromosome and intron coordinates match exactly: the STAR intron start is the upstream exon boundary plus one, and the intron end is the downstream exon boundary minus one.
 
 3. Classify tumor-enriched junctions as **oncofetal** using Evo-Devo expression.
 
@@ -53,13 +53,13 @@ bash run_module.sh
 ├── 05-domain-expression-filtering.R
 ├── README.md
 ├── results
-│   ├── tumor-enriched-junctions-atrt.qs2
-│   ├── tumor-enriched-oncofetal-splice-junctions-atrt.bed
-│   ├── tumor-enriched-oncofetal-splice-junctions-cds-atrt.bed
-│   ├── tumor-enriched-oncofetal-splice-junctions-domain-anno-atrt.uniq.tsv
-│   ├── tumor-enriched-oncofetal-splice-junctions-domain-expr-annotated-atrt.tsv.gz
-│   ├── tumor-enriched-oncofetal-splice-junctions-pfam-annotated-atrt.tsv.gz
-│   └── tumor-enriched-oncofetal-splice-junctions-atrt.tsv.gz
+│   ├── tumor-enriched-junctions.qs2
+│   ├── tumor-enriched-oncofetal-splice-junctions.bed
+│   ├── tumor-enriched-oncofetal-splice-junctions-cds.bed
+│   ├── tumor-enriched-oncofetal-splice-junctions-domain-anno.uniq.tsv
+│   ├── tumor-enriched-oncofetal-splice-junctions-domain-expr-annotated.tsv.gz
+│   ├── tumor-enriched-oncofetal-splice-junctions-pfam-annotated.tsv.gz
+│   └── tumor-enriched-oncofetal-splice-junctions.tsv.gz
 ├── run_module.sh
 └── util
     └── add-tpm-values.R

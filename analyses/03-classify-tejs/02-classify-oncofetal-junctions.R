@@ -19,7 +19,7 @@ junction_annotation_file <- file.path(
   "junction-annot.tsv.gz"
 )
 
-tumor_enriched_file <- file.path(results_dir, "tumor-enriched-junctions-atrt.qs2")
+tumor_enriched_file <- file.path(results_dir, "tumor-enriched-junctions.qs2")
 prenatal_junction_mat_file <- file.path(root_dir, "analyses",
                                         "01-ctrl-rmats-processing", "results",
                                         "evodevo-merged-prenatal-week-binned-norm-junction-ct-mat.qs2")
@@ -152,7 +152,7 @@ merged_enr_jc_annot_df <- merged_enr_jc_df %>%
 
 # Write the annotated junction table for downstream analyses.
 write_tsv(merged_enr_jc_annot_df,
-          file.path(results_dir, "tumor-enriched-oncofetal-splice-junctions-atrt.tsv.gz"))
+          file.path(results_dir, "tumor-enriched-oncofetal-splice-junctions.tsv.gz"))
 
 # Create and write a BED file for downstream protein-domain annotation.
 jc_bed_df <- merged_enr_jc_annot_df %>%
@@ -165,7 +165,7 @@ jc_bed_df <- merged_enr_jc_annot_df %>%
   distinct()
 
 write.table(jc_bed_df,
-            file.path(results_dir, "tumor-enriched-oncofetal-splice-junctions-atrt.bed"),
+            file.path(results_dir, "tumor-enriched-oncofetal-splice-junctions.bed"),
             col.names = FALSE, row.names = FALSE, quote = FALSE, sep = "\t")
 
 # Record package and R versions used for this run.
