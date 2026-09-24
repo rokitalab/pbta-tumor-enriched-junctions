@@ -102,11 +102,22 @@ analyses/02-tumor-enriched-splicing/results/pbta-merged-norm-junction-cts.qs2
 analyses/02-tumor-enriched-splicing/results/tumor-enriched-oncofetal-splice-junctions.tsv.gz
 analyses/02-tumor-enriched-splicing/results/tumor-enriched-oncofetal-splice-junctions-domain-expr-annotated.tsv.gz
 analyses/02-tumor-enriched-splicing/results/junction-annot.tsv.gz
+analyses/02-tumor-enriched-splicing/results/tumor-enriched-oncofetal-splice-junctions-cds.bed
+analyses/02-tumor-enriched-splicing/results/tumor-enriched-oncofetal-splice-junctions-pfam-annotated.tsv.gz
+analyses/02-tumor-enriched-splicing/results/tumor-enriched-oncofetal-splice-junctions.bed
 
 # 03-tesj-differential-splicing output
 analyses/03-tesj-differential-splicing/results/tumor-enriched-oncofetal-junction-splice-events.qs2
 analyses/03-tesj-differential-splicing/results/tumor-enriched-oncofetal-junction-diff-splice-event-annotation.tsv.gz
 analyses/03-tesj-differential-splicing/results/tumor-enriched-oncofetal-diff-splice-junctions.qs2
+
+# 04-summarize-TEJs output
+analyses/04-summarize-TEJs/results/tumor-enriched-oncofetal-splice-junctions-cohort-filtered.tsv.gz
+analyses/04-summarize-TEJs/results/all-tumor-enriched-oncofetal-splice-junctions-annotated.tsv.gz
+
+# 05-TEJ-clustering output
+analyses/05-TEJ-clustering/results/tumor-enriched-oncofetal-splice-junction-log2-cpm-combat-corrected.qs2
+analyses/05-TEJ-clustering/results/tej-log2-cpm-z-score-matrix-all.rds
 
 # survival analyses folder
 analyses/hgg-enriched-splicing/results/survival/*RDS
