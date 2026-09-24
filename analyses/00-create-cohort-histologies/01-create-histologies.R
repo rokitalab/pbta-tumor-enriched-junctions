@@ -27,9 +27,7 @@ plot_mapping_file <- file.path(input_dir,
 hist_file <- file.path(data_dir,
                        "histologies.tsv")
 
-samples_to_rm_file <- file.path(root_dir, "analyses",
-                                "02-tumor-enriched-splicing",
-                                "input",
+samples_to_rm_file <- file.path(input_dir,
                                 "pbta-rna-high-intron-samples.tsv")
 
 ancestry_file <- file.path(input_dir, 
@@ -37,6 +35,9 @@ ancestry_file <- file.path(input_dir,
 
 survival_file <- file.path(input_dir,
                            "openpedcan_histologies0311.csv")
+
+rare_cns_hist_file <- file.path(input_dir,
+                                "histologies-rare-cns.tsv")
 
 # Wrangle data 
 
@@ -46,6 +47,7 @@ pbta_samples <- qs2::qs_read(pbta_a5ss_rmats_file) %>%
   distinct(sample_id) %>%
   pull(sample_id)
 
+# remove theses samples with high intronic read count
 samples_to_rm <- read_tsv(samples_to_rm_file) %>%
   pull(Kids_First_Biospecimen_ID)
 
@@ -67,6 +69,7 @@ cohort_hist <- hist %>%
   # filter for PBTA
   dplyr::filter(Kids_First_Biospecimen_ID %in% pbta_samples) %>%
   # select relevant columns
+  # we will pull histology, cancer_group, molecular from more recent hist file in input/
   dplyr::select(Kids_First_Biospecimen_ID,
                 Kids_First_Participant_ID,
                 cohort,
@@ -78,10 +81,7 @@ cohort_hist <- hist %>%
                 tumor_descriptor,
                 composition,
                 cell_line_composition,
-                broad_histology,
                 cancer_group,
-                molecular_subtype,
-                molecular_subtype_methyl,
                 pathology_diagnosis,
                 pathology_free_text_diagnosis,
                 primary_site,
@@ -94,32 +94,6 @@ cohort_hist <- hist %>%
                 reported_gender,
                 germline_sex_estimate,
                 cancer_predispositions) %>%
-  # add plot group & hex codes
-  left_join(plot_mapping_df %>%
-              dplyr::select(broad_histology,
-                            cancer_group,
-                            plot_group,
-                            plot_group_hex)) %>%
-  # resolve NA plot group assignments
-  dplyr::mutate(plot_group = case_when(
-    is.na(plot_group) ~ "Other tumor",
-    TRUE ~ plot_group
-  )) %>%
-  dplyr::mutate(plot_group = case_when(
-    Kids_First_Biospecimen_ID == "BS_N7VQ1GQB" ~ "Low-grade glioma",
-    TRUE ~ plot_group
-  )) %>%
-  dplyr::mutate(molecular_subtype = case_when(
-    Kids_First_Biospecimen_ID == "BS_N7VQ1GQB" ~ "LGG, KIAA1549-BRAF",
-    TRUE ~ molecular_subtype
-  )) %>%
-  # update plot group hex codes
-  dplyr::mutate(plot_group_hex = case_when(
-    plot_group == "Oligodendroglioma" ~ "tan",
-    Kids_First_Biospecimen_ID == "BS_N7VQ1GQB" ~ "#8f8fbf",
-    is.na(plot_group_hex) ~ "#b5b5b5",
-    TRUE ~ plot_group_hex
-  )) %>%
   # add missing age dx for following patients
   mutate(age_at_diagnosis_days = case_when(Kids_First_Participant_ID == "PT_AEDWCP8Z" ~
                                              as.integer(365.25*17),
@@ -140,6 +114,56 @@ cohort_hist <- hist %>%
   dplyr::mutate(is_independent_primary = case_when(
     Kids_First_Biospecimen_ID %in% independent_specimens ~ "Yes",
     TRUE ~ "No"
+  ))
+
+
+### Integrate rare CNS tumor subtyping 
+
+rare_cns_hist <- read_tsv(rare_cns_hist_file)
+
+## append most up-to-date histology, cancer, and molecular subtype definitions
+cohort_hist <- cohort_hist %>%
+  dplyr::select(-cancer_group) %>%
+  left_join(rare_cns_hist %>%
+              dplyr::select(Kids_First_Biospecimen_ID,
+                            broad_histology,
+                            cancer_group,
+                            molecular_subtype,
+                            molecular_subtype_methyl))%>%
+  # add plot group & hex codes
+  left_join(plot_mapping_df %>%
+              dplyr::select(broad_histology,
+                            cancer_group,
+                            plot_group,
+                            plot_group_hex)) %>%
+  # Manual updates
+  # BS_N7VQ1GQB is confirmed LGG with BRAF fusion
+  # BS_3T0G8136 and BS_AKCQJ6XW are from the same patient with hybrid NFP/SWN, but initial is SWN
+  dplyr::mutate(plot_group = case_when(
+    Kids_First_Biospecimen_ID == "BS_N7VQ1GQB" ~ "Low-grade glioma",
+    Kids_First_Biospecimen_ID %in% c("BS_3T0G8136", "BS_AKCQJ6XW") ~ "Schwannoma/MPNST",
+    TRUE ~ plot_group
+  )) %>%
+  dplyr::mutate(molecular_subtype = case_when(
+    Kids_First_Biospecimen_ID == "BS_N7VQ1GQB" ~ "LGG, KIAA1549-BRAF",
+    TRUE ~ molecular_subtype
+  )) %>%
+  # update plot group hex codes
+  dplyr::mutate(plot_group_hex = case_when(
+    Kids_First_Biospecimen_ID == "BS_N7VQ1GQB" ~ "#8f8fbf",
+    Kids_First_Biospecimen_ID %in% c("BS_3T0G8136", "BS_AKCQJ6XW") ~ "#ab7200",
+    is.na(plot_group_hex) ~ "#b5b5b5",
+    TRUE ~ plot_group_hex
+  )) %>%
+  # remove tumors classified into "Other" group
+  dplyr::filter(plot_group != "Other tumor") %>% 
+  # create broad groupings for batch correction
+  dplyr::mutate(broad_group = case_when(
+    plot_group %in% c("Low-grade glioma",
+                      "Other high-grade glioma",
+                      "DIPG or DMG",
+                      "Oligodendroglioma") ~ "Glioma",
+    TRUE ~ plot_group
   ))
 
 ### Append genetic ancestry data
