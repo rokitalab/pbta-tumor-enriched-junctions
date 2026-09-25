@@ -23,7 +23,7 @@ results_dir <- file.path(analysis_dir, "results")
 
 # Set file paths
 enr_jc_splice_events_file <- file.path(results_dir, 
-                                       "tumor-enriched-oncofetal-junction-splice-events-atrt.qs2")
+                                       "tumor-enriched-oncofetal-junction-splice-events.qs2")
 
 gtex_psi_file <- file.path(root_dir, "analyses",
                            "01-ctrl-rmats-processing",
@@ -48,7 +48,7 @@ pedbrain_psi_file <- file.path(root_dir, "analyses",
 enr_jcs_annotated_file <- file.path(root_dir, "analyses",
                                     "03-classify-tejs",
                                     "results",
-                                    "tumor-enriched-oncofetal-splice-junctions-domain-expr-annotated-atrt.tsv.gz")
+                                    "tumor-enriched-oncofetal-splice-junctions-domain-expr-annotated.tsv.gz")
 
 # Wrangle data
 enr_jc_splice_event_df <- qs2::qs_read(enr_jc_splice_events_file)
@@ -269,7 +269,7 @@ merged_resolved_df <- merged_resolved_df %>%
 # write tsv
 write_tsv(merged_resolved_df,
           file.path(results_dir,
-                    "tumor-enriched-oncofetal-junction-diff-splice-event-annotation-atrt.tsv.gz"))
+                    "tumor-enriched-oncofetal-junction-diff-splice-event-annotation.tsv.gz"))
 
 # load domain-annotated, expression filtered junction df
 enr_jcs_annotated_filtered_df <- enr_jcs_annotated_df %>%
@@ -283,4 +283,4 @@ enr_jcs_annotated_filtered_df <- enr_jcs_annotated_df %>%
 # write to output
 qs2::qs_save(enr_jcs_annotated_filtered_df,
               file.path(results_dir,
-                        "tumor-enriched-oncofetal-diff-splice-junctions-atrt.qs2"))
+                        "tumor-enriched-oncofetal-diff-splice-junctions.qs2"))
