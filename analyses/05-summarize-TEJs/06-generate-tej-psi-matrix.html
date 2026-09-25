@@ -1645,13 +1645,13 @@ TEJ-associated splice event</li>
 </ul>
 <p>load necessary packages</p>
 <pre class="r"><code>library(tidyverse)</code></pre>
-<pre><code>## ── Attaching core tidyverse packages ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 2.0.0 ──
+<pre><code>## ── Attaching core tidyverse packages ──────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse 2.0.0 ──
 ## ✔ dplyr     1.1.4     ✔ readr     2.1.5
 ## ✔ forcats   1.0.0     ✔ stringr   1.5.1
 ## ✔ ggplot2   3.5.1     ✔ tibble    3.2.1
 ## ✔ lubridate 1.9.3     ✔ tidyr     1.3.1
 ## ✔ purrr     1.0.2     
-## ── Conflicts ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
+## ── Conflicts ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────── tidyverse_conflicts() ──
 ## ✖ dplyr::filter() masks stats::filter()
 ## ✖ dplyr::lag()    masks stats::lag()
 ## ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
@@ -1678,7 +1678,7 @@ library(ggsci)</code></pre>
 <pre class="r"><code># create directories
 root_dir &lt;- rprojroot::find_root(rprojroot::has_dir(&quot;.git&quot;))
 data_dir &lt;- file.path(root_dir, &quot;data&quot;)
-analysis_dir &lt;- file.path(root_dir, &quot;analyses&quot;, &quot;04-summarize-TEJs&quot;)
+analysis_dir &lt;- file.path(root_dir, &quot;analyses&quot;, &quot;05-summarize-TEJs&quot;)
 input_dir &lt;- file.path(analysis_dir, &quot;input&quot;)
 results_dir &lt;- file.path(analysis_dir, &quot;results&quot;)
 plot_dir &lt;- file.path(analysis_dir, &quot;plots&quot;)
@@ -1686,14 +1686,12 @@ plot_dir &lt;- file.path(analysis_dir, &quot;plots&quot;)
 source(file.path(root_dir, &quot;figures&quot;,
                  &quot;theme_for_plots.R&quot;))</code></pre>
 <p>Set file paths</p>
-<pre class="r"><code>tej_file &lt;- file.path(root_dir, &quot;analyses&quot;,
-                      &quot;04-summarize-TEJs&quot;,
-                      &quot;results&quot;,
+<pre class="r"><code>tej_file &lt;- file.path(results_dir,
                       &quot;recurrent-primary-tumor-enriched-oncofetal-splice-junctions-annotated-domain-updated.tsv.gz&quot;)
 
 
 splice_event_file &lt;- file.path(root_dir, &quot;analyses&quot;,
-                               &quot;03-tesj-differential-splicing&quot;,
+                               &quot;04-tej-differential-splicing&quot;,
                                &quot;results&quot;,
                                &quot;tumor-enriched-oncofetal-junction-diff-splice-event-annotation.tsv.gz&quot;)
 
@@ -1704,19 +1702,19 @@ cohort_hist_file &lt;- file.path(root_dir,
                               &quot;cohort-histologies.tsv&quot;)</code></pre>
 <p>Wrangle data</p>
 <pre class="r"><code>tej_df &lt;- read_tsv(tej_file)</code></pre>
-<pre><code>## Rows: 301647 Columns: 47
-## ── Column specification ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+<pre><code>## Rows: 433370 Columns: 49
+## ── Column specification ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ## Delimiter: &quot;\t&quot;
-## chr (30): Kids_First_Biospecimen_ID, junction, chr, strand, gene_symbol, jun...
-## dbl (17): junction_cpm, gene_tpm, junction_count, min_cpm_fc_all, min_cpm_fc...
+## chr (31): Kids_First_Biospecimen_ID, junction, chr, strand, gene_symbol, jun...
+## dbl (18): junction_cpm, gene_tpm, junction_count, min_cpm_fc_all, min_cpm_sn...
 ## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
 ## ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 <pre class="r"><code>cohort_hist &lt;- read_tsv(cohort_hist_file)</code></pre>
-<pre><code>## Rows: 1976 Columns: 36
-## ── Column specification ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+<pre><code>## Rows: 1962 Columns: 37
+## ── Column specification ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ## Delimiter: &quot;\t&quot;
-## chr (35): Kids_First_Biospecimen_ID, Kids_First_Participant_ID, cohort, sub_...
+## chr (36): Kids_First_Biospecimen_ID, Kids_First_Participant_ID, cohort, sub_...
 ## dbl  (1): age_at_diagnosis_days
 ## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.
@@ -1727,10 +1725,10 @@ cohort_hist_file &lt;- file.path(root_dir,
   dplyr::count(junction, splice_id, consensus_jc_event_type) %&gt;%
   dplyr::arrange(desc(n)) %&gt;%
   distinct(junction, .keep_all = TRUE)</code></pre>
-<pre><code>## Rows: 2353312 Columns: 10
-## ── Column specification ─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+<pre><code>## Rows: 1729303 Columns: 11
+## ── Column specification ────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 ## Delimiter: &quot;\t&quot;
-## chr (7): id, sample_id, junction, splice_id, event_type_sample, type, consen...
+## chr (8): id, sample_id, junction, splice_id, event_type_sample, type, consen...
 ## dbl (3): psi, mean_dpsi, deviation
 ## 
 ## ℹ Use `spec()` to retrieve the full column specification for this data.

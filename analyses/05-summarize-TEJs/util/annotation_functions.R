@@ -9,17 +9,29 @@ annotate_junctions <- function(chr = chr,
                                preference = preference,
                                gtf = gtf) {
   
-  # convert gtf df to data table for easier filtering
-  gtf_dt <- as.data.table(gtf)
+  # Reuse the indexed GTF data table supplied by the calling script. This
+  # avoids copying and sorting the same GTF subset for every junction.
+  gtf_dt <- if (data.table::is.data.table(gtf)) {
+    gtf
+  } else {
+    data.table::as.data.table(gtf)
+  }
   
-  setkey(gtf_dt, seqnames, start, end, gene_name)
+  # Match the junction-facing splice boundaries, rather than requiring each
+  # complete rMATS interval to equal an annotated exon. The distal boundary of
+  # an rMATS interval can differ from the GTF exon boundary without creating a
+  # novel splice site at this junction.
+  up_exon_gtf <- gtf_dt[
+    .(chr, gene_symbol, up_exon_end),
+    on = .(seqnames, gene_name, end),
+    nomatch = 0L
+  ]
   
-  # Get GTF entries for upstream and downstream exons
-  up_exon_gtf <- gtf_dt[.(chr, up_exon_start, up_exon_end, gene_symbol)]
-  up_exon_gtf <- up_exon_gtf[!is.na(up_exon_gtf$width)]
-  
-  down_exon_gtf <- gtf_dt[.(chr, down_exon_start, down_exon_end, gene_symbol)]
-  down_exon_gtf <- down_exon_gtf[!is.na(down_exon_gtf$width)]
+  down_exon_gtf <- gtf_dt[
+    .(chr, gene_symbol, down_exon_start),
+    on = .(seqnames, gene_name, start),
+    nomatch = 0L
+  ]
   
   # Scenario 1: junction is RI
   if (preference == "RI") {
@@ -59,12 +71,12 @@ annotate_junctions <- function(chr = chr,
                       exon_number)
       
       intron_number <- ifelse(exon_best_TSL$strand == "+", 
-                              exon_best_TSL$exon_number,
-                              as.numeric(exon_best_TSL$exon_number) - 1)
+                              as.numeric(exon_best_TSL$exon_number) - 1,
+                              as.numeric(exon_best_TSL$exon_number))
       
       junction_annot <- glue::glue("{exon_best_TSL$transcript_name}, intron{intron_number}:exon{exon_best_TSL$exon_number}")
       return(junction_annot)
-
+      
     }
     
   }
@@ -88,116 +100,133 @@ annotate_junctions <- function(chr = chr,
     # assign junction annotation
     junction_annot <- glue::glue("{common_transcripts}, exon{up_exon_number}:exon{down_exon_number}")
     return(junction_annot)
-
+    
   } 
   
   if (length(common_transcripts) > 1){
     
-    # Scenario 3: exons each map to single protein-coding transcript
-    common_pc_transcripts <- intersect(up_exon_gtf$transcript_name[up_exon_gtf$transcript_type == "protein_coding"],
-                                       down_exon_gtf$transcript_name[down_exon_gtf$transcript_type == "protein_coding"])
+    #   # Scenario 3: exons each map to single protein-coding transcript
+    #   common_pc_transcripts <- intersect(up_exon_gtf$transcript_name[up_exon_gtf$transcript_type == "protein_coding"],
+    #                                      down_exon_gtf$transcript_name[down_exon_gtf$transcript_type == "protein_coding"])
+    #   
+    #   if(length(common_pc_transcripts) == 1){
+    #     
+    #     # filter exon numbers for those in single protein-coding transcript
+    #     up_exon_number <- up_exon_gtf$exon_number[
+    #       up_exon_gtf$transcript_name == common_pc_transcripts
+    #     ]
+    #     
+    #     down_exon_number <- down_exon_gtf$exon_number[
+    #       down_exon_gtf$transcript_name == common_pc_transcripts
+    #     ]
+    #     
+    #     junction_annot <- glue::glue("{common_pc_transcripts}, exon{up_exon_number}:exon{down_exon_number}")
+    #     return(junction_annot)
+    #     
+    #   }
+    #   
+    #   # Scenario 5: exons map to multiple common transcripts --> take transcript with highest TSL (1 = most supported)
+    #   common_transcripts_best_tsl <- up_exon_gtf %>%
+    #     dplyr::filter(transcript_name %in% common_transcripts) %>%
+    #     dplyr::arrange(transcript_support_level,
+    #                    transcript_name) %>% 
+    #     dplyr::filter(transcript_support_level == min(transcript_support_level, na.rm = TRUE)) %>%
+    #     head(n = 1) %>%
+    #     pull(transcript_name)
+    #   
+    #   if (length(common_transcripts_best_tsl) == 1){
+    #     
+    #     up_exon_number <- up_exon_gtf$exon_number[
+    #       up_exon_gtf$transcript_name == common_transcripts_best_tsl
+    #     ]
+    #     
+    #     down_exon_number <- down_exon_gtf$exon_number[
+    #       down_exon_gtf$transcript_name == common_transcripts_best_tsl
+    #     ]
+    #     
+    #     junction_annot <- glue::glue("{common_transcripts_best_tsl}, exon{up_exon_number}:exon{down_exon_number}")
+    #     return(junction_annot)
+    #     
+    #   }
+    #   
+    #   # Scenario 6: exons map to multiple common transcripts with no TSL --> take first transcripts
+    #   common_transcripts_no_tsl_first <- up_exon_gtf %>%
+    #     dplyr::filter(transcript_name %in% common_transcripts) %>%
+    #     dplyr::arrange(transcript_name) %>% 
+    #     head(n = 1) %>%
+    #     pull(transcript_name)
+    #   
+    #   if (length(common_transcripts_no_tsl_first) == 1){
+    #     
+    #     up_exon_number <- up_exon_gtf$exon_number[
+    #       up_exon_gtf$transcript_name == common_transcripts_no_tsl_first
+    #     ]
+    #     
+    #     down_exon_number <- down_exon_gtf$exon_number[
+    #       down_exon_gtf$transcript_name == common_transcripts_no_tsl_first
+    #     ]
+    #     
+    #     junction_annot <- glue::glue("{common_transcripts_no_tsl_first}, exon{up_exon_number}:exon{down_exon_number}")
+    #     return(junction_annot)
+    #     
+    #   }
+    #   
+    # }
     
-    if(length(common_pc_transcripts) == 1){
-      
-      # filter exon numbers for those in single protein-coding transcript
-      up_exon_number <- up_exon_gtf$exon_number[
-        up_exon_gtf$transcript_name == common_pc_transcripts
-      ]
-      
-      down_exon_number <- down_exon_gtf$exon_number[
-        down_exon_gtf$transcript_name == common_pc_transcripts
-      ]
-      
-      junction_annot <- glue::glue("{common_pc_transcripts}, exon{up_exon_number}:exon{down_exon_number}")
-      return(junction_annot)
-
-    }
     
-    # Scenario 4: junction is annotated as exon skipping --> take transcript that supports skipping with highest TSL
-    if (preference == "ES"){
-      
-      # identify transcripts with at least on exon between junction exons
-      common_transcripts_es_df <- up_exon_gtf %>%
-        dplyr::filter(transcript_name %in% common_transcripts) %>%
-        dplyr::select(transcript_name, transcript_support_level,
-                      exon_number) %>%
-        dplyr::rename(up_exon_number = exon_number) %>%
-        left_join(down_exon_gtf %>%
-                    dplyr::select(transcript_name, 
-                                  exon_number) %>%
-                    dplyr::rename(down_exon_number = exon_number)) %>%
-        dplyr::filter(abs(as.numeric(up_exon_number) - as.numeric(down_exon_number)) > 1) 
-      
-      # take transcript with best TSL, if multiple
-      if (nrow(common_transcripts_es_df) > 0){
+    candidate_tbl <- tibble(transcript_name = common_transcripts) %>%
+      rowwise() %>%
+      mutate(
+        up_exon_number = up_exon_gtf$exon_number[
+          up_exon_gtf$transcript_name == transcript_name
+        ][1],
+        down_exon_number = down_exon_gtf$exon_number[
+          down_exon_gtf$transcript_name == transcript_name
+        ][1],
+        strand = up_exon_gtf$strand[
+          up_exon_gtf$transcript_name == transcript_name
+        ][1],
+        tsl = up_exon_gtf$transcript_support_level[
+          up_exon_gtf$transcript_name == transcript_name
+        ][1]
+      ) %>%
+      ungroup() %>%
+      mutate(
+        up_exon_number = as.numeric(up_exon_number),
+        down_exon_number = as.numeric(down_exon_number),
+        tsl = suppressWarnings(as.numeric(tsl)),
         
-        common_transcripts_es_best_tsl <- common_transcripts_es_df %>%
-          dplyr::arrange(transcript_support_level,
-                         transcript_name) %>%
-          head(n = 1) %>%
-          pull(transcript_name)
+        # sequential logic
+        sequential = case_when(
+          strand == "+" ~ down_exon_number == up_exon_number + 1,
+          strand == "-" ~ down_exon_number == up_exon_number - 1,
+          TRUE ~ FALSE
+        ),
         
-        up_exon_number <- up_exon_gtf$exon_number[
-          up_exon_gtf$transcript_name == common_transcripts_es_best_tsl
-        ]
+        # protein coding (intersection of both exons)
+        is_protein_coding = transcript_name %in% intersect(
+          up_exon_gtf$transcript_name[up_exon_gtf$transcript_type == "protein_coding"],
+          down_exon_gtf$transcript_name[down_exon_gtf$transcript_type == "protein_coding"]
+        ),
         
-        down_exon_number <- down_exon_gtf$exon_number[
-          down_exon_gtf$transcript_name == common_transcripts_es_best_tsl
-        ]
-        
-        junction_annot <- glue::glue("{common_transcripts_es_best_tsl}, exon{up_exon_number}:exon{down_exon_number}")
-        return(junction_annot)
-
-      }
-      
-    }
+        # ranking fields
+        seq_rank = ifelse(sequential, 1, 0),
+        pc_rank = ifelse(is_protein_coding, 1, 0)
+      )
     
-    # Scenario 5: exons map to multiple common transcripts --> take transcript with highest TSL (1 = most supported)
-    common_transcripts_best_tsl <- up_exon_gtf %>%
-      dplyr::filter(transcript_name %in% common_transcripts) %>%
-      dplyr::arrange(transcript_support_level,
-                     transcript_name) %>% 
-      dplyr::filter(transcript_support_level == min(transcript_support_level, na.rm = TRUE)) %>%
-      head(n = 1) %>%
-      pull(transcript_name)
+    # unified ranking
+    best_tx <- candidate_tbl %>%
+      arrange(
+        desc(seq_rank),   # sequential first
+        desc(pc_rank),    # protein-coding next
+        tsl,              # lowest TSL best
+        transcript_name   # deterministic fallback
+      ) %>%
+      dplyr::slice_head(n = 1)
     
-    if (length(common_transcripts_best_tsl) == 1){
-
-      up_exon_number <- up_exon_gtf$exon_number[
-        up_exon_gtf$transcript_name == common_transcripts_best_tsl
-      ]
-      
-      down_exon_number <- down_exon_gtf$exon_number[
-        down_exon_gtf$transcript_name == common_transcripts_best_tsl
-      ]
-      
-      junction_annot <- glue::glue("{common_transcripts_best_tsl}, exon{up_exon_number}:exon{down_exon_number}")
-      return(junction_annot)
-
-    }
-    
-    # Scenario 6: exons map to multiple common transcripts with no TSL --> take first transcripts
-    common_transcripts_no_tsl_first <- up_exon_gtf %>%
-      dplyr::filter(transcript_name %in% common_transcripts) %>%
-      dplyr::arrange(transcript_name) %>% 
-      head(n = 1) %>%
-      pull(transcript_name)
-    
-    if (length(common_transcripts_no_tsl_first) == 1){
-      
-      up_exon_number <- up_exon_gtf$exon_number[
-        up_exon_gtf$transcript_name == common_transcripts_no_tsl_first
-      ]
-      
-      down_exon_number <- down_exon_gtf$exon_number[
-        down_exon_gtf$transcript_name == common_transcripts_no_tsl_first
-      ]
-      
-      junction_annot <- glue::glue("{common_transcripts_no_tsl_first}, exon{up_exon_number}:exon{down_exon_number}")
-      return(junction_annot)
-
-    }
-    
+    return(glue::glue(
+      "{best_tx$transcript_name}, exon{best_tx$up_exon_number}:exon{best_tx$down_exon_number}"
+    ))
   }
   
   # Scenario 7: exons do not map to any common transcripts --> take transcripts with best TSL for each exon
@@ -219,7 +248,7 @@ annotate_junctions <- function(chr = chr,
     
     junction_annot <- glue::glue("{up_exon}:{down_exon}")
     return(junction_annot)
-
+    
   }
   
   # Scenario 8: one exon does not map to gtf exon --> annotate as novel donor or acceptor
@@ -238,9 +267,13 @@ annotate_junctions <- function(chr = chr,
                            "novel_donor",
                            "novel_acceptor")
       
-      junction_annot <- glue::glue("{novel_type}:{down_exon$transcript_name}, exon{down_exon$exon_number}")
+      junction_annot <- if (novel_type == "novel_acceptor") {
+        glue::glue("{down_exon$transcript_name}, exon{down_exon$exon_number}:{novel_type}")
+      } else {
+        glue::glue("{novel_type}:{down_exon$transcript_name}, exon{down_exon$exon_number}")
+      }
       return(junction_annot)
-
+      
     } else if (nrow(down_exon_gtf) == 0){
       
       up_exon <- up_exon_gtf %>%
@@ -254,9 +287,13 @@ annotate_junctions <- function(chr = chr,
                            "novel_acceptor",
                            "novel_donor")
       
-      junction_annot <- glue::glue("{novel_type}:{up_exon$transcript_name}, exon{up_exon$exon_number}")
+      junction_annot <- if (novel_type == "novel_acceptor") {
+        glue::glue("{up_exon$transcript_name}, exon{up_exon$exon_number}:{novel_type}")
+      } else {
+        glue::glue("{novel_type}:{up_exon$transcript_name}, exon{up_exon$exon_number}")
+      }
       return(junction_annot)
-
+      
     }
     
   }

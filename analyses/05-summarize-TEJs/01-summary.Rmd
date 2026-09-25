@@ -32,7 +32,7 @@ Set directory paths
 ```{r}
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
 data_dir <- file.path(root_dir, "data")
-analysis_dir <- file.path(root_dir, "analyses", "04-summarize-TEJs")
+analysis_dir <- file.path(root_dir, "analyses", "05-summarize-TEJs")
 input_dir <- file.path(analysis_dir, "input")
 results_dir <- file.path(analysis_dir, "results")
 plot_dir <- file.path(analysis_dir, "plots")
@@ -379,7 +379,7 @@ Save recurrent splice event df to output
 ```{r}
 write_tsv(recurrent_primary_tej_df,
           file.path(results_dir,
-          "recurrent-primary-tumor-enriched-oncofetal-splice-junctions-reclassified.tsv.gz"))
+          "recurrent-primary-tumor-enriched-oncofetal-splice-junctions.tsv.gz"))
 ```
 
 Print session info

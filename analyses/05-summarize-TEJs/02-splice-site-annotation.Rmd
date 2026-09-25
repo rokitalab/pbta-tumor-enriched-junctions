@@ -29,7 +29,7 @@ Set directory paths
 ```{r}
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
 data_dir <- file.path(root_dir, "data")
-analysis_dir <- file.path(root_dir, "analyses", "04-summarize-TEJs")
+analysis_dir <- file.path(root_dir, "analyses", "05-summarize-TEJs")
 input_dir <- file.path(analysis_dir, "input")
 results_dir <- file.path(analysis_dir, "results")
 plot_dir <- file.path(analysis_dir, "plots")
@@ -78,7 +78,8 @@ ends <- gtf_df %>%
 tej_annot_df <- tej_df %>%
   # retain unique TEJs
   distinct(junction, gene_symbol, preference_code, chr,
-           up_jc_start, up_jc_end, down_jc_start, down_jc_end) %>%
+           up_jc_start, up_jc_end, down_jc_start, down_jc_end,
+           strand) %>%
   dplyr::mutate(chr = case_when(
     grepl("KI", chr) ~ str_remove(chr, "chr"),
     TRUE ~ chr
@@ -110,8 +111,14 @@ Run `annotate_junctions()` function to annotate junctions to transcripts, exons,
 
 ```{r}
 # Subset gtf to make for easier filtering within function
-gtf_sub_df <- gtf_df %>%
-  dplyr::filter(start %in% tej_annot_df$down_jc_start | end %in% tej_annot_df$up_jc_end)
+gtf_sub_dt <- gtf_df %>%
+  dplyr::filter(start %in% tej_annot_df$down_jc_start | end %in% tej_annot_df$up_jc_end) %>%
+  data.table::as.data.table()
+
+# Create the splice-boundary lookup indices once. These are reused for every
+# junction annotation instead of sorting/copying the GTF within each function call.
+data.table::setindexv(gtf_sub_dt, c("seqnames", "gene_name", "end"))
+data.table::setindexv(gtf_sub_dt, c("seqnames", "gene_name", "start"))
 
 # run annotation
 system.time({
@@ -133,7 +140,7 @@ system.time({
             down_exon_end = ..5,
             gene_symbol = ..6,
             preference = ..7,
-            gtf = gtf_sub_df
+            gtf = gtf_sub_dt
           )
         )
       )
@@ -146,12 +153,33 @@ Join annotation to recurrent TEJ data frame
 ```{r}
 tej_df <- tej_df %>%
   left_join(tej_annot_df %>%
-              dplyr::select(junction,
-                            novel_ss,
-                            junction_name)) %>%
+              distinct(junction,
+                      novel_ss,
+                      junction_name)) %>%
+  dplyr::mutate(
+    up_exon = case_when(
+      grepl(":exon", junction_name) ~ sapply(
+        strsplit(junction_name, ", |:"),
+        function(x) if (length(x) >= 2) x[2] else NA_character_
+      ),
+      TRUE ~ NA_character_
+    )
+  ) %>%
+  dplyr::mutate(
+    down_exon = case_when(
+      grepl(":exon", junction_name) ~ sapply(
+        strsplit(junction_name, ", |:"),
+        function(x) if (length(x) >= 2) x[3] else NA_character_
+      ),
+      TRUE ~ NA_character_
+    )
+  ) %>%
+  dplyr::mutate(up_exon = as.numeric(str_remove(up_exon, "exon")),
+                down_exon = as.numeric(str_remove(down_exon, "exon"))) %>%
   dplyr::mutate(status = case_when(
     grepl("novel", junction_name) ~ "Novel splice site",
     !grepl(":exon|, intron|:intron", junction_name) ~ "Novel junction",
+    !is.na(up_exon) & !is.na(down_exon) & up_exon != down_exon + 1 & up_exon + 1 != down_exon ~ "Novel junction",
     TRUE ~ "Annotated junction"
   ))
 ```
@@ -170,15 +198,17 @@ hist_tej_novelss_ct <- tej_df %>%
   left_join(unique_hist_tej_ct) %>%
   dplyr::mutate(n_norm = n/hist_tej_n)
 
-hist_order <- c("Oligodendroglioma", "Neurofibroma plexiform", 
-                "Other CNS embryonal tumor", "Other tumor",
-                "Germ cell tumor", "Mixed neuronal-glial tumor",
-                "DIPG or DMG", "Mesenchymal tumor", 
-                "Meningioma", "Low-grade glioma",
-                "Schwannoma", "Other high-grade glioma",
-                "Craniopharyngioma", "Non-neoplastic tumor", 
-                "Medulloblastoma", "Choroid plexus tumor", 
-                "Ependymoma", "Atypical Teratoid Rhabdoid Tumor")
+hist_order <- c("Other CNS embryonal tumor", 
+                "Pineoblastoma", "Oligodendroglioma",
+                "Neurofibroma plexiform", "Mesenchymal tumor", 
+                "Rare CNS tumor", "Germ cell tumor",
+                "Meningioma", "Schwannoma/MPNST", 
+                "Non-neoplastic tumor", "Craniopharyngioma", 
+                "Mixed neuronal-glial tumor",
+                "Atypical Teratoid Rhabdoid Tumor", 
+                "Choroid plexus tumor", "Ependymoma",
+                "DIPG or DMG", "Other high-grade glioma",
+                "Low-grade glioma", "Medulloblastoma")
 
 # generate plot
 novelss_freq_barplot <- hist_tej_novelss_ct %>%

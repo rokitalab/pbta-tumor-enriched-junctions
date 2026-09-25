@@ -17,7 +17,7 @@ library(data.table)
 ### Set directory paths
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
 data_dir <- file.path(root_dir, "data")
-analysis_dir <- file.path(root_dir, "analyses", "04-summarize-TEJs")
+analysis_dir <- file.path(root_dir, "analyses", "05-summarize-TEJs")
 results_dir <- file.path(analysis_dir, "results")
 
 source(file.path(analysis_dir,

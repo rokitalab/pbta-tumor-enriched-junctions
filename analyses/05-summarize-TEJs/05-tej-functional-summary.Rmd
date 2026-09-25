@@ -29,7 +29,7 @@ Set directory paths
 ```{r}
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
 data_dir <- file.path(root_dir, "data")
-analysis_dir <- file.path(root_dir, "analyses", "04-summarize-TEJs")
+analysis_dir <- file.path(root_dir, "analyses", "05-summarize-TEJs")
 input_dir <- file.path(analysis_dir, "input")
 results_dir <- file.path(analysis_dir, "results")
 plot_dir <- file.path(analysis_dir, "plots")
@@ -43,9 +43,7 @@ source(file.path(root_dir, "figures", "theme_for_plots.R"))
 Set file paths
 
 ```{r}
-tej_file <- file.path(root_dir, "analyses",
-                      "04-summarize-TEJs",
-                      "results",
+tej_file <- file.path(results_dir,
                       "recurrent-primary-tumor-enriched-oncofetal-splice-junctions-annotated.tsv.gz")
 
 uniprot_file <- file.path(root_dir, "analyses",
@@ -134,7 +132,7 @@ ggplot(consequence_ct,
 
 ggsave(file.path(plot_dir,
                  "tej-n-by-consequence.pdf"),
-       width = 4.5, height = 2.5)
+       width = 5, height = 2.5)
 ```
 
 Plot EC-annotated TEJs by histology
@@ -147,7 +145,7 @@ file_names <- c("ATRT", "CPT", "CRANIO",
                 "LGG", "MB", "MNG",
                 "MES", "GNT", "NFP",
                 "NNT", "OLIGO", "CNSemb", 
-                "HGG", "Other", "SWN")
+                "HGG", "PB", "Rare", "SWN")
 names(file_names) <- groups
 
 preference_palette <- c("EI" = "#56B4E9",
@@ -164,7 +162,7 @@ for (hist in groups){
     dplyr::filter(plot_group == hist,
                   grepl("EC domain", consequence) & gene_symbol %in% cell_membrane_proteins) %>%
     dplyr::count(gene_symbol, preference_code) %>%
-    dplyr::filter(n >= 5) %>%
+    dplyr::filter(n >= 10) %>%
     arrange(desc(gene_symbol)) %>%
     dplyr::mutate(gene_symbol = fct_relevel(gene_symbol,
                                             unique(gene_symbol)))
@@ -232,7 +230,7 @@ hgg_atrt_ec_events_df %>%
       theme_Publication()
 
   ggsave(file.path(plot_dir, "atrt-hgg-recurrent-ec-tejs-by-gene.pdf"),
-         height = 9, width = 8)
+         height = 12, width = 8)
 ```
 
 Save TEJ data frame with updated domain annotation
