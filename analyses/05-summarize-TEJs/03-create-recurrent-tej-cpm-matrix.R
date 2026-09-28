@@ -57,6 +57,7 @@ if (!length(recurrent_junctions)) {
   stop("No recurrent TEJ junctions were found in: ", recur_tej_file)
 }
 
+# Define function to subset full junction mats for TEJs
 subset_recurrent_junctions <- function(input_file, output_file,
                                        back_transform_log2 = FALSE) {
   message("Loading: ", input_file)
