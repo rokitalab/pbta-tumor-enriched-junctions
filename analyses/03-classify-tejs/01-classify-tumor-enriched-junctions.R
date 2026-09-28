@@ -136,7 +136,10 @@ ctrl_junction_mat <- gtex_junction_mat %>%
 keep_cols <- !grepl("junction", colnames(ctrl_junction_mat))
 
 ctrl_junction_mat <- ctrl_junction_mat[
-  rowSums(as.data.frame(ctrl_junction_mat)[, keep_cols, drop = FALSE] >= 10) == 0,
+  rowSums(
+    as.data.frame(ctrl_junction_mat)[, keep_cols, drop = FALSE] > 10,
+    na.rm = TRUE
+  ) == 0,
 ]
 
 # merge control sd cpm matrices
