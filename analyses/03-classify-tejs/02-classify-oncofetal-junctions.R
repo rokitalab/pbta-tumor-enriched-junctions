@@ -86,7 +86,7 @@ for (k in seq_along(prenatal_groups)) {
     snr <- (prenatal_cpm - postnatal_cpm) /
       prenatal_vs_postnatal_df[[postnatal_sd_cols[j]]]
     min_fc <- pmin(min_fc, fc, na.rm = TRUE)
-    min_snr <- pmin(min_snr, snr)
+    min_snr <- pmin(min_snr, snr, na.rm = TRUE)
   }
 
   prenatal_min_fc_cols[k] <- paste0("min_prenatal_fc_", prenatal_group)
