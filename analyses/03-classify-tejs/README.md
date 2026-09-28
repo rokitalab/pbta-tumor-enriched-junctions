@@ -42,6 +42,7 @@ bash run_module.sh
 ## Input files
 * `analyses/02-pbta-junction-processing/results/pbta-merged-norm-batch-corrected-junction-cts.qs2` batch-corrected PBTA junction CPMs.
 * `analyses/02-pbta-junction-processing/results/junction-annot.tsv.gz` PBTA splice-junction annotations.
+* `data/SJ.merged.control-cohort.tsv.gz` normal brain junction counts to compare against rMATS-derived tumor-specific junctions. 
 
 ## Directory structure
 ```
