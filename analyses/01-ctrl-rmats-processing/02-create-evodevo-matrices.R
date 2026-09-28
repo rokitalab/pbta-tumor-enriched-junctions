@@ -86,7 +86,26 @@ evodevo_hist <- read_tsv(hist_file) %>%
 evodevo_prenatal_hist <- evodevo_hist %>%
   dplyr::filter(!is.na(evodevo_prenatal_week_group))
 evodevo_postnatal_hist <- evodevo_hist %>%
-  dplyr::filter(!is.na(evodevo_postnatal_group))
+  dplyr::filter(!is.na(evodevo_postnatal_group)) %>%
+  dplyr::mutate(
+    postnatal_region = sub("-.*", "", evodevo_postnatal_group)
+  )
+
+# Calculate mean PSI across all postnatal samples within each broad brain
+# region. This produces a single Forebrain and Hindbrain value per event,
+# rather than separate values for each postnatal developmental stage.
+create_collapsed_postnatal_psi <- function(df, event_type) {
+  postnatal_df <- df %>%
+    dplyr::filter(sample_id %in% evodevo_postnatal_hist$Kids_First_Biospecimen_ID)
+
+  create_psi_matrix(
+    postnatal_df,
+    event_type = event_type,
+    hist = evodevo_postnatal_hist,
+    group_col = "postnatal_region",
+    id_col = "Kids_First_Biospecimen_ID"
+  )
+}
 
 # Load rMATS SE results
 se_df <- qs2::qs_read(se_file) %>%
@@ -103,6 +122,8 @@ se_postnatal_psi_mat <- create_psi_matrix(se_df %>%
                                           hist = evodevo_postnatal_hist,
                                           group_col = "evodevo_postnatal_group",
                                           id_col = "Kids_First_Biospecimen_ID")
+
+se_collapsed_postnatal_psi <- create_collapsed_postnatal_psi(se_df, "SE")
 
 # create median PSI matrix for prenatal samples by region and developmental stage
 se_prenatal_week_psi_mat <- create_psi_matrix(se_df %>%
@@ -135,6 +156,8 @@ ri_postnatal_psi_mat <- create_psi_matrix(ri_df %>%
                                           hist = evodevo_postnatal_hist,
                                           group_col = "evodevo_postnatal_group",
                                           id_col = "Kids_First_Biospecimen_ID")
+
+ri_collapsed_postnatal_psi <- create_collapsed_postnatal_psi(ri_df, "RI")
 
 # create median PSI matrix for prenatal samples by region and developmental stage
 ri_prenatal_week_psi_mat <- create_psi_matrix(ri_df %>%
@@ -172,6 +195,8 @@ a3ss_postnatal_psi_mat <- create_psi_matrix(a3ss_df %>%
                                             group_col = "evodevo_postnatal_group",
                                             id_col = "Kids_First_Biospecimen_ID")
 
+a3ss_collapsed_postnatal_psi <- create_collapsed_postnatal_psi(a3ss_df, "A3SS")
+
 # create median PSI matrix for prenatal samples by region and developmental stage
 a3ss_prenatal_week_psi_mat <- create_psi_matrix(a3ss_df %>%
                                                   dplyr::filter(sample_id %in% evodevo_prenatal_hist$Kids_First_Biospecimen_ID),
@@ -204,6 +229,8 @@ a5ss_postnatal_psi_mat <- create_psi_matrix(a5ss_df %>%
                                             hist = evodevo_postnatal_hist,
                                             group_col = "evodevo_postnatal_group",
                                             id_col = "Kids_First_Biospecimen_ID")
+
+a5ss_collapsed_postnatal_psi <- create_collapsed_postnatal_psi(a5ss_df, "A5SS")
 
 # create median PSI matrix for prenatal samples by region and developmental stage
 a5ss_prenatal_week_psi_mat <- create_psi_matrix(a5ss_df %>%
@@ -345,6 +372,22 @@ merged_postnatal_psi_mat <- se_postnatal_psi_mat %>%
 qs2::qs_save(merged_postnatal_psi_mat,
              file.path(results_dir,
                        "evodevo-merged-postnatal-psi-mat.qs2"))
+
+# Merge and save mean PSI matrices collapsed across postnatal stages within
+# each broad brain region.
+merged_collapsed_postnatal_psi_mat <- se_collapsed_postnatal_psi %>%
+  dplyr::mutate(splicing_case = "SE") %>%
+  bind_rows(ri_collapsed_postnatal_psi %>%
+              dplyr::mutate(splicing_case = "RI"),
+            a3ss_collapsed_postnatal_psi %>%
+              dplyr::mutate(splicing_case = "A3SS"),
+            a5ss_collapsed_postnatal_psi %>%
+              dplyr::mutate(splicing_case = "A5SS")) %>%
+  dplyr::select(splice_id, splicing_case, everything())
+
+qs2::qs_save(merged_collapsed_postnatal_psi_mat,
+             file.path(results_dir,
+                       "evodevo-merged-postnatal-collapsed-psi-mat.qs2"))
 
 merged_prenatal_week_psi_mat <- se_prenatal_week_psi_mat %>%
   dplyr::mutate(splicing_case = "SE") %>%

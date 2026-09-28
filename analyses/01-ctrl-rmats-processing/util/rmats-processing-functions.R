@@ -336,7 +336,8 @@ create_psi_matrix <- function(df,
                               hist,
                               id_col,
                               group_col,
-                              aggregation_fun = mean){
+                              aggregation_fun = mean,
+                              return_n_nonmissing = FALSE){
   
   
   if (event_type == "SE"){
@@ -373,7 +374,8 @@ create_psi_matrix <- function(df,
   
   # Group and summarize values
   agg_psi_df <- psi_df[
-    , .(summary_psi = aggregation_fun(psi, na.rm = TRUE)),
+    , .(summary_psi = aggregation_fun(psi, na.rm = TRUE),
+        n_nonmissing = sum(!is.na(psi))),
     by = c(group_col, "splice_id")
   ]
   
@@ -381,7 +383,7 @@ create_psi_matrix <- function(df,
   psi_mat <- dcast(
     agg_psi_df,
     as.formula(paste("splice_id ~", group_col)),
-    value.var = "summary_psi"
+    value.var = if (return_n_nonmissing) "n_nonmissing" else "summary_psi"
   )
   
   # return mat
