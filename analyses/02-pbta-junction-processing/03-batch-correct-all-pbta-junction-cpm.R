@@ -286,7 +286,7 @@ for (i in seq_along(chunk_starts)) {
       mod = combat_mod,
       par.prior = TRUE
     ), 5)
-
+    
     ## Update the final matrix in place and stage only genuinely corrected
     ## rows for the later long-form CPM update.
     corrected_row_indices <- row_indices[eligible_rows]
@@ -294,7 +294,7 @@ for (i in seq_along(chunk_starts)) {
       corrected_row_indices,
       (sample_ids) := data.table::as.data.table(corrected_log2_chunk)
     ]
-
+    
     corrected_chunk_dt <- data.table::as.data.table(corrected_log2_chunk)
     data.table::setnames(corrected_chunk_dt, sample_ids)
     corrected_chunk_dt[, junction := junction_cpm$junction[corrected_row_indices]]
