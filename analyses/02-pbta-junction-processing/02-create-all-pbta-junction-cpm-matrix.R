@@ -157,7 +157,7 @@ gc()
 
 # At this point all event types have been combined, so junction support can be
 # counted across the complete PBTA data set without first creating a dense CPM
-# matrix. Remove junctions with non-missing counts in fewer than three samples.
+# matrix. Remove junctions with non-missing counts in fewer than two samples.
 merged_junction_dt <- as.data.table(merged_junction_df)
 rm(merged_junction_df)
 
@@ -166,13 +166,13 @@ junction_sample_counts <- merged_junction_dt[
   by = junction
 ]
 low_support_junctions <- junction_sample_counts[
-  n_non_na_samples < 3L,
+  n_non_na_samples < 2L,
   junction
 ]
 
 print(glue::glue(
   "Removing {length(low_support_junctions)} junctions with non-NA counts ",
-  "in fewer than three PBTA samples..."
+  "in fewer than two PBTA samples..."
 ))
 merged_junction_dt <- merged_junction_dt[
   !junction %in% low_support_junctions
