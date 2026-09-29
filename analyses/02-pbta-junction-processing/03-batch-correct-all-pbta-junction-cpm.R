@@ -21,7 +21,8 @@ root_dir <- find_root(has_dir(".git"))
 analysis_dir <- file.path(root_dir, "analyses", "02-pbta-junction-processing")
 results_dir <- file.path(analysis_dir, "results")
 
-## Exclude junctions observed in fewer than this many samples.
+## Batch-correct only junctions observed sufficiently often for a stable model.
+## Ineligible junctions remain in the output as uncorrected log2(CPM + 1).
 min_non_na_values <- 10L
 min_non_na_per_batch <- 2L
 
@@ -50,8 +51,9 @@ batch_corrected_pbta_file <- file.path(
   "pbta-merged-norm-batch-corrected-junction-cts.qs2"
 )
 
-## Process 50,000 junctions in each ComBat chunk.
+## Process 50,000 junctions in each chunk to limit peak memory use.
 chunk_size <- 50000L
+long_update_chunk_size <- 10000L
 
 ## Load the junction CPM matrix and cohort annotations
 message("Loading all-PBTA junction CPM matrix...")
@@ -144,15 +146,15 @@ if (combat_design_rank < ncol(combat_design)) {
 
 ## ComBat cannot estimate a scale adjustment for a junction with zero
 ## within-batch variance. It also cannot fit a batch-plus-histology model for
-## a sparse junction when the samples with observed CPM values do not yield a
+## a sparse junction when the samples with observed values do not yield a
 ## full-rank design. Those rows are retained in the output but left as
 ## uncorrected log2(CPM + 1).
-combat_eligible_rows <- function(cpm_mat, batches, combat_design) {
-  eligible <- rep(TRUE, nrow(cpm_mat))
+combat_eligible_rows <- function(log2_cpm_mat, batches, combat_design) {
+  eligible <- rep(TRUE, nrow(log2_cpm_mat))
   
   for (sample_indices in batches) {
     batch_variance <- apply(
-      cpm_mat[, sample_indices, drop = FALSE],
+      log2_cpm_mat[, sample_indices, drop = FALSE],
       1L,
       stats::var,
       na.rm = TRUE
@@ -163,7 +165,7 @@ combat_eligible_rows <- function(cpm_mat, batches, combat_design) {
   ## ComBat uses a separate least-squares fit for rows containing NAs. Check
   ## the exact design available for each such row to prevent solve() from
   ## receiving a singular cross-product matrix.
-  missing_cpm <- is.na(cpm_mat)
+  missing_cpm <- is.na(log2_cpm_mat)
   rows_requiring_rank_check <- which(eligible & rowSums(missing_cpm) > 0L)
   
   if (length(rows_requiring_rank_check)) {
@@ -181,16 +183,17 @@ combat_eligible_rows <- function(cpm_mat, batches, combat_design) {
   eligible
 }
 
-## Filter sparsely observed junctions before batch correction. Calculate
-## non-missing counts in blocks to avoid allocating a full logical matrix.
+## Identify rows eligible for batch correction. Calculate non-missing counts
+## in blocks to avoid allocating a full logical matrix. Ineligible rows are
+## retained in the final matrix without batch correction.
 filter_chunk_size <- 10000L
 filter_starts <- seq.int(1L, length(junction_indices), by = filter_chunk_size)
 keep_rows <- logical(length(junction_indices))
 
 message(
-  "Removing junctions with fewer than ", min_non_na_values,
-  " non-NA CPM values or fewer than ", min_non_na_per_batch,
-  " non-NA values in any RNA-library batch..."
+  "Identifying junctions with at least ", min_non_na_values,
+  " non-NA CPM values and at least ", min_non_na_per_batch,
+  " non-NA values in every RNA-library batch for ComBat..."
 )
 for (i in seq_along(filter_starts)) {
   start <- filter_starts[[i]]
@@ -209,24 +212,50 @@ for (i in seq_along(filter_starts)) {
     rowSums(batch_non_na >= min_non_na_per_batch) == length(batches)
 }
 
-n_removed <- sum(!keep_rows)
-junction_indices <- junction_indices[keep_rows]
+n_ineligible <- sum(!keep_rows)
+combat_junction_indices <- junction_indices[keep_rows]
 rm(keep_rows, cpm_filter_chunk)
 gc()
 
 message(
-  "Retained ", length(junction_indices), " junctions; removed ", n_removed,
-  " failing the non-NA observation thresholds."
+  "ComBat will correct ", length(combat_junction_indices),
+  " junctions; ", n_ineligible,
+  " ineligible junctions will remain uncorrected."
 )
-if (!length(junction_indices)) {
-  stop("No junctions remain after filtering sparse rows.")
+
+## Convert the input matrix to the output scale in place. This establishes the
+## correct uncorrected value for every junction without allocating a second
+## full junction-by-sample matrix.
+all_row_starts <- seq.int(1L, nrow(junction_cpm), by = chunk_size)
+message(
+  "Converting all junction CPMs to log2(CPM + 1) in ",
+  length(all_row_starts), " chunk(s)..."
+)
+for (i in seq_along(all_row_starts)) {
+  start <- all_row_starts[[i]]
+  end <- min(start + chunk_size - 1L, nrow(junction_cpm))
+  row_indices <- start:end
+  log2_cpm_chunk <- log2(as.matrix(junction_cpm[row_indices, ..sample_ids]) + 1)
+  junction_cpm[row_indices, (sample_ids) := data.table::as.data.table(log2_cpm_chunk)]
+  rm(log2_cpm_chunk)
+  gc()
 }
 
-## Run ComBat separately for junction chunks to limit peak memory use.
-## Randomizing junction_indices makes each chunk broadly representative.
-n_junctions <- length(junction_indices)
-chunk_starts <- seq.int(1L, n_junctions, by = chunk_size)
-combat_chunks <- vector("list", length(chunk_starts))
+## Run ComBat separately for eligible junction chunks. Corrected values are
+## written back into junction_cpm immediately, so neither a second complete
+## matrix nor a list of all ComBat chunks is retained in memory. Save only the
+## corrected rows temporarily; they are later used to update the long-form
+## table after the complete matrix has been released.
+## Randomizing combat_junction_indices makes each chunk broadly representative.
+n_junctions <- length(combat_junction_indices)
+chunk_starts <- if (n_junctions) {
+  seq.int(1L, n_junctions, by = chunk_size)
+} else {
+  integer()
+}
+correction_chunk_dir <- tempfile("pbta-combat-correction-chunks-")
+dir.create(correction_chunk_dir)
+correction_chunk_files <- character()
 
 message(
   "Batch-correcting ", n_junctions, " junctions in ",
@@ -236,25 +265,47 @@ message(
 for (i in seq_along(chunk_starts)) {
   start <- chunk_starts[[i]]
   end <- min(start + chunk_size - 1L, n_junctions)
-  row_indices <- junction_indices[start:end]
+  row_indices <- combat_junction_indices[start:end]
   message(
     "Processing chunk ", i, "/", length(chunk_starts),
     " (", length(row_indices), " randomized junctions)..."
   )
   
-  cpm_chunk <- as.matrix(junction_cpm[row_indices, ..sample_ids])
-  storage.mode(cpm_chunk) <- "double"
-  log2_cpm_chunk <- log2(cpm_chunk + 1)
-  eligible_rows <- combat_eligible_rows(cpm_chunk, batches, combat_design)
-  combat_chunk <- log2_cpm_chunk
+  log2_cpm_chunk <- as.matrix(junction_cpm[row_indices, ..sample_ids])
+  storage.mode(log2_cpm_chunk) <- "double"
+  eligible_rows <- combat_eligible_rows(
+    log2_cpm_chunk,
+    batches,
+    combat_design
+  )
   
   if (any(eligible_rows)) {
-    combat_chunk[eligible_rows, ] <- sva::ComBat(
+    corrected_log2_chunk <- round(sva::ComBat(
       dat = log2_cpm_chunk[eligible_rows, , drop = FALSE],
       batch = batch,
       mod = combat_mod,
       par.prior = TRUE
+    ), 5)
+
+    ## Update the final matrix in place and stage only genuinely corrected
+    ## rows for the later long-form CPM update.
+    corrected_row_indices <- row_indices[eligible_rows]
+    junction_cpm[
+      corrected_row_indices,
+      (sample_ids) := data.table::as.data.table(corrected_log2_chunk)
+    ]
+
+    corrected_chunk_dt <- data.table::as.data.table(corrected_log2_chunk)
+    data.table::setnames(corrected_chunk_dt, sample_ids)
+    corrected_chunk_dt[, junction := junction_cpm$junction[corrected_row_indices]]
+    data.table::setcolorder(corrected_chunk_dt, c("junction", sample_ids))
+    correction_chunk_file <- file.path(
+      correction_chunk_dir,
+      sprintf("combat-corrected-%05d.qs2", i)
     )
+    qs2::qs_save(corrected_chunk_dt, correction_chunk_file)
+    correction_chunk_files <- c(correction_chunk_files, correction_chunk_file)
+    rm(corrected_log2_chunk, corrected_row_indices, corrected_chunk_dt)
   }
   if (any(!eligible_rows)) {
     message(
@@ -264,21 +315,14 @@ for (i in seq_along(chunk_starts)) {
     )
   }
   
-  combat_chunks[[i]] <- data.table::as.data.table(round(combat_chunk, 5))
-  data.table::setnames(combat_chunks[[i]], sample_ids)
-  combat_chunks[[i]][, junction := junction_cpm$junction[row_indices]]
-  data.table::setcolorder(combat_chunks[[i]], c("junction", sample_ids))
-  
-  rm(cpm_chunk, log2_cpm_chunk, eligible_rows, combat_chunk)
+  rm(log2_cpm_chunk, eligible_rows)
   gc()
 }
 
-combat_mat <- data.table::rbindlist(combat_chunks, use.names = TRUE)
-rm(junction_cpm, combat_chunks)
-gc()
-
 message("Saving ComBat-corrected log2 CPM matrix...")
-qs2::qs_save(combat_mat, output_file)
+qs2::qs_save(junction_cpm, output_file)
+rm(junction_cpm)
+gc()
 
 ## Replace the long-form PBTA junction CPM values with their ComBat-corrected
 ## counterparts. ComBat operates on log2(CPM + 1), so transform its output
@@ -295,32 +339,48 @@ if (!all(required_pbta_columns %in% names(pbta_merged))) {
   )
 }
 
-message("Converting ComBat-corrected log2 CPMs back to CPMs...")
-combat_mat[, (sample_ids) := lapply(
-  .SD,
-  function(x) round(pmax(2^x - 1, 0), 5)
-), .SDcols = sample_ids]
-
-## The ComBat matrix includes only rows that passed the observation filters.
-## Rows not present in it (for example, sparse junctions) retain their
-## original CPM values in the final table.
-message("Replacing PBTA junction CPMs with batch-corrected CPMs...")
-corrected_cpm_long <- data.table::melt(
-  combat_mat,
-  id.vars = "junction",
-  variable.name = "sample_id",
-  value.name = "batch_corrected_junction_cpm",
-  na.rm = TRUE,
-  variable.factor = FALSE
-)
+## The original long-form table already contains the correct values for every
+## uncorrected row. Update it only with corrected junction chunks, avoiding a
+## full melt of the complete CPM matrix.
+message("Replacing corrected PBTA junction CPMs in chunks...")
 data.table::setkey(pbta_merged, junction, sample_id)
-data.table::setkey(corrected_cpm_long, junction, sample_id)
-pbta_merged[corrected_cpm_long,
-            junction_cpm := i.batch_corrected_junction_cpm,
-            on = .(junction, sample_id)
-]
+for (i in seq_along(correction_chunk_files)) {
+  message("Updating corrected junction chunk ", i, "/", length(correction_chunk_files), "...")
+  corrected_chunk_dt <- data.table::as.data.table(qs2::qs_read(correction_chunk_files[[i]]))
+  long_update_starts <- seq.int(
+    1L,
+    nrow(corrected_chunk_dt),
+    by = long_update_chunk_size
+  )
+  for (start in long_update_starts) {
+    end <- min(start + long_update_chunk_size - 1L, nrow(corrected_chunk_dt))
+    corrected_update_dt <- data.table::copy(corrected_chunk_dt[start:end])
+    corrected_update_dt[, (sample_ids) := lapply(
+      .SD,
+      function(x) round(pmax(2^x - 1, 0), 5)
+    ), .SDcols = sample_ids]
+    corrected_cpm_long <- data.table::melt(
+      corrected_update_dt,
+      id.vars = "junction",
+      variable.name = "sample_id",
+      value.name = "batch_corrected_junction_cpm",
+      na.rm = TRUE,
+      variable.factor = FALSE
+    )
+    data.table::setkey(corrected_cpm_long, junction, sample_id)
+    pbta_merged[corrected_cpm_long,
+                junction_cpm := i.batch_corrected_junction_cpm,
+                on = .(junction, sample_id)]
+    rm(corrected_update_dt, corrected_cpm_long)
+    gc()
+  }
+  rm(corrected_chunk_dt, long_update_starts)
+  gc()
+}
 
 message("Saving PBTA junction table with batch-corrected CPMs...")
 qs2::qs_save(pbta_merged, batch_corrected_pbta_file)
+
+unlink(correction_chunk_dir, recursive = TRUE)
 
 sessionInfo()
