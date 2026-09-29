@@ -25,13 +25,13 @@ prenatal_junction_mat_file <- file.path(root_dir, "analyses",
                                         "evodevo-merged-prenatal-week-binned-norm-junction-ct-mat.qs2")
 postnatal_junction_mat_file <- file.path(root_dir, "analyses",
                                          "01-ctrl-rmats-processing", "results",
-                                         "evodevo-merged-postnatal-norm-junction-ct-mat.qs2")
+                                         "evodevo-merged-postnatal-stage-norm-junction-ct-mat.qs2")
 postnatal_junction_sd_file <- file.path(root_dir, "analyses",
                                         "01-ctrl-rmats-processing", "results",
-                                        "evodevo-merged-postnatal-norm-junction-sd-mat.qs2")
+                                        "evodevo-merged-postnatal-stage-norm-junction-sd-mat.qs2")
 
 print("Loading tumor-enriched junctions and Evo-Devo matrices...")
-# Load stage-01 calls and postnatal Evo-Devo CPM/SD matrices.
+# Load stage-01 calls and postnatal Evo-Devo CPM/SD matrices by brain region and stage.
 merged_enr_jc_df <- qs2::qs_read(tumor_enriched_file)
 evodevo_junction_mat <- qs2::qs_read(postnatal_junction_mat_file) %>%
   rename_with(~ paste0("mean_cpm_", .x), -junction)
@@ -56,15 +56,21 @@ prenatal_groups <- sub("^prenatal_mean_cpm_", "", prenatal_mean_cols)
 
 # Assemble one comparison table containing prenatal and postnatal measurements.
 prenatal_vs_postnatal_df <- prenatal_junction_mat %>%
-  inner_join(evodevo_junction_mat %>%
-               dplyr::filter(junction %in% junctions_to_classify$junction) %>%
-               dplyr::select(junction, all_of(postnatal_mean_cols)),
-             by = "junction") %>%
-  inner_join(evodevo_sd_mat %>%
-               dplyr::filter(junction %in% junctions_to_classify$junction) %>%
-               dplyr::select(junction, all_of(postnatal_sd_cols)),
-             by = "junction") %>%
+  left_join(evodevo_junction_mat %>%
+              dplyr::filter(junction %in% junctions_to_classify$junction) %>%
+              dplyr::select(junction, all_of(postnatal_mean_cols)),
+            by = "junction") %>%
+  left_join(evodevo_sd_mat %>%
+              dplyr::filter(junction %in% junctions_to_classify$junction) %>%
+              dplyr::select(junction, all_of(postnatal_sd_cols)),
+            by = "junction") %>%
   as.data.frame()
+
+# Junctions not observed in a postnatal group are treated as unexpressed there.
+prenatal_vs_postnatal_df[postnatal_mean_cols] <-
+  lapply(prenatal_vs_postnatal_df[postnatal_mean_cols], dplyr::coalesce, 0)
+prenatal_vs_postnatal_df[postnatal_sd_cols] <-
+  lapply(prenatal_vs_postnatal_df[postnatal_sd_cols], dplyr::coalesce, 0)
 
 # For each prenatal group, calculate the minimum FC and SNR across every
 # postnatal group without retaining the intermediate comparison columns.
@@ -88,6 +94,12 @@ for (k in seq_along(prenatal_groups)) {
     min_fc <- pmin(min_fc, fc, na.rm = TRUE)
     min_snr <- pmin(min_snr, snr, na.rm = TRUE)
   }
+
+  # A missing prenatal CPM is not evidence of prenatal expression.  Without
+  # this guard, pmin(..., na.rm = TRUE) retains the Inf initializer for these
+  # rows, causing them to satisfy both oncofetal thresholds.
+  min_fc[is.na(prenatal_cpm)] <- NA_real_
+  min_snr[is.na(prenatal_cpm)] <- NA_real_
 
   prenatal_min_fc_cols[k] <- paste0("min_prenatal_fc_", prenatal_group)
   prenatal_min_snr_cols[k] <- paste0("min_prenatal_snr_", prenatal_group)

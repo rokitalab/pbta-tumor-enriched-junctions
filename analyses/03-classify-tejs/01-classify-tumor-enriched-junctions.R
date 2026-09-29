@@ -49,10 +49,6 @@ evodevo_junction_sd_file <- file.path(root_dir, "analyses",
                                       "01-ctrl-rmats-processing",
                                       "results",
                                       "evodevo-merged-postnatal-norm-junction-sd-mat.qs2")
-evodevo_metadata_file <- file.path(root_dir, "analyses",
-                                   "01-ctrl-rmats-processing",
-                                   "results",
-                                   "evodevo-brain-prenatal-week-binned-metadata.tsv")
 
 # pediatric normal brain
 pedbrain_junction_mat_file <- file.path(root_dir, "analyses",
@@ -95,24 +91,12 @@ gtex_sd_mat <- qs2::qs_read(gtex_junction_sd_file) %>%
     -junction
   )
 
-evodevo_group_sizes <- readr::read_tsv(evodevo_metadata_file,
-                                       show_col_types = FALSE) %>%
-  dplyr::filter(!is.na(evodevo_postnatal_group)) %>%
-  dplyr::transmute(
-    evodevo_postnatal_group,
-    region = sub("-.*", "", evodevo_postnatal_group)
-  ) %>%
-  dplyr::count(region, evodevo_postnatal_group, name = "n")
-
-evodevo_postnatal_ref <- collapse_evodevo_postnatal_groups(
-  qs2::qs_read(evodevo_junction_mat_file),
-  qs2::qs_read(evodevo_junction_sd_file),
-  evodevo_group_sizes
-)
-evodevo_junction_mat <- evodevo_postnatal_ref %>%
-  dplyr::select(junction, starts_with("mean_cpm_"))
-evodevo_sd_mat <- evodevo_postnatal_ref %>%
-  dplyr::select(junction, starts_with("sd_cpm_"))
+# The Evo-Devo matrices are already collapsed across postnatal stages within
+# each brain region, so load their Forebrain/Hindbrain summaries directly.
+evodevo_junction_mat <- qs2::qs_read(evodevo_junction_mat_file) %>%
+  rename_with(~ paste0("mean_cpm_", .x), -junction)
+evodevo_sd_mat <- qs2::qs_read(evodevo_junction_sd_file) %>%
+  rename_with(~ paste0("sd_cpm_", .x), -junction)
 
 # Normal ped brain
 pedbrain_junction_mat <- qs2::qs_read(pedbrain_junction_mat_file) %>%
@@ -129,8 +113,8 @@ pedbrain_sd_mat <- qs2::qs_read(pedbrain_junction_sd_file) %>%
 
 # merge control mean cpm matrices
 ctrl_junction_mat <- gtex_junction_mat %>%
-  left_join(evodevo_junction_mat) %>%
-  left_join(pedbrain_junction_mat) 
+  full_join(evodevo_junction_mat) %>%
+  full_join(pedbrain_junction_mat) 
 
 # Filter out junctions with mean CPM >= 10 in any control group.
 keep_cols <- !grepl("junction", colnames(ctrl_junction_mat))
@@ -144,8 +128,8 @@ ctrl_junction_mat <- ctrl_junction_mat[
 
 # merge control sd cpm matrices
 ctrl_sd_mat <- gtex_sd_mat %>%
-  left_join(evodevo_sd_mat) %>%
-  left_join(pedbrain_sd_mat)
+  full_join(evodevo_sd_mat) %>%
+  full_join(pedbrain_sd_mat)
 
 print("Filtering PBTA junctions...")
 pbta_junction_sub_df <- pbta_junction_df %>%
