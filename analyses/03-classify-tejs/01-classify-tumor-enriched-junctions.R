@@ -176,16 +176,23 @@ for (i in 1:length(starts)) {
   n_chunk_rows <- nrow(enr_jc_chunk)
   max_control_cpm <- rep(-Inf, n_chunk_rows)
   min_control_snr <- rep(Inf, n_chunk_rows)
-
+  n_control_snr <- integer(n_chunk_rows)
+  
   for (j in seq_along(cpm_cols)) {
     cpm <- cpm_cols[j]
     sd <- sub("^mean_cpm_", "sd_cpm_", cpm)
     control_cpm <- enr_jc_chunk[[cpm]]
     snr <- (enr_jc_chunk$junction_cpm - control_cpm) / enr_jc_chunk[[sd]]
-
+    
     max_control_cpm <- pmax(max_control_cpm, control_cpm, na.rm = TRUE)
     min_control_snr <- pmin(min_control_snr, snr, na.rm = TRUE)
+    n_control_snr <- n_control_snr + !is.na(snr)
   }
+  
+  # Without any computable control SNR (e.g. every control group has a single
+  # observed sample, so SD is NA), the SNR criterion cannot be evaluated.
+  # Keep it missing rather than retaining the Inf initializer.
+  min_control_snr[n_control_snr == 0] <- NA_real_
   
   # calculate summary stats & define tumor-enriched junctions
   enr_jc_chunk <- enr_jc_chunk %>%
