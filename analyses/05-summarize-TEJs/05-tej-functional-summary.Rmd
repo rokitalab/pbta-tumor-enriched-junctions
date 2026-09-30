@@ -199,7 +199,7 @@ hgg_atrt_ec_events <- tej_df %>%
                                   "Atypical Teratoid Rhabdoid Tumor"),
                   grepl("EC domain", consequence) & gene_symbol %in% cell_membrane_proteins) %>%
   dplyr::count(gene_symbol, preference_code) %>%
-  dplyr::filter(n >= 30) %>%
+  dplyr::filter(n >= 60) %>%
   pull(gene_symbol)
 
 hgg_atrt_ec_events_df <- tej_df %>%

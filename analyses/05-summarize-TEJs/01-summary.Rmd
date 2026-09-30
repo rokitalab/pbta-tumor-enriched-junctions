@@ -291,7 +291,6 @@ ggsave(file.path(plot_dir,
 recurrent_tej_n_plot
 ```
 
-
 Plot distribution of TEJ splice event types by histology
 
 ```{r}
