@@ -85,7 +85,8 @@ for (k in seq_along(prenatal_groups)) {
   prenatal_cpm <- prenatal_vs_postnatal_df[[prenatal_mean_col]]
   min_fc <- rep(Inf, nrow(prenatal_vs_postnatal_df))
   min_snr <- rep(Inf, nrow(prenatal_vs_postnatal_df))
-
+  n_snr <- integer(nrow(prenatal_vs_postnatal_df))
+  
   for (j in seq_along(postnatal_mean_cols)) {
     postnatal_cpm <- prenatal_vs_postnatal_df[[postnatal_mean_cols[j]]]
     fc <- prenatal_cpm / (postnatal_cpm + 1e-5)
@@ -93,16 +94,20 @@ for (k in seq_along(prenatal_groups)) {
       prenatal_vs_postnatal_df[[postnatal_sd_cols[j]]]
     min_fc <- pmin(min_fc, fc, na.rm = TRUE)
     min_snr <- pmin(min_snr, snr, na.rm = TRUE)
+    n_snr <- n_snr + !is.na(snr)
   }
 
   # Missing prenatal CPM is not evidence of prenatal expression. Likewise,
   # junctions absent from every postnatal group are not eligible for an
   # oncofetal call. Without these guards, pmin(..., na.rm = TRUE) retains the
   # Inf initializer for rows without valid comparisons.
-  min_fc[is.na(prenatal_cpm) |
-           !prenatal_vs_postnatal_df$has_postnatal_cpm] <- NA_real_
-  min_snr[is.na(prenatal_cpm) |
-            !prenatal_vs_postnatal_df$has_postnatal_cpm] <- NA_real_
+  no_comparison <- is.na(prenatal_cpm) |
+      !prenatal_vs_postnatal_df$has_postnatal_cpm
+  min_fc[no_comparison] <- NA_real_
+  
+  # A postnatal mean can exist without any postnatal SD (e.g. every observed
+  # group has a single sample), so the SNR criterion cannot be evaluated.
+  min_snr[no_comparison | n_snr == 0] <- NA_real_
 
   prenatal_min_fc_cols[k] <- paste0("min_prenatal_fc_", prenatal_group)
   prenatal_min_snr_cols[k] <- paste0("min_prenatal_snr_", prenatal_group)
