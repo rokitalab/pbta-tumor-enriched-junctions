@@ -66,11 +66,11 @@ prenatal_vs_postnatal_df <- prenatal_junction_mat %>%
             by = "junction") %>%
   as.data.frame()
 
-# Junctions not observed in a postnatal group are treated as unexpressed there.
-prenatal_vs_postnatal_df[postnatal_mean_cols] <-
-  lapply(prenatal_vs_postnatal_df[postnatal_mean_cols], dplyr::coalesce, 0)
-prenatal_vs_postnatal_df[postnatal_sd_cols] <-
-  lapply(prenatal_vs_postnatal_df[postnatal_sd_cols], dplyr::coalesce, 0)
+# A junction must have an observed postnatal CPM in at least one group to be
+# eligible for oncofetal classification. Keep postnatal NAs as missing.
+prenatal_vs_postnatal_df$has_postnatal_cpm <- rowSums(
+  !is.na(prenatal_vs_postnatal_df[, postnatal_mean_cols, drop = FALSE])
+) > 0
 
 # For each prenatal group, calculate the minimum FC and SNR across every
 # postnatal group without retaining the intermediate comparison columns.
@@ -95,11 +95,14 @@ for (k in seq_along(prenatal_groups)) {
     min_snr <- pmin(min_snr, snr, na.rm = TRUE)
   }
 
-  # A missing prenatal CPM is not evidence of prenatal expression.  Without
-  # this guard, pmin(..., na.rm = TRUE) retains the Inf initializer for these
-  # rows, causing them to satisfy both oncofetal thresholds.
-  min_fc[is.na(prenatal_cpm)] <- NA_real_
-  min_snr[is.na(prenatal_cpm)] <- NA_real_
+  # Missing prenatal CPM is not evidence of prenatal expression. Likewise,
+  # junctions absent from every postnatal group are not eligible for an
+  # oncofetal call. Without these guards, pmin(..., na.rm = TRUE) retains the
+  # Inf initializer for rows without valid comparisons.
+  min_fc[is.na(prenatal_cpm) |
+           !prenatal_vs_postnatal_df$has_postnatal_cpm] <- NA_real_
+  min_snr[is.na(prenatal_cpm) |
+            !prenatal_vs_postnatal_df$has_postnatal_cpm] <- NA_real_
 
   prenatal_min_fc_cols[k] <- paste0("min_prenatal_fc_", prenatal_group)
   prenatal_min_snr_cols[k] <- paste0("min_prenatal_snr_", prenatal_group)
@@ -179,6 +182,33 @@ jc_bed_df <- merged_enr_jc_annot_df %>%
 write.table(jc_bed_df,
             file.path(results_dir, "tumor-enriched-oncofetal-splice-junctions.bed"),
             col.names = FALSE, row.names = FALSE, quote = FALSE, sep = "\t")
+
+# Report unique junction classification counts and infinite prenatal/postnatal
+# comparison statistics among oncofetal junctions.
+unique_classified_junctions <- merged_enr_jc_annot_df %>%
+  dplyr::distinct(junction, junction_preference,
+                  max_prenatal_min_cpm_fc, max_prenatal_min_cpm_snr)
+
+classification_counts <- unique_classified_junctions %>%
+  dplyr::filter(junction_preference %in% c("Tumor-enriched", "Oncofetal")) %>%
+  dplyr::count(junction_preference, name = "n_unique_junctions") %>%
+  tidyr::complete(junction_preference = c("Tumor-enriched", "Oncofetal"),
+                  fill = list(n_unique_junctions = 0L))
+
+oncofetal_infinite_counts <- unique_classified_junctions %>%
+  dplyr::filter(junction_preference == "Oncofetal") %>%
+  dplyr::summarise(
+    n_oncofetal_junctions = dplyr::n(),
+    n_with_infinite_fc = sum(is.infinite(max_prenatal_min_cpm_fc)),
+    n_with_infinite_snr = sum(is.infinite(max_prenatal_min_cpm_snr)),
+    n_with_infinite_fc_or_snr = sum(
+      is.infinite(max_prenatal_min_cpm_fc) |
+        is.infinite(max_prenatal_min_cpm_snr)
+    )
+  )
+
+print(classification_counts)
+print(oncofetal_infinite_counts)
 
 # Record package and R versions used for this run.
 sessionInfo()
