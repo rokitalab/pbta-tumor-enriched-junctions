@@ -291,6 +291,131 @@ ggsave(file.path(plot_dir,
 recurrent_tej_n_plot
 ```
 
+Assess recurrent TEJs for RNA library type bias
+
+```{r}
+# A TEJ is absent from the input data when it was not called. Count all
+# eligible primary samples by library class first, then join observed calls
+# to those denominators. This retains TEJ-negative samples without creating
+# a very large sample-by-junction matrix.
+library_type_samples <- hist %>%
+  dplyr::filter(is_independent_primary == "Yes",
+                RNA_library %in% c("stranded", "poly-A", "poly-A stranded")) %>%
+  dplyr::transmute(
+    Kids_First_Biospecimen_ID,
+    RNA_library_class = dplyr::if_else(RNA_library == "stranded",
+                                        "total_RNA", "polyA")
+  ) %>%
+  distinct(Kids_First_Biospecimen_ID, .keep_all = TRUE)
+
+library_type_denominators <- library_type_samples %>%
+  count(RNA_library_class, name = "n_samples")
+
+recurrent_junctions <- recurrent_primary_tej_df %>%
+  distinct(junction) %>%
+  pull(junction)
+
+called_recurrent_tejs <- recurrent_primary_tej_df %>%
+  distinct(Kids_First_Biospecimen_ID, junction) %>%
+  inner_join(library_type_samples,
+             by = "Kids_First_Biospecimen_ID") %>%
+  count(junction, RNA_library_class, name = "n_called")
+
+# Every junction is represented in both library classes; missing values after
+# the join are therefore genuine zero-call classes.
+library_bias_input <- tidyr::crossing(
+  junction = recurrent_junctions,
+  library_type_denominators
+) %>%
+  left_join(called_recurrent_tejs,
+            by = c("junction", "RNA_library_class")) %>%
+  dplyr::mutate(n_called = tidyr::replace_na(n_called, 0L),
+                RNA_library_class = factor(RNA_library_class,
+                                           levels = c("total_RNA", "polyA")))
+
+# First, report the directly interpretable frequency in each library class.
+library_bias_summary <- library_bias_input %>%
+  group_by(junction, RNA_library_class) %>%
+  summarise(n_samples = sum(n_samples),
+            n_called = sum(n_called),
+            call_frequency = n_called / n_samples,
+            .groups = "drop") %>%
+  pivot_wider(names_from = RNA_library_class,
+              values_from = c(n_samples, n_called, call_frequency))
+
+# Test each junction once for an association between calling and library class.
+# An odds ratio >1 means a TEJ was called more often in total-RNA than in
+# poly-A libraries.
+test_library_bias <- function(event_df) {
+  if (nrow(event_df) != 2 ||
+      sum(event_df$n_called) == 0 ||
+      sum(event_df$n_called) == sum(event_df$n_samples)) {
+    return(tibble(odds_ratio_total_RNA_vs_polyA = NA_real_,
+                  conf_low = NA_real_,
+                  conf_high = NA_real_,
+                  p_value = NA_real_))
+  }
+
+  event_df <- event_df %>% dplyr::arrange(RNA_library_class)
+  # Rows encode called then absent and columns are total-RNA then poly-A,
+  # so the odds ratio is in the total-RNA/poly-A direction.
+  fisher_table <- rbind(event_df$n_called,
+                        event_df$n_samples - event_df$n_called)
+  fisher <- stats::fisher.test(fisher_table)
+
+  tibble(odds_ratio_total_RNA_vs_polyA = unname(fisher$estimate),
+         conf_low = unname(fisher$conf.int[1]),
+         conf_high = unname(fisher$conf.int[2]),
+         p_value = fisher$p.value)
+}
+
+library_bias_results <- library_bias_input %>%
+  group_by(junction) %>%
+  group_modify(~ test_library_bias(.x)) %>%
+  ungroup() %>%
+  dplyr::mutate(p_adj = p.adjust(p_value, method = "BH")) %>%
+  left_join(library_bias_summary, by = "junction") %>%
+  dplyr::mutate(
+    library_bias = case_when(
+      p_adj < 0.05 & odds_ratio_total_RNA_vs_polyA >= 2 ~ "total_RNA",
+      p_adj < 0.05 & odds_ratio_total_RNA_vs_polyA <= 0.5 ~ "polyA",
+      TRUE ~ "none"
+    )
+  ) %>%
+  arrange(p_adj, desc(abs(log2(odds_ratio_total_RNA_vs_polyA))))
+
+write_tsv(library_bias_results,
+          file.path(results_dir, "recurrent-tej-rna-library-bias.tsv.gz"))
+
+# Append the per-junction library-bias results to every corresponding
+# sample-level recurrent TEJ record before the final recurrent-TEJ export.
+recurrent_primary_tej_df <- recurrent_primary_tej_df %>%
+  left_join(library_bias_results, by = "junction")
+
+# This plot is useful for inspecting effect size and avoiding interpretation
+# of statistically significant but very small frequency differences.
+library_bias_plot <- library_bias_results %>%
+  ggplot(aes(x = call_frequency_polyA,
+             y = call_frequency_total_RNA,
+             color = library_bias)) +
+  geom_abline(slope = 1, intercept = 0, linetype = "dashed") +
+  geom_point(alpha = 0.6, size = 1.5) +
+  scale_color_manual(values = c(total_RNA = "#0072B2",
+                                polyA = "#D55E00",
+                                none = "grey70")) +
+  theme_Publication() +
+  labs(x = "TEJ call frequency in poly-A libraries",
+       y = "TEJ call frequency in total-RNA libraries",
+       color = "Library bias")
+
+ggsave(file.path(plot_dir, "recurrent-tej-rna-library-bias.pdf"),
+       library_bias_plot, width = 5, height = 5)
+
+library_bias_results %>%
+  dplyr::filter(library_bias != "none")
+```
+
+
 Plot distribution of TEJ splice event types by histology
 
 ```{r}
