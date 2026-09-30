@@ -17,6 +17,10 @@ data_dir <- file.path(root_dir, "data")
 analysis_dir <- file.path(root_dir, "analyses", "03-classify-tejs")
 results_dir <- file.path(analysis_dir, "results")
 
+if (!dir.exists(results_dir)) {
+    dir.create(results_dir)
+}
+
 source(file.path(analysis_dir, "util", "other-functions.R"))
 
 ## file paths
