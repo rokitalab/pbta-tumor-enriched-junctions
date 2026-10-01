@@ -19,9 +19,8 @@ library(data.table)
 ### Set directory paths
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
 data_dir <- file.path(root_dir, "data")
-module_dir <- file.path(root_dir, "analyses", "02-pbta-junction-processing")
-input_dir <- file.path(root_dir, "analyses", "00-create-cohort-histologies", "input")
-results_dir <- file.path(module_dir, "results")
+analysis_dir <- file.path(root_dir, "analyses", "02-pbta-junction-processing")
+results_dir <- file.path(analysis_dir, "results")
 
 if (!dir.exists(results_dir)){
   
