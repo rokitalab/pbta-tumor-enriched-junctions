@@ -45,7 +45,12 @@ Then, paste the instance IP address into your browser to start Rstudio.
 docker exec -ti <CONTAINER_NAME> bash
 ```
 
-5. Navigate to an analysis module and run its shell script (modules are numbered and should be run in order, as later modules use results from earlier ones):
+5. Run the `download_data.sh` shell script to obtain the latest data files:
+```
+bash download_data.sh
+```
+
+6. Navigate to an analysis module and run its shell script (modules are numbered and should be run in order, as later modules use results from earlier ones):
 ```
 cd /home/rstudio/pbta-tumor-enriched-junctions/analyses/module_of_interest
 bash run_module.sh
