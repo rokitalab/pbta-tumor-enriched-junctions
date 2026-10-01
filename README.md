@@ -1,5 +1,7 @@
 # Identification of pediatric CNS tumor-enriched splicing events
 
+This repository is a companion methods repository for the TAPESTRY manuscript. It contains the code used to identify and characterize pediatric CNS tumor-enriched splice junctions (TEJs) in the PBTA cohort.
+
 ### To reproduce the code in this repository
 
 1. Clone the repository:
