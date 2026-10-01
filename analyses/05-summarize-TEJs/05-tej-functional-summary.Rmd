@@ -1,0 +1,248 @@
+---
+title: "Plot EC-annotated tumor-enriched splice junctions"
+output: 
+  html_notebook:
+    toc: TRUE
+    toc_float: TRUE
+author: Ryan Corbett
+date: 2026
+params:
+  plot_ci: TRUE
+---
+
+Load required packages
+
+```{r}
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(data.table)
+  library(rprojroot)
+  library(R.utils)
+  library(ggsci)
+  library(ggforce)
+  library(ggpubr)
+})
+```
+
+Set directory paths
+
+```{r}
+root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
+data_dir <- file.path(root_dir, "data")
+analysis_dir <- file.path(root_dir, "analyses", "05-summarize-TEJs")
+input_dir <- file.path(analysis_dir, "input")
+results_dir <- file.path(analysis_dir, "results")
+plot_dir <- file.path(analysis_dir, "plots")
+if (!dir.exists(results_dir)) {
+  dir.create(results_dir)
+}
+
+source(file.path(root_dir, "figures", "theme_for_plots.R"))
+```
+
+Set file paths
+
+```{r}
+tej_file <- file.path(results_dir,
+                      "recurrent-primary-tumor-enriched-oncofetal-splice-junctions-annotated.tsv.gz")
+
+uniprot_file <- file.path(root_dir, "analyses",
+                        "pepMLM-preprocessing",
+                        "input",
+                        "uniprotkb_organism_id_9606_AND_reviewed_2025_06_18.txt")
+```
+
+Wrangle data
+
+```{r}
+tej_df <- read_tsv(tej_file)
+
+uniprot_df <- read_tsv(uniprot_file)
+```
+
+Current uniprot topological domain annotations include associations with ANY membrane (ER, mitochondria), not just cell membrane.
+Therefore, we need to identify proteins that localize to cell membranes and update annotations. 
+These will include keywords "Membrane"/"cell membrane", and "single-pass"/"multi-pass"
+
+```{r}
+# extract known extracellular proteins based on keywords
+cell_membrane_proteins <- uniprot_df %>%
+  dplyr::filter(
+    grepl("Single-pass type I membrane protein|Multi-pass membrane protein|Single-pass membrane protein|Single-pass type II membrane protein|Single-pass type III membrane protein|Single-pass type IV membrane protein", `Subcellular location [CC]`),
+    grepl("cell membrane|Cell membrane", `Subcellular location [CC]`),
+    # remove ER membrane 
+    !grepl("Endoplasmic reticulum membrane; Single-pass type I membrane protein|endoplasmic reticulum (ER) membrane", `Subcellular location [CC]`),
+    !is.na(`Gene Names (primary)`)
+                ) %>%
+  pull(`Gene Names (primary)`)
+```
+
+Update TEJ df uniprot annotation to remove annotations for proteins that don't localize to extracellular membrane
+
+```{r}
+tej_df <- tej_df %>% 
+  dplyr::mutate(uniprot_domain_type = case_when(
+    gene_symbol %in% cell_membrane_proteins & !is.na(uniprot_domain_type) ~ uniprot_domain_type,
+    TRUE ~ NA_character_
+  )) %>%
+  dplyr::mutate(uniprot_domain_start = case_when(
+    is.na(uniprot_domain_type) ~ NA,
+    TRUE ~ uniprot_domain_start
+  ),
+  uniprot_domain_end = case_when(
+    is.na(uniprot_domain_type) ~ NA,
+    TRUE ~ uniprot_domain_end
+    )) %>%
+  dplyr::mutate(consequence = case_when(
+    grepl("EC", uniprot_domain_type) & gene_symbol %in% cell_membrane_proteins ~ "EC domain",
+    !is.na(pfam_name) ~ "Other functional domain",
+    in_cds == "Yes" ~ "Other coding sequence",
+    TRUE ~ "Putative non-coding"
+  ))
+```
+
+Determine distribution of junctions affecting extracellular and pfam domains
+
+```{r}
+consequence_df <- tej_df %>%
+  distinct(junction, gene_symbol,
+           consequence, pfam_name, uniprot_domain_type, in_cds) %>%
+  dplyr::mutate(consequence = case_when(
+    grepl("EC", uniprot_domain_type) & gene_symbol %in% cell_membrane_proteins ~ "EC domain",
+    !is.na(pfam_name) ~ "Other functional domain",
+    in_cds == "Yes" ~ "Other coding sequence",
+    TRUE ~ "Putative non-coding"
+  ))
+
+table(consequence_df$consequence)
+
+consequence_ct <- consequence_df %>%
+  count(consequence) %>%
+  arrange(n) %>%
+  dplyr::mutate(consequence = fct_relevel(consequence,
+                                          unique(consequence)))
+
+ggplot(consequence_ct,
+       aes(y = consequence, x = n, fill = consequence)) +
+  geom_bar(stat = "identity", color = "black", show.legend = FALSE) + 
+  theme_Publication() +
+  labs(y = NULL,
+     x = "N TEJs") +
+  scale_fill_npg()
+
+ggsave(file.path(plot_dir,
+                 "tej-n-by-consequence.pdf"),
+       width = 5, height = 2.5)
+```
+
+Plot EC-annotated TEJs by histology
+
+```{r}
+groups <- sort(unique(tej_df$plot_group))
+
+file_names <- c("ATRT", "CPT", "CRANIO",
+                "DMG", "EPN", "GCT",
+                "LGG", "MB", "MNG",
+                "MES", "GNT", "NFP",
+                "NNT", "OLIGO", "CNSemb", 
+                "HGG", "PB", "Rare", "SWN")
+names(file_names) <- groups
+
+preference_palette <- c("EI" = "#56B4E9",
+                        "ES" = "#0072B2",
+                        "RI" = "#009E73",
+                        "A3-" = "#E69F00",
+                        "A3+" = "#F0E442",
+                        "A5-" = "#D55E00",
+                        "A5+" = "#CC79A7")
+
+for (hist in groups){
+
+  recurrent_ec_events <- tej_df %>%
+    dplyr::filter(plot_group == hist,
+                  grepl("EC domain", consequence) & gene_symbol %in% cell_membrane_proteins) %>%
+    dplyr::count(gene_symbol, preference_code) %>%
+    dplyr::arrange(desc(n)) %>%
+    head(n = 50) %>%
+    arrange(desc(gene_symbol)) %>%
+    dplyr::mutate(gene_symbol = fct_relevel(gene_symbol,
+                                            unique(gene_symbol)))
+  
+  if (nrow(recurrent_ec_events) > 0){
+
+    recurrent_ec_events %>%
+      
+    ggplot(aes(y = gene_symbol, x = n, fill = preference_code)) +
+        geom_bar(stat="identity", position="stack", color = "black", linewidth = 0.2) + 
+        labs(x = "Count",
+             y = NULL,
+             fill = "Event type",
+             title = hist) + 
+        scale_fill_manual(values = preference_palette, 
+             breaks = sort(names(preference_palette))) +
+        theme_Publication()
+  
+    ggsave(file.path(plot_dir, glue::glue("{file_names[hist]}-recurrent-ec-tejs-by-gene.pdf")),
+           height = 12, width = 5)
+    
+  }
+  
+}
+```
+
+Plot high recurrence ATRT, HGG EC-localized events only
+
+```{r}
+hgg_atrt_ec_events <- tej_df %>%
+  dplyr::filter(plot_group %in% c("Other high-grade glioma",
+                                  "DIPG or DMG",
+                                  "Atypical Teratoid Rhabdoid Tumor"),
+                  grepl("EC domain", consequence) & gene_symbol %in% cell_membrane_proteins) %>%
+  dplyr::count(gene_symbol, preference_code) %>%
+  dplyr::filter(n >= 60) %>%
+  pull(gene_symbol)
+
+hgg_atrt_ec_events_df <- tej_df %>%
+  dplyr::mutate(plot_group = case_when(
+    plot_group %in% c("DIPG or DMG",
+                      "Other high-grade glioma") ~ "High-grade glioma",
+    TRUE ~ plot_group
+  )) %>%
+  dplyr::filter(grepl("EC domain", consequence) & gene_symbol %in% cell_membrane_proteins,
+                gene_symbol %in% hgg_atrt_ec_events,
+                  plot_group %in% c("High-grade glioma",
+                                    "Atypical Teratoid Rhabdoid Tumor")) %>%
+  dplyr::count(gene_symbol, preference_code, plot_group) %>%
+  arrange(desc(gene_symbol)) %>%
+  dplyr::mutate(gene_symbol = fct_relevel(gene_symbol,
+                                          unique(gene_symbol)))
+  
+hgg_atrt_ec_events_df %>%
+  
+  ggplot(aes(y = gene_symbol, x = n, fill = preference_code)) +
+      geom_bar(stat="identity", position="stack", color = "black", linewidth = 0.2) + 
+      labs(x = "Count",
+           y = NULL,
+           fill = "Event type") + 
+    facet_wrap(~plot_group, nrow = 1, scale = "free",
+               labeller = labeller(plot_group = label_wrap_gen(16))) +
+      scale_fill_manual(values = preference_palette, 
+           breaks = sort(names(preference_palette))) +
+      theme_Publication()
+
+  ggsave(file.path(plot_dir, "atrt-hgg-recurrent-ec-tejs-by-gene.pdf"),
+         height = 12, width = 8)
+```
+
+Save TEJ data frame with updated domain annotation
+
+```{r}
+write_tsv(tej_df,
+          file.path(results_dir,
+                    "recurrent-primary-tumor-enriched-oncofetal-splice-junctions-annotated-domain-updated.tsv.gz"))
+```
+
+print session info
+```{r}
+sessionInfo()
+```

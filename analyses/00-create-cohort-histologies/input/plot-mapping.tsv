@@ -1,0 +1,86 @@
+broad_histology	cancer_group	broad_histology_display	plot_group	broad_histology_hex	cancer_group_abbreviation	plot_group_hex
+Embryonal tumor	Atypical Teratoid Rhabdoid Tumor	Embryonal tumor	Atypical Teratoid Rhabdoid Tumor	#220040	ATRT	#4d0d85
+Benign tumor	Choroid plexus papilloma	Choroid plexus tumor	Choroid plexus tumor	#00441B	CPT	#00441B
+Benign tumor	Atypical choroid plexus papilloma	Choroid plexus tumor	Choroid plexus tumor	#00441B	CPT	#00441B
+Choroid plexus tumor	NA	Choroid plexus tumor	Choroid plexus tumor	#00441B	CPT	#00441B
+Choroid plexus tumor	Choroid plexus carcinoma	Choroid plexus tumor	Choroid plexus tumor	#00441B	CPT	#00441B
+Choroid plexus tumor	Choroid plexus tumor	Choroid plexus tumor	Choroid plexus tumor	#00441B	CPT	#00441B
+Choroid plexus tumor	Choroid plexus cyst	Choroid plexus tumor	Choroid plexus tumor	#00441B	CPT	#00441B
+Tumors of sellar region	Craniopharyngioma	Craniopharyngioma	Craniopharyngioma	#b2502d	CRANIO	#b2502d
+Tumors of sellar region	Adamantinomatous Craniopharyngioma	Craniopharyngioma	Craniopharyngioma	#b2502d	CRANIO	#b2502d
+Diffuse astrocytic and oligodendroglial tumor	Diffuse intrinsic pontine glioma	High-grade glioma	DIPG or DMG	#ff40d9	DIPG	#ff40d9
+Diffuse astrocytic and oligodendroglial tumor	Diffuse midline glioma	High-grade glioma	DIPG or DMG	#ff40d9	DMG	#ff40d9
+Ependymal tumor	Ependymoma	Ependymoma	Ependymoma	#2200ff	EPN	#2200ff
+Germ cell tumor	Germinoma	Germ cell tumor	Germ cell tumor	#0074d9	GCT	#0074d9
+Germ cell tumor	Mixed germ cell tumor	Germ cell tumor	Germ cell tumor	#0074d9	GCT	#0074d9
+Germ cell tumor	Teratoma	Germ cell tumor	Germ cell tumor	#0074d9	GCT	#0074d9
+Germ cell tumor	NA	Germ cell tumor	Germ cell tumor	#0074d9	GCT	#0074d9
+Low-grade astrocytic tumor	Diffuse fibrillary astrocytoma	Low-grade glioma	Low-grade glioma	#8f8fbf	Other LGG	#8f8fbf
+Low-grade astrocytic tumor	Low-grade glioma	Low-grade glioma	Low-grade glioma	#8f8fbf	Other LGG	#8f8fbf
+Low-grade astrocytic tumor	Gliomatosis Cerebri	Low-grade glioma	Low-grade glioma	#8f8fbf	Other LGG	#8f8fbf
+Low-grade astrocytic tumor	Pilocytic astrocytoma	Low-grade glioma	Low-grade glioma	#8f8fbf	PA	#8f8fbf
+Low-grade astrocytic tumor	Pleomorphic xanthoastrocytoma	Low-grade glioma	Low-grade glioma	#8f8fbf	PXA	#8f8fbf
+Low-grade astrocytic tumor	Subependymal Giant Cell Astrocytoma	Low-grade glioma	Low-grade glioma	#8f8fbf	SEGA	#8f8fbf
+Embryonal tumor	Medulloblastoma	Embryonal tumor	Medulloblastoma	#220040	MB	#a340ff
+Meningioma	Meningioma	Meningioma	Meningioma	#2db398	Meningioma	#2db398
+Meningioma	NA	Meningioma	Meningioma	#2db398	Meningioma	#2db398
+Chordoma	Chordoma	Mesenchymal tumor	Mesenchymal tumor	#7fbf00	Chordoma	#7fbf00
+Mesenchymal non-meningothelial tumor	Ewing sarcoma	Mesenchymal tumor	Mesenchymal tumor	#7fbf00	EWS	#7fbf00
+Mesenchymal non-meningothelial tumor	Fibromyxoid lesion	Mesenchymal tumor	Mesenchymal tumor	#7fbf00	Other MNMT	#7fbf00
+Mesenchymal non-meningothelial tumor	Hemangioblastoma	Mesenchymal tumor	Mesenchymal tumor	#7fbf00	Hemangioblastoma	#7fbf00
+Mesenchymal non-meningothelial tumor	Inflammatory Myofibroblastic Tumor	Mesenchymal tumor	Mesenchymal tumor	#7fbf00	Other MNMT	#7fbf00
+Mesenchymal non-meningothelial tumor	Rhabdomyosarcoma	Mesenchymal tumor	Mesenchymal tumor	#7fbf00	RMS	#7fbf00
+Mesenchymal non-meningothelial tumor	Sarcoma	Mesenchymal tumor	Mesenchymal tumor	#7fbf00	Other MNMT	#7fbf00
+Mesenchymal non-meningothelial tumor	Myofibroblastoma	Mesenchymal tumor	Mesenchymal tumor	#7fbf00	Other MNMT	#7fbf00
+Mesenchymal non-meningothelial tumor	Chondromyxoid fibroma	Mesenchymal tumor	Mesenchymal tumor	#7fbf00	Other MNMT	#7fbf00
+Mesenchymal non-meningothelial tumor	Mesenchymal tumor	Mesenchymal tumor	Mesenchymal tumor	#7fbf00	Other MNMT	#7fbf00
+Low-grade astrocytic tumor	Ganglioglioma	Mixed neuronal-glial tumor	Mixed neuronal-glial tumor	#685815	GNG	#685815
+Neuronal and mixed neuronal-glial tumor	Glial-neuronal tumor	Mixed neuronal-glial tumor	Mixed neuronal-glial tumor	#685815	Other NGT	#685815
+Neuronal and mixed neuronal-glial tumor	Dysembryoplastic neuroepithelial tumor	Mixed neuronal-glial tumor	Mixed neuronal-glial tumor	#685815	DNET	#685815
+Neuronal and mixed neuronal-glial tumor	Central neurocytoma	Mixed neuronal-glial tumor	Mixed neuronal-glial tumor	#685815	CNC	#685815
+Neuronal and mixed neuronal-glial tumor	Desmoplastic infantile astrocytoma and ganglioglioma	Mixed neuronal-glial tumor	Mixed neuronal-glial tumor	#685815	Other NGT	#685815
+Neuronal and mixed neuronal-glial tumor	Extraventricular neurocytoma	Mixed neuronal-glial tumor	Mixed neuronal-glial tumor	#685815	EVN	#685815
+Neuronal and mixed neuronal-glial tumor	Glial-neuronal tumor NOS	Mixed neuronal-glial tumor	Mixed neuronal-glial tumor	#685815	Other NGT	#685815
+Neuronal and mixed neuronal-glial tumor	Neuroepithelial neoplasm	Mixed neuronal-glial tumor	Mixed neuronal-glial tumor	#685815	Other NGT	#685815
+Neuronal and mixed neuronal-glial tumor	Rosette-forming glioneuronal tumor	Mixed neuronal-glial tumor	Mixed neuronal-glial tumor	#685815	Other NGT	#685815
+Neuronal and mixed neuronal-glial tumor	Neurocytoma	Mixed neuronal-glial tumor	Mixed neuronal-glial tumor	#685815	Other NGT	#685815
+Neuronal and mixed neuronal-glial tumor	NA	Mixed neuronal-glial tumor	Mixed neuronal-glial tumor	#685815	Other NGT	#685815
+Neuronal and mixed neuronal-glial tumor	Diffuse leptomeningeal glioneuronal tumor	Mixed neuronal-glial tumor	Mixed neuronal-glial tumor	#685815	Other NGT	#685815
+Tumor of cranial and paraspinal nerves	Neurofibroma/Plexiform	Tumor of cranial and paraspinal nerves	Neurofibroma plexiform	#ffaa00	NFP	#e6ac39
+Benign tumor	NA	Benign tumor	Non-neoplastic tumor	#FFF5EB	Non-neoplastic tumor	#FFF5EB
+Benign tumor	Adenoma	Benign tumor	Non-neoplastic tumor	#FFF5EB	Non-neoplastic tumor	#FFF5EB
+Non-tumor	NA	Non-tumor	Non-neoplastic tumor	#FFF5EB	Non-neoplastic tumor	#FFF5EB
+Pre-cancerous lesion	NA	Benign tumor	Non-neoplastic tumor	#FFF5EB	Non-neoplastic tumor	#FFF5EB
+Tumor of cranial and paraspinal nerves	Intraneural perineuroma	Benign tumor	Non-neoplastic tumor	#FFF5EB	Non-neoplastic tumor	#FFF5EB
+Diffuse astrocytic and oligodendroglial tumor	Oligodendroglioma	Oligodendroglioma	Oligodendroglioma	tan	Oligodendroglioma	tan
+Embryonal tumor	CNS Embryonal tumor	Embryonal tumor	Other CNS embryonal tumor	#220040	Other ET	#b08ccf
+Embryonal tumor	Embryonal tumor	Embryonal tumor	Other CNS embryonal tumor	#220040	Other ET	#b08ccf
+Embryonal tumor	Embryonal tumor with multilayer rosettes	Embryonal tumor	Other CNS embryonal tumor	#220040	ETMR	#b08ccf
+Embryonal tumor	CNS neuroblastoma	Embryonal tumor	Other CNS embryonal tumor	#220040	Other ET	#b08ccf
+Embryonal tumor	High-grade neuroepithelial tumor	Embryonal tumor	Other CNS embryonal tumor	#220040	Other ET	#b08ccf
+Other tumor	Ganglioneuroma	Embryonal tumor	Other CNS embryonal tumor	#220040	Other ET	#b08ccf
+Embryonal tumor	Ganglioneuroblastoma	Other embryonal tumor	Other CNS embryonal tumor	#220040	Other ET	#b08ccf
+Embryonal tumor	Neuroblastoma	Other embryonal tumor	Other CNS embryonal tumor	#220040	Other ET	#b08ccf
+Diffuse astrocytic and oligodendroglial tumor	Gliosarcoma	High-grade glioma	Other high-grade glioma	#ffccf5	Other HGG	#ffccf5
+Diffuse astrocytic and oligodendroglial tumor	High-grade glioma	High-grade glioma	Other high-grade glioma	#ffccf5	Other HGG	#ffccf5
+Diffuse astrocytic and oligodendroglial tumor	Pleomorphic xanthoastrocytoma	High-grade glioma	Other high-grade glioma	#ffccf5	PXA	#ffccf5
+Diffuse astrocytic and oligodendroglial tumor	Diffuse hemispheric glioma	High-grade glioma	Other high-grade glioma	#ffccf5	Other HGG	#ffccf5
+Diffuse astrocytic and oligodendroglial tumor	Infant-type hemispheric glioma	High-grade glioma	Other high-grade glioma	#ffccf5	Other HGG	#ffccf5
+Diffuse astrocytic and oligodendroglial tumor	Congenital malignant brain tumor	Other tumor	Other tumor	#b5b5b5	Other	#b5b5b5
+Benign tumor	Cavernoma	Other tumor	Other tumor	#b5b5b5	Other	#b5b5b5
+Embryonal tumor	Ganglioneuroma	Other embryonal tumor	Other CNS embryonal tumor	#220040	Other ET	#b08ccf
+Epstein-Barr virus-related tumor	Epstein-Barr virus-related tumor	Other tumor	Other tumor	#b5b5b5	Other	#b5b5b5
+Histiocytic tumor	Juvenile xanthogranuloma	Other tumor	Other tumor	#b5b5b5	Other	#b5b5b5
+Histiocytic tumor	Langerhans Cell histiocytosis	Other tumor	Other tumor	#b5b5b5	Other	#b5b5b5
+Histiocytic tumor	Rosai-Dorfman disease	Other tumor	Other tumor	#b5b5b5	Other	#b5b5b5
+Lymphoma	CNS Burkitt's lymphoma	Other tumor	Other tumor	#b5b5b5	Other	#b5b5b5
+Melanocytic tumor	Melanocytic tumor	Other tumor	Other tumor	#b5b5b5	Other	#b5b5b5
+Metastatic tumors	Metastatic secondary tumors	Other tumor	Other tumor	#b5b5b5	Other	#b5b5b5
+Non-CNS tumor	Myxoid spindle cell tumor	Other tumor	Other tumor	#b5b5b5	Other	#b5b5b5
+Other tumor	Other tumor	Other tumor	Other tumor	#b5b5b5	Other	#b5b5b5
+Tumor of pineal region	Pineoblastoma	Other tumor	Pineoblastoma	#FF2900	Pineoblastoma	#FF2900
+Tumor of cranial and paraspinal nerves	Malignant peripheral nerve sheath tumor	Tumor of cranial and paraspinal nerves	Schwannoma/MPNST	#ffaa00	Schwannoma/MPNST	#ab7200
+Tumor of cranial and paraspinal nerves	Schwannoma	Tumor of cranial and paraspinal nerves	Schwannoma/MPNST	#ffaa00	Schwannoma/MPNST	#ab7200
+Mixed or indeterminate tumor	Rare CNS tumor	Mixed or intermediate tumor	Rare CNS tumor	#b5b5b5	Other rare CNS tumor	#b5b5b5
+Mixed or indeterminate tumor	Astroblastoma	Mixed or intermediate tumor	Rare CNS tumor	#b5b5b5	Other rare CNS tumor	#b5b5b5
+Embryonal tumor	Rare CNS tumor	Embryonal tumor	Rare CNS tumor	#b5b5b5	Other rare CNS tumor	#b5b5b5

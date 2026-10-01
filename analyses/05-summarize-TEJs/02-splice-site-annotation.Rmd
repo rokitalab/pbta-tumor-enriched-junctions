@@ -1,0 +1,244 @@
+---
+title: "TEJ transcript annotation"
+output: 
+  html_notebook:
+    toc: TRUE
+    toc_float: TRUE
+author: Ryan Corbett
+date: 2025
+params:
+  plot_ci: TRUE
+---
+
+Load required packages
+
+```{r}
+suppressPackageStartupMessages({
+  library(tidyverse)
+  library(data.table)
+  library(rprojroot)
+  library(R.utils)
+  library(ggsci)
+  library(ggforce)
+  library(ggpubr)
+})
+```
+
+Set directory paths
+
+```{r}
+root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
+data_dir <- file.path(root_dir, "data")
+analysis_dir <- file.path(root_dir, "analyses", "05-summarize-TEJs")
+input_dir <- file.path(analysis_dir, "input")
+results_dir <- file.path(analysis_dir, "results")
+plot_dir <- file.path(analysis_dir, "plots")
+if (!dir.exists(results_dir)) {
+  dir.create(results_dir)
+}
+
+source(file.path(root_dir, "figures", "theme_for_plots.R"))
+source(file.path(analysis_dir, "util", "annotation_functions.R"))
+```
+
+Set file paths
+
+```{r}
+tej_file <- file.path(results_dir,
+                       "recurrent-primary-tumor-enriched-oncofetal-splice-junctions.tsv.gz")
+
+gtf_file <- file.path(data_dir,
+                      "gencode.v39.primary_assembly.annotation.gtf.gz")
+```
+
+Wrangle data
+
+```{r}
+tej_df <- read_tsv(tej_file)
+
+gtf <- rtracklayer::import(gtf_file)
+
+gtf_df <- as.data.frame(gtf) %>%
+  dplyr::filter(type == "exon") 
+```
+
+Determine if TEJ exons map to GTF-annotated exons
+
+```{r}
+starts <- gtf_df %>%
+  distinct(seqnames, start, end, .keep_all = TRUE) %>%
+  dplyr::mutate(chr_start = glue::glue("{seqnames}:{start}")) %>%
+  pull(chr_start)
+
+ends <- gtf_df %>%
+  distinct(seqnames, start, end, .keep_all = TRUE) %>%
+  dplyr::mutate(chr_start = glue::glue("{seqnames}:{end}")) %>%
+  pull(chr_start)
+
+tej_annot_df <- tej_df %>%
+  # retain unique TEJs
+  distinct(junction, gene_symbol, preference_code, chr,
+           up_jc_start, up_jc_end, down_jc_start, down_jc_end,
+           strand) %>%
+  dplyr::mutate(chr = case_when(
+    grepl("KI", chr) ~ str_remove(chr, "chr"),
+    TRUE ~ chr
+  )) %>%
+  # define exon coords for GTF mapping
+  dplyr::mutate(up_bound = glue::glue("{chr}:{up_jc_end}"),
+                down_bound = glue::glue("{chr}:{down_jc_start}")) %>%
+  # determine if junction bounds are annotated
+  dplyr::mutate(up_bound_annotated = case_when(
+    up_bound %in% ends ~ "Yes",
+    TRUE ~ "No"
+  )) %>%
+  dplyr::mutate(down_bound_annotated = case_when(
+    down_bound %in% starts ~ "Yes",
+    TRUE ~ "No"
+  ))
+
+# if exon-exon boundary and one boundary not annotated, classify as novel
+tej_annot_df <- tej_annot_df %>%
+  dplyr::mutate(novel_ss = case_when(
+    preference_code == "RI" & up_bound_annotated == "No" & down_bound_annotated == "No" ~ "Yes",
+    preference_code == "RI" ~ "No",
+    up_bound_annotated == "No" | down_bound_annotated == "No" ~ "Yes",
+    TRUE ~ "No"
+  ))
+```
+
+Run `annotate_junctions()` function to annotate junctions to transcripts, exons, and introns
+
+```{r}
+# Subset gtf to make for easier filtering within function
+gtf_sub_dt <- gtf_df %>%
+  dplyr::filter(start %in% tej_annot_df$down_jc_start | end %in% tej_annot_df$up_jc_end) %>%
+  data.table::as.data.table()
+
+# Create the splice-boundary lookup indices once. These are reused for every
+# junction annotation instead of sorting/copying the GTF within each function call.
+data.table::setindexv(gtf_sub_dt, c("seqnames", "gene_name", "end"))
+data.table::setindexv(gtf_sub_dt, c("seqnames", "gene_name", "start"))
+
+# run annotation
+system.time({
+  tej_annot_df <- tej_annot_df %>%
+    dplyr::mutate(
+      junction_name = suppressMessages(pmap_chr(
+          pick(chr,
+               up_jc_start,
+               up_jc_end,
+               down_jc_start,
+               down_jc_end,
+               gene_symbol,
+               preference_code),
+          \(...) annotate_junctions(
+            chr = ..1,
+            up_exon_start = ..2,
+            up_exon_end = ..3,
+            down_exon_start = ..4,
+            down_exon_end = ..5,
+            gene_symbol = ..6,
+            preference = ..7,
+            gtf = gtf_sub_dt
+          )
+        )
+      )
+    )
+})
+```
+
+Join annotation to recurrent TEJ data frame
+
+```{r}
+tej_df <- tej_df %>%
+  left_join(tej_annot_df %>%
+              distinct(junction,
+                      novel_ss,
+                      junction_name)) %>%
+  dplyr::mutate(
+    up_exon = case_when(
+      grepl(":exon", junction_name) ~ sapply(
+        strsplit(junction_name, ", |:"),
+        function(x) if (length(x) >= 2) x[2] else NA_character_
+      ),
+      TRUE ~ NA_character_
+    )
+  ) %>%
+  dplyr::mutate(
+    down_exon = case_when(
+      grepl(":exon", junction_name) ~ sapply(
+        strsplit(junction_name, ", |:"),
+        function(x) if (length(x) >= 2) x[3] else NA_character_
+      ),
+      TRUE ~ NA_character_
+    )
+  ) %>%
+  dplyr::mutate(up_exon = as.numeric(str_remove(up_exon, "exon")),
+                down_exon = as.numeric(str_remove(down_exon, "exon"))) %>%
+  dplyr::mutate(status = case_when(
+    grepl("novel", junction_name) ~ "Novel splice site",
+    !grepl(":exon|, intron|:intron", junction_name) ~ "Novel junction",
+    !is.na(up_exon) & !is.na(down_exon) & up_exon != down_exon + 1 & up_exon + 1 != down_exon ~ "Novel junction",
+    TRUE ~ "Annotated junction"
+  ))
+```
+
+Plot novel splice site usage frequency among tejs by histology
+
+```{r}
+unique_hist_tej_ct <- tej_df %>%
+  distinct(plot_group, junction) %>%
+  dplyr::count(plot_group) %>%
+  dplyr::rename(hist_tej_n = n)
+
+hist_tej_novelss_ct <- tej_df %>%
+  distinct(junction, plot_group, .keep_all = TRUE) %>%
+  dplyr::count(plot_group, status) %>%
+  left_join(unique_hist_tej_ct) %>%
+  dplyr::mutate(n_norm = n/hist_tej_n)
+
+hist_order <- c("Other CNS embryonal tumor", 
+                "Pineoblastoma", "Oligodendroglioma",
+                "Neurofibroma plexiform", "Mesenchymal tumor", 
+                "Rare CNS tumor", "Germ cell tumor",
+                "Meningioma", "Schwannoma/MPNST", 
+                "Non-neoplastic tumor", "Craniopharyngioma", 
+                "Mixed neuronal-glial tumor",
+                "Atypical Teratoid Rhabdoid Tumor", 
+                "Choroid plexus tumor", "Ependymoma",
+                "DIPG or DMG", "Other high-grade glioma",
+                "Low-grade glioma", "Medulloblastoma")
+
+# generate plot
+novelss_freq_barplot <- hist_tej_novelss_ct %>%
+  dplyr::filter(status != "Annotated junction") %>%
+  dplyr::mutate(plot_group = fct_relevel(plot_group,
+                                        as.character(hist_order))) %>%
+  ggplot(aes(y = plot_group, x = n_norm, fill = status)) +
+  geom_bar(stat = "identity", color = "black", show.legend = TRUE) + 
+  scale_fill_npg() +
+  theme_Publication() +
+  labs(x = "Proportion TEJs",
+     y = NULL,
+     fill = "Junction annotation")
+
+ggsave(file.path(plot_dir,
+                 "tejs-by-junction-status-hist-barplot.pdf"),
+       novelss_freq_barplot,
+       width = 8, height = 6)
+```
+
+Write annotation results to output
+
+```{r}
+write_tsv(tej_df,
+          file.path(results_dir,
+                    "recurrent-primary-tumor-enriched-oncofetal-splice-junctions-annotated.tsv.gz"))
+```
+
+Print session info
+
+```{r}
+sessionInfo()
+```
