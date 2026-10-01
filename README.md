@@ -4,7 +4,7 @@
 
 1. Clone the repository:
 ```
-git clone git@github.com:rokitalab/tumor-enriched-splicing.git
+git clone git@github.com:rokitalab/pbta-tumor-enriched-junctions.git
 ```
 
 2. Pull Docker container:
@@ -14,10 +14,10 @@ docker pull pgc-images.sbgenomics.com/rokita-lab/splicing-neoepitopes:latest
 
 3. Start the Docker container
 
-From the `tumor-enriched-splicing` folder, run:
+From the `pbta-tumor-enriched-junctions` folder, run:
 
 ```
-docker run --platform linux/amd64 --name <CONTAINER_NAME> -d -e PASSWORD=pass -p 8787:8787 -v $PWD:/home/rstudio/tumor-enriched-splicing pgc-images.sbgenomics.com/rokita-lab/splicing-neoepitopes:latest
+docker run --platform linux/amd64 --name <CONTAINER_NAME> -d -e PASSWORD=pass -p 8787:8787 -v $PWD:/home/rstudio/pbta-tumor-enriched-junctions pgc-images.sbgenomics.com/rokita-lab/splicing-neoepitopes:latest
 ```
 
 Users can also run Rstudio in the project docker container from a web browser using the instructions below:
@@ -25,7 +25,7 @@ Users can also run Rstudio in the project docker container from a web browser us
 __Local Development in Rstudio__ (Max OS X and Linux users only)
 
 ```
-docker run --platform linux/amd64 --name <CONTAINER_NAME> -d -e PASSWORD=pass -p 8787:8787 -v $PWD:/home/rstudio/tumor-enriched-splicing pgc-images.sbgenomics.com/rokita-lab/splicing-neoepitopes:latest
+docker run --platform linux/amd64 --name <CONTAINER_NAME> -d -e PASSWORD=pass -p 8787:8787 -v $PWD:/home/rstudio/pbta-tumor-enriched-junctions pgc-images.sbgenomics.com/rokita-lab/splicing-neoepitopes:latest
 ```
 
 Then, navigate to `localhost:8787` in your web browser. The username for login is `rstudio` and the password will be whatever password is set in the `docker run` command above (default: `pass`).
@@ -33,27 +33,23 @@ Then, navigate to `localhost:8787` in your web browser. The username for login i
 __Development using Amazon EC2, depending on your open ports__
 
 ```
-docker run --platform linux/amd64 --name <CONTAINER_NAME> -d -e PASSWORD=pass -p 80:8787 -v $PWD:/home/rstudio/tumor-enriched-splicing pgc-images.sbgenomics.com/rokita-lab/splicing-neoepitopes:latest
+docker run --platform linux/amd64 --name <CONTAINER_NAME> -d -e PASSWORD=pass -p 80:8787 -v $PWD:/home/rstudio/pbta-tumor-enriched-junctions pgc-images.sbgenomics.com/rokita-lab/splicing-neoepitopes:latest
 ```
 
 Then, paste the instance IP address into your browser to start Rstudio. 
 
-4. Execute the shell within the docker image; from the `tumor-enriched-splicing` folder, run: 
+4. Execute the shell within the docker image; from the `pbta-tumor-enriched-junctions` folder, run: 
 ```
 docker exec -ti <CONTAINER_NAME> bash
 ```
 
-5. Run the `download-data.sh` shell script to obtain latest data files: 
+5. Navigate to an analysis module and run its shell script (modules are numbered and should be run in order, as later modules use results from earlier ones):
 ```
-bash download_data.sh
-```
-
-6. Navigate to an analysis module and run the shell script:
-```
-cd /home/rstudio/tumor-enriched-splicing/analyses/module_of_interest
+cd /home/rstudio/pbta-tumor-enriched-junctions/analyses/module_of_interest
+bash run_module.sh
 ```
 
-### Below is the main directory structure listing the analyses and data files used in this repository
+### Below is the main directory structure listing the analyses used in this repository
 
 ```
 .
@@ -61,26 +57,35 @@ cd /home/rstudio/tumor-enriched-splicing/analyses/module_of_interest
 ├── LICENSE
 ├── README.md
 ├── analyses
-│   ├── 00-pre-processing
-│   ├── 01-tumor-specific-variants
-│   ├── 02-translation
-│   ├── find-gtex-aya
-│   ├── process-ctrls-variants
-│   ├── summarize-tumor-enriched-splicing
-│   ├── tumor-specific-alt-splice-sites
-│   └── tumor-specific-retained-introns
+│   ├── 00-create-cohort-histologies
+│   ├── 01-ctrl-rmats-processing
+│   ├── 02-pbta-junction-processing
+│   ├── 03-classify-tejs
+│   ├── 04-tej-differential-splicing
+│   └── 05-summarize-TEJs
 ├── data
-│   └── v8
 ├── doc
-│   └── release-notes.md
-├── download_data.sh
+│   └── release-notes.md
 ├── figures
-│   └── theme_for_plots.R
-├── scripts
-│   └── download-original.sh
+│   └── theme_for_plots.R
+└── scripts
 ```
 
+### Analysis modules
+
+Each module has its own README with inputs, outputs and methods.
+
+| Module | Description |
+|---|---|
+| `00-create-cohort-histologies` | Create the cohort histologies file and cohort summary plots |
+| `01-ctrl-rmats-processing` | Generate normal brain (GTEx, evo-devo, PedBrain, cell type) splice event matrices |
+| `02-pbta-junction-processing` | Get PBTA junction counts, create CPM matrices and batch-correct them |
+| `03-classify-tejs` | Classify tumor-enriched and oncofetal splice junctions (TEJs) and annotate protein domains |
+| `04-tej-differential-splicing` | Assess differential splicing of TEJs |
+| `05-summarize-TEJs` | Summarize TEJs: splice site, functional and recurrence analyses, CPM and PSI matrices |
+
+Large generated results files are not tracked in git (see `.gitignore`) and must be regenerated by running the modules.
 
 ## Code Authors
 
-Ryan Corbett ([@rjcorb](https://github.com/rjcorb)) and Ammar Naqvi ([@naqvia](https://github.com/naqvia))
+Ryan Corbett ([@rjcorb](https://github.com/rjcorb))
