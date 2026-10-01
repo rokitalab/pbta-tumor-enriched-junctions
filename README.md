@@ -1,6 +1,6 @@
 # Identification of pediatric CNS tumor-enriched splicing events
 
-This repository is a companion methods repository for the [TAPESTRY web app](https://tapestry.rokitalab.com) (preprint forthcoming). It contains the code used to identify and characterize pediatric CNS tumor-enriched splice junctions (TEJs) in the PBTA cohort that are explored in the app.
+This repository is a companion methods repository for the [TAPESTRY web app](https://tapestry.rokitalab.com). It contains the code used to identify and characterize pediatric CNS tumor-enriched splice junctions (TEJs) in the PBTA cohort that are explored in the app.
 
 ### To reproduce the code in this repository
 
