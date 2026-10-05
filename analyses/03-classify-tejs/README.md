@@ -47,7 +47,7 @@ All tumor-enriched junctions from both routes above are compared using Evo-Devo 
 
 - Fold change is `prenatal CPM / postnatal CPM` (pseudocount of 1e-5), and SNR is `(prenatal CPM − postnatal CPM) / postnatal CPM SD`.
 - For each prenatal group, take the minimum fold change and minimum SNR across all postnatal groups.
-- A junction is **oncofetal** when at least one prenatal group has a minimum fold change greater than 2 and a minimum SNR greater than 2.
+- A junction is **oncofetal** when at least one prenatal group has a minimum fold change greater than 2 and a minimum SNR greater than 2 relative to all postnatal groups.
 - A junction is not eligible if it has no observed postnatal CPM in any group, or if its prenatal CPM is missing in a given group (missing values are never treated as evidence of prenatal expression). If no postnatal SD is available, SNR is missing and the criterion is not met.
 - The prenatal group(s) meeting the criteria are recorded in `oncofetal_prenatal_group` (semicolon-separated). The best minimum fold change and SNR across prenatal groups are recorded in `max_prenatal_min_cpm_fc` and `max_prenatal_min_cpm_snr`.
 - Tumor-enriched junctions that do not meet the oncofetal criteria keep the `Tumor-enriched` label (called "tumor-specific" in the TAPESTRY web app).
