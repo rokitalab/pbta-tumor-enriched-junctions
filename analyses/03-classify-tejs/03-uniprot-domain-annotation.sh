@@ -64,5 +64,5 @@ awk '{
 ## Extract overlapping junctions for each domain type
 echo -e  "junction\tjunction_preference\tdomain_type\tdomain_start\tdomain_end\toverlap_start\toverlap_end" > "$output_target_list_filename"
 cat "$output_cds_ec_filename" | awk '{print $4"\t"$5"\tEC\t"$9"\t"$10"\t"$11"\t"$12}' | sort -u  >> "$output_target_list_filename"
-cat "$output_cds_tmem_filename" | awk '{print $4"\t"$5"\tEC\t"$9"\t"$10"\t"$11"\t"$12}' | sort -u >> "$output_target_list_filename"
-cat "$output_cds_cyto_filename" | awk '{print $4"\t"$5"\tEC\t"$9"\t"$10"\t"$11"\t"$12}' | sort -u  >> "$output_target_list_filename"
+cat "$output_cds_tmem_filename" | awk '{print $4"\t"$5"\tTM\t"$9"\t"$10"\t"$11"\t"$12}' | sort -u >> "$output_target_list_filename"
+cat "$output_cds_cyto_filename" | awk '{print $4"\t"$5"\tIC\t"$9"\t"$10"\t"$11"\t"$12}' | sort -u  >> "$output_target_list_filename"
