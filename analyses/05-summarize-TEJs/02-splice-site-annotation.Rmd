@@ -124,7 +124,7 @@ data.table::setindexv(gtf_sub_dt, c("seqnames", "gene_name", "start"))
 system.time({
   tej_annot_df <- tej_annot_df %>%
     dplyr::mutate(
-      junction_name = suppressMessages(pmap_chr(
+      annot = suppressMessages(pmap(
           pick(chr,
                up_jc_start,
                up_jc_end,
@@ -144,7 +144,9 @@ system.time({
           )
         )
       )
-    )
+    ) %>%
+    # split annotation into junction_name and transcript_id columns
+    tidyr::unnest_wider(annot)
 })
 ```
 
@@ -155,7 +157,8 @@ tej_df <- tej_df %>%
   left_join(tej_annot_df %>%
               distinct(junction,
                       novel_ss,
-                      junction_name)) %>%
+                      junction_name,
+                      transcript_id)) %>%
   dplyr::mutate(
     up_exon = case_when(
       grepl(":exon", junction_name) ~ sapply(
