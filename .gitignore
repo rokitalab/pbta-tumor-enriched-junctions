@@ -80,6 +80,9 @@ analyses/01-ctrl-rmats-processing/results/*
 # 02-pbta-junction-processing output
 analyses/02-pbta-junction-processing/results/pbta-merged-norm-junction-cts.qs2
 analyses/02-pbta-junction-processing/results/junction-annot.tsv.gz
+analyses/02-pbta-junction-processing/results/all-pbta-splice-junction-cpm.qs2
+analyses/02-pbta-junction-processing/results/all-pbta-splice-junction-log2-cpm-combat-corrected.qs2
+analyses/02-pbta-junction-processing/results/pbta-merged-norm-batch-corrected-junction-cts.qs2
 
 # 03-classify-tejs output
 analyses/03-classify-tejs/results/*

@@ -46,9 +46,7 @@ Set file paths
 tej_file <- file.path(results_dir,
                       "recurrent-primary-tumor-enriched-oncofetal-splice-junctions-annotated.tsv.gz")
 
-uniprot_file <- file.path(root_dir, "analyses",
-                        "pepMLM-preprocessing",
-                        "input",
+uniprot_file <- file.path(input_dir,
                         "uniprotkb_organism_id_9606_AND_reviewed_2025_06_18.txt")
 ```
 
@@ -199,7 +197,7 @@ hgg_atrt_ec_events <- tej_df %>%
                                   "Atypical Teratoid Rhabdoid Tumor"),
                   grepl("EC domain", consequence) & gene_symbol %in% cell_membrane_proteins) %>%
   dplyr::count(gene_symbol, preference_code) %>%
-  dplyr::filter(n >= 60) %>%
+  dplyr::filter(n >= 30) %>%
   pull(gene_symbol)
 
 hgg_atrt_ec_events_df <- tej_df %>%

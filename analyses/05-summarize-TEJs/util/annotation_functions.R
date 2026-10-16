@@ -1,5 +1,18 @@
 # Function to annotate splice junctions to transcripts, exons, introns
 
+# Helper to package junction annotation with Ensembl transcript ID(s). When
+# up- and downstream exons map to different transcripts, IDs are collapsed
+# with ";". Missing IDs (novel exons) are dropped.
+make_annot <- function(junction_name, transcript_ids = NA_character_) {
+
+  transcript_ids <- unique(transcript_ids[!is.na(transcript_ids)])
+
+  tibble::tibble(
+    junction_name = as.character(junction_name),
+    transcript_id = if (length(transcript_ids) == 0) NA_character_ else paste(transcript_ids, collapse = ";")
+  )
+}
+
 annotate_junctions <- function(chr = chr,
                                up_exon_start = up_exon_start,
                                up_exon_end = up_exon_end,
@@ -39,7 +52,7 @@ annotate_junctions <- function(chr = chr,
     # if adjacent exon is not annotated:
     if (nrow(up_exon_gtf) == 0 & nrow(down_exon_gtf) == 0) {
       
-      return("RI event adjacent to novel exon")
+      return(make_annot("RI event adjacent to novel exon"))
       
       # if adjacent exon is upstream and annotated:
     } else if (nrow(up_exon_gtf) > 0 & nrow(down_exon_gtf) == 0) {
@@ -49,16 +62,16 @@ annotate_junctions <- function(chr = chr,
         dplyr::arrange(transcript_support_level,
                        transcript_name) %>%
         head(n = 1) %>%
-        dplyr::select(strand, transcript_name,
+        dplyr::select(strand, transcript_name, transcript_id,
                       exon_number)
-      
+
       # get intron number from exon number and strand
-      intron_number <- ifelse(exon_best_TSL$strand == "+", 
+      intron_number <- ifelse(exon_best_TSL$strand == "+",
                               exon_best_TSL$exon_number,
                               as.numeric(exon_best_TSL$exon_number) - 1)
-      
+
       junction_annot <- glue::glue("{exon_best_TSL$transcript_name}, exon{exon_best_TSL$exon_number}:intron{intron_number}")
-      return(junction_annot)
+      return(make_annot(junction_annot, exon_best_TSL$transcript_id))
       
       # if adjacent exon is downstream and annotated:
     } else if (nrow(up_exon_gtf) == 0 & nrow(down_exon_gtf) > 0) {
@@ -67,15 +80,15 @@ annotate_junctions <- function(chr = chr,
         dplyr::arrange(transcript_support_level,
                        transcript_name) %>%
         head(n = 1) %>%
-        dplyr::select(strand, transcript_name,
+        dplyr::select(strand, transcript_name, transcript_id,
                       exon_number)
-      
-      intron_number <- ifelse(exon_best_TSL$strand == "+", 
+
+      intron_number <- ifelse(exon_best_TSL$strand == "+",
                               as.numeric(exon_best_TSL$exon_number) - 1,
                               as.numeric(exon_best_TSL$exon_number))
-      
+
       junction_annot <- glue::glue("{exon_best_TSL$transcript_name}, intron{intron_number}:exon{exon_best_TSL$exon_number}")
-      return(junction_annot)
+      return(make_annot(junction_annot, exon_best_TSL$transcript_id))
       
     }
     
@@ -97,11 +110,15 @@ annotate_junctions <- function(chr = chr,
       down_exon_gtf$transcript_name == common_transcripts
     ]
     
+    transcript_id <- up_exon_gtf$transcript_id[
+      up_exon_gtf$transcript_name == common_transcripts
+    ][1]
+
     # assign junction annotation
     junction_annot <- glue::glue("{common_transcripts}, exon{up_exon_number}:exon{down_exon_number}")
-    return(junction_annot)
-    
-  } 
+    return(make_annot(junction_annot, transcript_id))
+
+  }
   
   if (length(common_transcripts) > 1){
     
@@ -177,6 +194,9 @@ annotate_junctions <- function(chr = chr,
     candidate_tbl <- tibble(transcript_name = common_transcripts) %>%
       rowwise() %>%
       mutate(
+        transcript_id = up_exon_gtf$transcript_id[
+          up_exon_gtf$transcript_name == transcript_name
+        ][1],
         up_exon_number = up_exon_gtf$exon_number[
           up_exon_gtf$transcript_name == transcript_name
         ][1],
@@ -209,7 +229,15 @@ annotate_junctions <- function(chr = chr,
           down_exon_gtf$transcript_name[down_exon_gtf$transcript_type == "protein_coding"]
         ),
         
+        # For ES calls, prefer transcript isoforms with exon(s) between the
+        # two junction-facing exons.  This selects an isoform that contains
+        # the skipped exon rather than one in which the exons are
+        # naturally adjacent.
+        n_skipped_exons = pmax(abs(down_exon_number - up_exon_number) - 1, 0),
+        contains_skipped_exon = preference == "ES" & n_skipped_exons > 0,
+
         # ranking fields
+        skip_rank = ifelse(contains_skipped_exon, 1, 0),
         seq_rank = ifelse(sequential, 1, 0),
         pc_rank = ifelse(is_protein_coding, 1, 0)
       )
@@ -217,15 +245,19 @@ annotate_junctions <- function(chr = chr,
     # unified ranking
     best_tx <- candidate_tbl %>%
       arrange(
-        desc(seq_rank),   # sequential first
+        desc(skip_rank),  # ES: transcript contains skipped exon(s) first
+        tsl,              # then prefer the best-supported transcript
+        desc(seq_rank),   # otherwise, sequential first
         desc(pc_rank),    # protein-coding next
-        tsl,              # lowest TSL best
         transcript_name   # deterministic fallback
       ) %>%
       dplyr::slice_head(n = 1)
     
-    return(glue::glue(
-      "{best_tx$transcript_name}, exon{best_tx$up_exon_number}:exon{best_tx$down_exon_number}"
+    return(make_annot(
+      glue::glue(
+        "{best_tx$transcript_name}, exon{best_tx$up_exon_number}:exon{best_tx$down_exon_number}"
+      ),
+      best_tx$transcript_id
     ))
   }
   
@@ -236,18 +268,17 @@ annotate_junctions <- function(chr = chr,
       dplyr::arrange(transcript_support_level,
                      transcript_name) %>% 
       head(n = 1) %>%
-      dplyr::mutate(exon_id = glue::glue("{transcript_name}, exon{exon_number}")) %>%
-      pull(exon_id)
-    
+      dplyr::mutate(exon_id = glue::glue("{transcript_name}, exon{exon_number}"))
+
     down_exon <- down_exon_gtf %>%
       dplyr::arrange(transcript_support_level,
-                     transcript_name) %>% 
+                     transcript_name) %>%
       head(n = 1) %>%
-      dplyr::mutate(exon_id = glue::glue("{transcript_name}, exon{exon_number}")) %>%
-      pull(exon_id)
-    
-    junction_annot <- glue::glue("{up_exon}:{down_exon}")
-    return(junction_annot)
+      dplyr::mutate(exon_id = glue::glue("{transcript_name}, exon{exon_number}"))
+
+    junction_annot <- glue::glue("{up_exon$exon_id}:{down_exon$exon_id}")
+    return(make_annot(junction_annot,
+                      c(up_exon$transcript_id, down_exon$transcript_id)))
     
   }
   
@@ -260,7 +291,7 @@ annotate_junctions <- function(chr = chr,
         dplyr::arrange(transcript_support_level,
                        transcript_name) %>%
         head(n = 1) %>%
-        dplyr::select(strand, transcript_name,
+        dplyr::select(strand, transcript_name, transcript_id,
                       exon_number)
       
       novel_type <- ifelse(down_exon$strand == "+", 
@@ -272,7 +303,7 @@ annotate_junctions <- function(chr = chr,
       } else {
         glue::glue("{novel_type}:{down_exon$transcript_name}, exon{down_exon$exon_number}")
       }
-      return(junction_annot)
+      return(make_annot(junction_annot, down_exon$transcript_id))
       
     } else if (nrow(down_exon_gtf) == 0){
       
@@ -280,7 +311,7 @@ annotate_junctions <- function(chr = chr,
         dplyr::arrange(transcript_support_level,
                        transcript_name) %>%
         head(n = 1) %>%
-        dplyr::select(strand, transcript_name,
+        dplyr::select(strand, transcript_name, transcript_id,
                       exon_number)
       
       novel_type <- ifelse(up_exon$strand == "+", 
@@ -292,7 +323,7 @@ annotate_junctions <- function(chr = chr,
       } else {
         glue::glue("{novel_type}:{up_exon$transcript_name}, exon{up_exon$exon_number}")
       }
-      return(junction_annot)
+      return(make_annot(junction_annot, up_exon$transcript_id))
       
     }
     
@@ -301,7 +332,7 @@ annotate_junctions <- function(chr = chr,
   # Scenario 9: Neither exon maps to gtf exon
   if (nrow(up_exon_gtf) == 0 & nrow(down_exon_gtf) == 0){
     
-    return("Novel exon:exon junction")
+    return(make_annot("Novel exon:exon junction"))
     
   }
   
