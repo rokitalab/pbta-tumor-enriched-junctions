@@ -46,9 +46,7 @@ Set file paths
 tej_file <- file.path(results_dir,
                       "recurrent-primary-tumor-enriched-oncofetal-splice-junctions-annotated.tsv.gz")
 
-uniprot_file <- file.path(root_dir, "analyses",
-                        "pepMLM-preprocessing",
-                        "input",
+uniprot_file <- file.path(input_dir,
                         "uniprotkb_organism_id_9606_AND_reviewed_2025_06_18.txt")
 ```
 
