@@ -142,29 +142,73 @@ tej_annot_df <- tej_annot_df %>%
   ))
 ```
 
-Obtain the skipped (cassette) exon of each ES junction's consensus rMATS SE event
+Obtain the skipped (cassette) exon of each ES junction and the retained intron of each RI junction from the junction's consensus rMATS event
 
 ```{r}
 # Select the consensus splice event per junction as in
 # 06-generate-tej-psi-matrix.Rmd: the most frequent splice_id among samples
-# whose event type matches the junction's consensus event type. SE splice_ids
-# are "{chr}:{exonStart}-{exonEnd}_{upstreamES}-{upstreamEE}_{downstreamES}-{downstreamEE}_{strand}"
-# with 1-based starts, so the first interval is the skipped exon.
-skipped_exon_df <- read_tsv(splice_event_file) %>%
+# whose event type matches the junction's consensus event type.
+consensus_event_df <- read_tsv(splice_event_file) %>%
   dplyr::filter(junction %in% tej_annot_df$junction,
-                consensus_jc_event_type == "exon skipping",
+                consensus_jc_event_type %in% c("exon skipping", "intron retention"),
                 event_type_sample == consensus_jc_event_type) %>%
-  dplyr::count(junction, splice_id) %>%
+  dplyr::count(junction, splice_id, consensus_jc_event_type) %>%
   dplyr::arrange(desc(n)) %>%
-  distinct(junction, .keep_all = TRUE) %>%
+  distinct(junction, .keep_all = TRUE)
+
+# SE splice_ids are
+# "{chr}:{exonStart}-{exonEnd}_{upstreamES}-{upstreamEE}_{downstreamES}-{downstreamEE}_{strand}"
+# with 1-based starts, so the first interval is the skipped exon.
+skipped_exon_df <- consensus_event_df %>%
+  dplyr::filter(consensus_jc_event_type == "exon skipping") %>%
   tidyr::extract(splice_id,
                  into = c("skipped_exon_start", "skipped_exon_end"),
                  regex = "^[^:]+:(\\d+)-(\\d+)_",
                  convert = TRUE) %>%
   dplyr::select(junction, skipped_exon_start, skipped_exon_end)
 
+# RI splice_ids are
+# "{chr}:{riExonStart_0base}-{riExonEnd}_{upstreamES}-{upstreamEE}_{downstreamES}-{downstreamEE}_{strand}"
+# with 1-based upstreamES/downstreamES; the retained intron lies between
+# upstreamEE and downstreamES.
+retained_intron_df <- consensus_event_df %>%
+  dplyr::filter(consensus_jc_event_type == "intron retention") %>%
+  tidyr::extract(splice_id,
+                 into = c("ri_upstream_exon_end", "ri_downstream_exon_start"),
+                 regex = "^[^:]+:\\d+-\\d+_\\d+-(\\d+)_(\\d+)-\\d+_",
+                 convert = TRUE) %>%
+  dplyr::select(junction, ri_upstream_exon_end, ri_downstream_exon_start)
+
 tej_annot_df <- tej_annot_df %>%
-  left_join(skipped_exon_df, by = "junction")
+  left_join(skipped_exon_df, by = "junction") %>%
+  left_join(retained_intron_df, by = "junction")
+
+# RI TEJs are exon-intron boundaries, so they never match a GENCODE intron.
+# Treat an RI TEJ as annotated when a GENCODE exon (any transcript type)
+# spans its retained intron.
+gtf_exon_dt <- gtf_df %>%
+  dplyr::transmute(seqnames = as.character(seqnames), start, end) %>%
+  data.table::as.data.table()
+
+ri_query_dt <- tej_annot_df %>%
+  dplyr::filter(!is.na(ri_upstream_exon_end)) %>%
+  distinct(junction, chr, ri_upstream_exon_end, ri_downstream_exon_start) %>%
+  data.table::as.data.table()
+
+ri_annotated_jcs <- gtf_exon_dt[
+  ri_query_dt,
+  on = .(seqnames = chr,
+         start <= ri_upstream_exon_end,
+         end >= ri_downstream_exon_start),
+  nomatch = 0L,
+  unique(i.junction)
+]
+
+tej_annot_df <- tej_annot_df %>%
+  dplyr::mutate(junction_in_gencode = case_when(
+    preference_code == "RI" ~ junction %in% ri_annotated_jcs,
+    TRUE ~ junction_in_gencode
+  ))
 ```
 
 Run `annotate_junctions()` function to annotate junctions to transcripts, exons, and introns.
@@ -193,6 +237,7 @@ When only one junction-facing exon is annotated (novel donor/acceptor, RI), or t
 Labels list the genomically upstream (lower coordinate) side first, so minus-strand labels read against the direction of transcription: for a minus-strand gene, `exon4:exon2` is a junction from exon 2 to exon 4.
 
 `status` does not depend on the chosen transcript: `Novel splice site` when a junction-facing splice site is unannotated, `Annotated junction` when the junction is an intron of any GENCODE transcript, otherwise `Novel junction`.
+RI TEJs are exon-intron boundaries rather than exon-exon junctions, so for them `Annotated junction` means a GENCODE exon of any transcript type spans the retained intron of the junction's consensus rMATS RI event.
 
 ```{r}
 # Subset gtf to make for easier filtering within function. Keep exons at
@@ -274,8 +319,9 @@ tej_df <- tej_df %>%
   ) %>%
   dplyr::mutate(up_exon = as.numeric(str_remove(up_exon, "exon")),
                 down_exon = as.numeric(str_remove(down_exon, "exon"))) %>%
-  # Annotated junction: the junction is an intron of any GENCODE transcript,
-  # independent of the transcript chosen for junction_name
+  # Annotated junction: the junction is an intron of any GENCODE transcript
+  # (RI: a GENCODE exon spans the retained intron), independent of the
+  # transcript chosen for junction_name
   dplyr::mutate(status = case_when(
     grepl("novel", junction_name) ~ "Novel splice site",
     junction_in_gencode ~ "Annotated junction",
