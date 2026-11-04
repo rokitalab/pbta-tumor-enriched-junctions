@@ -49,6 +49,11 @@ tej_file <- file.path(results_dir,
 
 gtf_file <- file.path(data_dir,
                       "gencode.v39.primary_assembly.annotation.gtf.gz")
+
+splice_event_file <- file.path(root_dir, "analyses",
+                               "04-tej-differential-splicing",
+                               "results",
+                               "tumor-enriched-oncofetal-junction-diff-splice-event-annotation.tsv.gz")
 ```
 
 Wrangle data
@@ -58,8 +63,23 @@ tej_df <- read_tsv(tej_file)
 
 gtf <- rtracklayer::import(gtf_file)
 
+# rtracklayer keeps only the last value of repeated GTF attributes, so the
+# imported `tag` column usually misses "MANE_Select". Read MANE Select
+# transcript IDs directly from the GTF text instead.
+mane_tx_ids <- readr::read_lines_chunked(
+  gtf_file,
+  readr::ListCallback$new(function(x, pos) {
+    x <- x[grepl('tag "MANE_Select"', x, fixed = TRUE)]
+    stringr::str_match(x, 'transcript_id "([^"]+)"')[, 2]
+  }),
+  chunk_size = 1e5
+) %>%
+  unlist() %>%
+  unique()
+
 gtf_df <- as.data.frame(gtf) %>%
-  dplyr::filter(type == "exon") 
+  dplyr::filter(type == "exon") %>%
+  dplyr::mutate(is_mane = transcript_id %in% mane_tx_ids)
 ```
 
 Determine if TEJ exons map to GTF-annotated exons
@@ -107,12 +127,63 @@ tej_annot_df <- tej_annot_df %>%
   ))
 ```
 
-Run `annotate_junctions()` function to annotate junctions to transcripts, exons, and introns
+Obtain the skipped (cassette) exon of each ES junction's consensus rMATS SE event
 
 ```{r}
-# Subset gtf to make for easier filtering within function
+# Select the consensus splice event per junction as in
+# 06-generate-tej-psi-matrix.Rmd: the most frequent splice_id among samples
+# whose event type matches the junction's consensus event type. SE splice_ids
+# are "{chr}:{exonStart}-{exonEnd}_{upstreamES}-{upstreamEE}_{downstreamES}-{downstreamEE}_{strand}"
+# with 1-based starts, so the first interval is the skipped exon.
+skipped_exon_df <- read_tsv(splice_event_file) %>%
+  dplyr::filter(junction %in% tej_annot_df$junction,
+                consensus_jc_event_type == "exon skipping",
+                event_type_sample == consensus_jc_event_type) %>%
+  dplyr::count(junction, splice_id) %>%
+  dplyr::arrange(desc(n)) %>%
+  distinct(junction, .keep_all = TRUE) %>%
+  tidyr::extract(splice_id,
+                 into = c("skipped_exon_start", "skipped_exon_end"),
+                 regex = "^[^:]+:(\\d+)-(\\d+)_",
+                 convert = TRUE) %>%
+  dplyr::select(junction, skipped_exon_start, skipped_exon_end)
+
+tej_annot_df <- tej_annot_df %>%
+  left_join(skipped_exon_df, by = "junction")
+```
+
+Run `annotate_junctions()` function to annotate junctions to transcripts, exons, and introns.
+
+A GTF exon matches a junction when its junction-facing splice site matches; the distal exon boundary is not compared.
+For exon skipping (ES) TEJs, the skipped exon comes from the junction's consensus rMATS SE event (chunk above).
+
+When several transcripts contain both junction-facing exons, they are ranked by:
+
+1. ES only: contains the rMATS skipped exon
+2. ES only: skips at least one exon between the two junction-facing exons
+3. protein-coding
+4. MANE Select (GTF `tag "MANE_Select"`)
+5. transcript support level (1 best; NA last)
+6. junction-facing exons adjacent in the transcript
+7. transcript name
+
+When only one junction-facing exon is annotated (novel donor/acceptor, RI), or the two exons share no transcript, each exon's transcript is ranked by protein-coding, MANE Select, TSL, then name.
+
+`cassette_status` (ES TEJs only; `NA` otherwise) records where the rMATS skipped exon (matched on both boundaries, within the gene) is annotated:
+
+* `in chosen transcript`: the labelled transcript contains it
+* `annotated elsewhere`: another transcript of the gene contains it
+* `novel`: no transcript of the gene contains it
+
+Labels list the genomically upstream (lower coordinate) side first, so minus-strand labels read against the direction of transcription: for a minus-strand gene, `exon4:exon2` is a junction from exon 2 to exon 4.
+
+```{r}
+# Subset gtf to make for easier filtering within function. Keep exons at
+# junction-facing boundaries and candidate rMATS skipped exons.
 gtf_sub_dt <- gtf_df %>%
-  dplyr::filter(start %in% tej_annot_df$down_jc_start | end %in% tej_annot_df$up_jc_end) %>%
+  dplyr::filter(start %in% tej_annot_df$down_jc_start |
+                  end %in% tej_annot_df$up_jc_end |
+                  start %in% tej_annot_df$skipped_exon_start) %>%
   data.table::as.data.table()
 
 # Create the splice-boundary lookup indices once. These are reused for every
@@ -131,7 +202,9 @@ system.time({
                down_jc_start,
                down_jc_end,
                gene_symbol,
-               preference_code),
+               preference_code,
+               skipped_exon_start,
+               skipped_exon_end),
           \(...) annotate_junctions(
             chr = ..1,
             up_exon_start = ..2,
@@ -140,12 +213,15 @@ system.time({
             down_exon_end = ..5,
             gene_symbol = ..6,
             preference = ..7,
-            gtf = gtf_sub_dt
+            gtf = gtf_sub_dt,
+            skipped_exon_start = ..8,
+            skipped_exon_end = ..9
           )
         )
       )
     ) %>%
-    # split annotation into junction_name and transcript_id columns
+    # split annotation into junction_name, transcript_id, and
+    # cassette_status columns
     tidyr::unnest_wider(annot)
 })
 ```
@@ -158,7 +234,8 @@ tej_df <- tej_df %>%
               distinct(junction,
                       novel_ss,
                       junction_name,
-                      transcript_id)) %>%
+                      transcript_id,
+                      cassette_status)) %>%
   dplyr::mutate(
     up_exon = case_when(
       grepl(":exon", junction_name) ~ sapply(
