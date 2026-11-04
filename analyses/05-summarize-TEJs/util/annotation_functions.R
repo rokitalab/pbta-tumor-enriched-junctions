@@ -296,10 +296,12 @@ annotate_junctions <- function(chr = chr,
       arrange(
         desc(contains_cassette), # ES: transcript contains the rMATS skipped exon
         desc(skip_rank),         # ES: otherwise, transcript skips some exon(s)
-        desc(pc_rank),           # protein-coding first
+        desc(seq_rank),          # other events: flanking exons adjacent in the
+                                 # transcript, so the label does not imply an
+                                 # additional exon skip
+        desc(pc_rank),           # then protein-coding
         desc(is_mane),           # then MANE Select
         tsl,                     # then the best-supported transcript (NA last)
-        desc(seq_rank),          # then flanking exons adjacent in the transcript
         transcript_name          # deterministic fallback
       ) %>%
       dplyr::slice_head(n = 1)

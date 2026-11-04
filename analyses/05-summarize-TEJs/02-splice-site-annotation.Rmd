@@ -95,6 +95,19 @@ ends <- gtf_df %>%
   dplyr::mutate(chr_start = glue::glue("{seqnames}:{end}")) %>%
   pull(chr_start)
 
+# GENCODE introns ("{chr}:{exon end}-{next exon start}") from consecutive
+# exons of every transcript
+gencode_introns <- gtf_df %>%
+  dplyr::select(seqnames, transcript_id, start, end) %>%
+  dplyr::arrange(transcript_id, start) %>%
+  dplyr::group_by(transcript_id) %>%
+  dplyr::mutate(next_start = dplyr::lead(start)) %>%
+  dplyr::ungroup() %>%
+  dplyr::filter(!is.na(next_start)) %>%
+  dplyr::transmute(intron = glue::glue("{seqnames}:{end}-{next_start}")) %>%
+  distinct() %>%
+  pull(intron)
+
 tej_annot_df <- tej_df %>%
   # retain unique TEJs
   distinct(junction, gene_symbol, preference_code, chr,
@@ -115,7 +128,9 @@ tej_annot_df <- tej_df %>%
   dplyr::mutate(down_bound_annotated = case_when(
     down_bound %in% starts ~ "Yes",
     TRUE ~ "No"
-  ))
+  )) %>%
+  # determine if the junction itself is a GENCODE intron
+  dplyr::mutate(junction_in_gencode = glue::glue("{chr}:{up_jc_end}-{down_jc_start}") %in% gencode_introns)
 
 # if exon-exon boundary and one boundary not annotated, classify as novel
 tej_annot_df <- tej_annot_df %>%
@@ -161,10 +176,10 @@ When several transcripts contain both junction-facing exons, they are ranked by:
 
 1. ES only: contains the rMATS skipped exon
 2. ES only: skips at least one exon between the two junction-facing exons
-3. protein-coding
-4. MANE Select (GTF `tag "MANE_Select"`)
-5. transcript support level (1 best; NA last)
-6. junction-facing exons adjacent in the transcript
+3. junction-facing exons adjacent in the transcript (for non-ES events, a non-adjacent label would imply an additional exon skip)
+4. protein-coding
+5. MANE Select (GTF `tag "MANE_Select"`)
+6. transcript support level (1 best; NA last)
 7. transcript name
 
 When only one junction-facing exon is annotated (novel donor/acceptor, RI), or the two exons share no transcript, each exon's transcript is ranked by protein-coding, MANE Select, TSL, then name.
@@ -176,6 +191,8 @@ When only one junction-facing exon is annotated (novel donor/acceptor, RI), or t
 * `novel`: no transcript of the gene contains it
 
 Labels list the genomically upstream (lower coordinate) side first, so minus-strand labels read against the direction of transcription: for a minus-strand gene, `exon4:exon2` is a junction from exon 2 to exon 4.
+
+`status` does not depend on the chosen transcript: `Novel splice site` when a junction-facing splice site is unannotated, `Annotated junction` when the junction is an intron of any GENCODE transcript, otherwise `Novel junction`.
 
 ```{r}
 # Subset gtf to make for easier filtering within function. Keep exons at
@@ -235,7 +252,8 @@ tej_df <- tej_df %>%
                       novel_ss,
                       junction_name,
                       transcript_id,
-                      cassette_status)) %>%
+                      cassette_status,
+                      junction_in_gencode)) %>%
   dplyr::mutate(
     up_exon = case_when(
       grepl(":exon", junction_name) ~ sapply(
@@ -256,12 +274,14 @@ tej_df <- tej_df %>%
   ) %>%
   dplyr::mutate(up_exon = as.numeric(str_remove(up_exon, "exon")),
                 down_exon = as.numeric(str_remove(down_exon, "exon"))) %>%
+  # Annotated junction: the junction is an intron of any GENCODE transcript,
+  # independent of the transcript chosen for junction_name
   dplyr::mutate(status = case_when(
     grepl("novel", junction_name) ~ "Novel splice site",
-    !grepl(":exon|, intron|:intron", junction_name) ~ "Novel junction",
-    !is.na(up_exon) & !is.na(down_exon) & up_exon != down_exon + 1 & up_exon + 1 != down_exon ~ "Novel junction",
-    TRUE ~ "Annotated junction"
-  ))
+    junction_in_gencode ~ "Annotated junction",
+    TRUE ~ "Novel junction"
+  )) %>%
+  dplyr::select(-junction_in_gencode)
 ```
 
 Plot novel splice site usage frequency among tejs by histology
