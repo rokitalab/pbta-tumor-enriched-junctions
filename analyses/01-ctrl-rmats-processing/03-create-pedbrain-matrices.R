@@ -195,9 +195,9 @@ merged_norm_junction_mat <- junction_mat_list[["se"]] %>%
   distinct(junction, .keep_all = TRUE)
 
 # Save merged junction output
-qs2::qs_save(merged_norm_junction_mat,
+arrow::write_parquet(merged_norm_junction_mat,
              file.path(results_dir,
-                       "normal-pedbrain-merged-norm-junction-ct-mat.qs2"))
+                       "normal-pedbrain-merged-norm-junction-ct-mat.parquet"))
 
 # Merge junction sd matrices and filter for unique junction IDs
 merged_junction_sd_mat <- junction_sd_list[["se"]] %>%
@@ -207,9 +207,9 @@ merged_junction_sd_mat <- junction_sd_list[["se"]] %>%
   distinct(junction, .keep_all = TRUE)
 
 # Save merged junction output
-qs2::qs_save(merged_junction_sd_mat,
+arrow::write_parquet(merged_junction_sd_mat,
              file.path(results_dir,
-                       "normal-pedbrain-merged-norm-junction-sd-mat.qs2"))
+                       "normal-pedbrain-merged-norm-junction-sd-mat.parquet"))
 
 # Merge PSI matrices 
 merged_psi_mat <- se_psi_mat %>%
@@ -222,9 +222,9 @@ merged_psi_mat <- se_psi_mat %>%
               dplyr::mutate(splicing_case = "A5SS")) %>%
   dplyr::select(splice_id, splicing_case, everything())
 
-qs2::qs_save(merged_psi_mat,
+arrow::write_parquet(merged_psi_mat,
              file.path(results_dir,
-                       "normal-pedbrain-merged-psi-mat.qs2"))
+                       "normal-pedbrain-merged-psi-mat.parquet"))
 
 # print session info
 sessionInfo()

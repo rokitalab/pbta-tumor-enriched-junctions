@@ -37,21 +37,21 @@ bash run_module.sh
 │   └── gtex-v10-removed-samples.tsv
 ├── results
 │   ├── evodevo-brain-prenatal-week-binned-metadata.tsv
-│   ├── evodevo-merged-postnatal-norm-junction-ct-mat.qs2
-│   ├── evodevo-merged-postnatal-norm-junction-sd-mat.qs2
-│   ├── evodevo-merged-postnatal-psi-mat.qs2
-│   ├── evodevo-merged-prenatal-week-binned-norm-junction-ct-mat.qs2
-│   ├── evodevo-merged-prenatal-week-binned-norm-junction-sd-mat.qs2
-│   ├── evodevo-merged-prenatal-week-binned-psi-mat.qs2
-│   ├── gtex-merged-norm-junction-ct-mat.qs2
-│   ├── gtex-merged-norm-junction-sd-mat.qs2
-│   ├── gtex-merged-psi-mat.qs2
-│   ├── normal-brain-celltype-merged-norm-junction-ct-mat.qs2
-│   ├── normal-brain-celltype-merged-norm-junction-sd-mat.qs2
-│   ├── normal-brain-celltype-merged-psi-mat.qs2
-│   ├── normal-pedbrain-merged-norm-junction-ct-mat.qs2
-│   ├── normal-pedbrain-merged-norm-junction-sd-mat.qs2
-│   └── normal-pedbrain-merged-psi-mat.qs2
+│   ├── evodevo-merged-postnatal-norm-junction-ct-mat.parquet
+│   ├── evodevo-merged-postnatal-norm-junction-sd-mat.parquet
+│   ├── evodevo-merged-postnatal-psi-mat.parquet
+│   ├── evodevo-merged-prenatal-week-binned-norm-junction-ct-mat.parquet
+│   ├── evodevo-merged-prenatal-week-binned-norm-junction-sd-mat.parquet
+│   ├── evodevo-merged-prenatal-week-binned-psi-mat.parquet
+│   ├── gtex-merged-norm-junction-ct-mat.parquet
+│   ├── gtex-merged-norm-junction-sd-mat.parquet
+│   ├── gtex-merged-psi-mat.parquet
+│   ├── normal-brain-celltype-merged-norm-junction-ct-mat.parquet
+│   ├── normal-brain-celltype-merged-norm-junction-sd-mat.parquet
+│   ├── normal-brain-celltype-merged-psi-mat.parquet
+│   ├── normal-pedbrain-merged-norm-junction-ct-mat.parquet
+│   ├── normal-pedbrain-merged-norm-junction-sd-mat.parquet
+│   └── normal-pedbrain-merged-psi-mat.parquet
 ├── run_module.sh
 └── util
     └── rmats-processing-functions.R
