@@ -5,7 +5,8 @@
 ## Jan 2026
 
 # This script performs the following:
-# - loads pediatric brain rMATS files 
+# - loads pediatric brain rMATS files and filters for pediatric brain samples in the control cohort histologies
+#   (excluding tumor-infiltrated samples)
 # - pulls splice event junction and target coordinates and normalizes against rMATS input reads
 # - calculates mean junction/target normalized counts per brain region
 
@@ -38,10 +39,20 @@ read_file <- file.path(data_dir,
 hist_file <- file.path(data_dir,
                        "ped-normal-brain-histologies.tsv")
 
-# Load hist
+# Control cohort histologies; defines the samples included in each control cohort
+ctrl_hist_file <- file.path(root_dir, "analyses",
+                            "00-create-cohort-histologies",
+                            "results",
+                            "control-cohort-histologies.tsv")
+
+# Load control cohort histologies and get Pediatric brain sample IDs
+pedbrain_ids <- read_tsv(ctrl_hist_file) %>%
+  dplyr::filter(cohort == "Pediatric brain") %>%
+  pull(sample_id)
+
+# Load hist and filter for control samples
 hist <- read_tsv(hist_file) %>%
-  # filter out tumor-infiltrated pons
-  dplyr::filter(sample_id != "7316-7585") %>%
+  dplyr::filter(sample_id %in% pedbrain_ids) %>%
   # only need sample ID, primary_site columns
   dplyr::select(sample_id, primary_site)
 

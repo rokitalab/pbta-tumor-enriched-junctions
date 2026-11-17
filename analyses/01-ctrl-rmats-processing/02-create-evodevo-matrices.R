@@ -5,7 +5,8 @@
 ## Jan 2026
 
 # This script performs the following:
-# - loads Evo-Devo rMATS files and filters for brain regions (all ages)
+# - loads Evo-Devo rMATS files and filters for Evo-devo samples in the control cohort histologies
+#   (forebrain/hindbrain, excluding middle adult and elderly life stages)
 # - pulls splice event junction and target coordinates and normalizes against rMATS input reads
 # - calculates mean and SD matrices across postnatal samples within brain regions
 #   and separately by brain region and postnatal stage
@@ -42,12 +43,20 @@ read_file <- file.path(data_dir,
 hist_file <- file.path(data_dir,
                        "evodevo-histologies.tsv")
 
-# Load evodevo hist, filter for brain regions, and define sample groupings
+# Control cohort histologies; defines the samples included in each control cohort
+ctrl_hist_file <- file.path(root_dir, "analyses",
+                            "00-create-cohort-histologies",
+                            "results",
+                            "control-cohort-histologies.tsv")
+
+# Load control cohort histologies and get Evo-devo sample IDs
+evodevo_ids <- read_tsv(ctrl_hist_file) %>%
+  dplyr::filter(cohort == "Evo-devo") %>%
+  pull(sample_id)
+
+# Load evodevo hist, filter for control samples, and define sample groupings
 evodevo_hist <- read_tsv(hist_file) %>%
-  # filter for brain samples, filter out older life stages
-  dplyr::filter(primary_site %in% c("Forebrain", "Hindbrain"),
-                !pathology_free_text_diagnosis %in% c("Middle Adult",
-                                                      "Elderly")) %>%
+  dplyr::filter(Kids_First_Biospecimen_ID %in% evodevo_ids) %>%
   # Extract gestational age only for prenatal samples and assign developmental-stage bins.
   dplyr::mutate(
     weeks_post_conception = case_when(

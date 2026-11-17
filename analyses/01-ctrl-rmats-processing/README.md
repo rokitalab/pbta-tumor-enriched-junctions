@@ -2,7 +2,7 @@
 
 Module authors: Ryan Corbett (@rjcorb)
 
-This module generates splice event junction counts per million (CPM) matrices in normal brain control cohorts to be used as references in PBTA tumor-enriched splicing analyses. 
+This module generates splice event junction counts per million (CPM) matrices in normal brain control cohorts to be used as references in PBTA tumor-enriched splicing analyses. Samples included from each cohort are defined in `../00-create-cohort-histologies/results/control-cohort-histologies.tsv`, so `00-create-cohort-histologies` must be run first. 
 
 ## Usage
 ### script to run analysis
@@ -20,8 +20,9 @@ bash run_module.sh
 * `util/rmats-processing-functions.R` scripts containing functions to process raw rMATS data, normal junction and target counts, calculate mean CPMs by subgroups, and generate matrices. 
 
 ## Input files
-* `GTEx_Analysis_v8_Annotations_SubjectPhenotypesDS.txt` file to obtain participant age ranges
-* `gtex-v10-removed-samples.tsv` low-quality samples removed from GTEx v10
+* `../00-create-cohort-histologies/results/control-cohort-histologies.tsv` control cohort samples to include in matrices
+* `GTEx_Analysis_v8_Annotations_SubjectPhenotypesDS.txt` file to obtain participant age ranges (used by `../00-create-cohort-histologies/03-create-control-cohort-histologies.R`)
+* `gtex-v10-removed-samples.tsv` low-quality samples removed from GTEx v10 (used by `../00-create-cohort-histologies/03-create-control-cohort-histologies.R`)
 
 ## Directory structure
 ```

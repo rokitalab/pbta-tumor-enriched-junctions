@@ -5,7 +5,7 @@
 ## Jan 2026
 
 # This script performs the following:
-# - loads brain cell type rMATS files 
+# - loads brain cell type rMATS files and filters for cell type samples in the control cohort histologies
 # - pulls splice event junction and target coordinates and normalizes against rMATS input reads
 # - calculates mean junction/target normalized counts per cell type
 
@@ -38,8 +38,20 @@ read_file <- file.path(data_dir,
 hist_file <- file.path(data_dir,
                        "GSE73721-normal-histologies.tsv")
 
-# Load hist
+# Control cohort histologies; defines the samples included in each control cohort
+ctrl_hist_file <- file.path(root_dir, "analyses",
+                            "00-create-cohort-histologies",
+                            "results",
+                            "control-cohort-histologies.tsv")
+
+# Load control cohort histologies and get Pediatric brain cell type sample IDs
+celltype_ids <- read_tsv(ctrl_hist_file) %>%
+  dplyr::filter(cohort == "Pediatric brain cell type") %>%
+  pull(sample_id)
+
+# Load hist and filter for control samples
 hist <- read_csv(hist_file) %>%
+  dplyr::filter(Run %in% celltype_ids) %>%
   # only need run ID, cell type columns
   distinct(Run, cell_type)
 
