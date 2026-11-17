@@ -79,12 +79,11 @@ RUN R -e "remotes::install_github('thomasp85/patchwork', ref = '1cb732b129ed6a65
 RUN R -e "remotes::install_github('d3b-center/annoFuseData', ref = '321bc4f6db6e9a21358f0d09297142f6029ac7aa', dependencies = TRUE)"
 RUN R -e "remotes::install_github('qsbase/qs2', ref = '6f835e54eb7d10123051f44894ee1001566094fb', dependencies = TRUE)"
 
+# Install arrow for reading/writing parquet files
+RUN R -e "install.packages('arrow')" && \
+    R -e "stopifnot(arrow::arrow_info()\$capabilities[['parquet']])"
+
 # Install python and python packages
-# Install pip3 and low-level python installation reqs
-#RUN apt-get -y --no-install-recommends install \
-#    python3-pip  python3-dev
-#RUN ln -s /usr/bin/python3 /usr/bin/python
-#RUN python3 -m pip install --upgrade pip
 
 RUN apt-get update && apt-get -y --no-install-recommends install \
     python3-pip python3-dev \
