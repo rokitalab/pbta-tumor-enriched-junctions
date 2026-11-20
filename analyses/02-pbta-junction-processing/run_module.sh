@@ -7,7 +7,7 @@ results_dir="$root_dir/analyses/02-pbta-junction-processing/results"
 cd "$script_dir" || exit 1
 
 # If normalized junction counts are not available, generate them first.
-if [ -f "$results_dir/pbta-merged-norm-junction-cts.qs2" ]; then
+if [ -f "$results_dir/pbta-merged-norm-junction-cts.parquet" ]; then
     echo "Found normalized PBTA junction counts. Proceeding..."
 else
     echo "Normalized PBTA junction counts do not exist. Running 01-get-junction-counts.R..."

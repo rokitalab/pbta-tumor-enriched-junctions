@@ -2,7 +2,7 @@
 
 Module authors: Ryan Corbett (@rjcorb)
 
-This module generates splice event junction counts per million (CPM) matrices in normal brain control cohorts to be used as references in PBTA tumor-enriched splicing analyses. 
+This module generates splice event junction counts per million (CPM) matrices in normal brain control cohorts to be used as references in PBTA tumor-enriched splicing analyses. Samples included from each cohort are defined in `../00-create-cohort-histologies/results/control-cohort-histologies.tsv`, so `00-create-cohort-histologies` must be run first. 
 
 ## Usage
 ### script to run analysis
@@ -20,8 +20,9 @@ bash run_module.sh
 * `util/rmats-processing-functions.R` scripts containing functions to process raw rMATS data, normal junction and target counts, calculate mean CPMs by subgroups, and generate matrices. 
 
 ## Input files
-* `GTEx_Analysis_v8_Annotations_SubjectPhenotypesDS.txt` file to obtain participant age ranges
-* `gtex-v10-removed-samples.tsv` low-quality samples removed from GTEx v10
+* `../00-create-cohort-histologies/results/control-cohort-histologies.tsv` control cohort samples to include in matrices
+* `GTEx_Analysis_v8_Annotations_SubjectPhenotypesDS.txt` file to obtain participant age ranges (used by `../00-create-cohort-histologies/03-create-control-cohort-histologies.R`)
+* `gtex-v10-removed-samples.tsv` low-quality samples removed from GTEx v10 (used by `../00-create-cohort-histologies/03-create-control-cohort-histologies.R`)
 
 ## Directory structure
 ```
@@ -36,21 +37,21 @@ bash run_module.sh
 │   └── gtex-v10-removed-samples.tsv
 ├── results
 │   ├── evodevo-brain-prenatal-week-binned-metadata.tsv
-│   ├── evodevo-merged-postnatal-norm-junction-ct-mat.qs2
-│   ├── evodevo-merged-postnatal-norm-junction-sd-mat.qs2
-│   ├── evodevo-merged-postnatal-psi-mat.qs2
-│   ├── evodevo-merged-prenatal-week-binned-norm-junction-ct-mat.qs2
-│   ├── evodevo-merged-prenatal-week-binned-norm-junction-sd-mat.qs2
-│   ├── evodevo-merged-prenatal-week-binned-psi-mat.qs2
-│   ├── gtex-merged-norm-junction-ct-mat.qs2
-│   ├── gtex-merged-norm-junction-sd-mat.qs2
-│   ├── gtex-merged-psi-mat.qs2
-│   ├── normal-brain-celltype-merged-norm-junction-ct-mat.qs2
-│   ├── normal-brain-celltype-merged-norm-junction-sd-mat.qs2
-│   ├── normal-brain-celltype-merged-psi-mat.qs2
-│   ├── normal-pedbrain-merged-norm-junction-ct-mat.qs2
-│   ├── normal-pedbrain-merged-norm-junction-sd-mat.qs2
-│   └── normal-pedbrain-merged-psi-mat.qs2
+│   ├── evodevo-merged-postnatal-norm-junction-ct-mat.parquet
+│   ├── evodevo-merged-postnatal-norm-junction-sd-mat.parquet
+│   ├── evodevo-merged-postnatal-psi-mat.parquet
+│   ├── evodevo-merged-prenatal-week-binned-norm-junction-ct-mat.parquet
+│   ├── evodevo-merged-prenatal-week-binned-norm-junction-sd-mat.parquet
+│   ├── evodevo-merged-prenatal-week-binned-psi-mat.parquet
+│   ├── gtex-merged-norm-junction-ct-mat.parquet
+│   ├── gtex-merged-norm-junction-sd-mat.parquet
+│   ├── gtex-merged-psi-mat.parquet
+│   ├── normal-brain-celltype-merged-norm-junction-ct-mat.parquet
+│   ├── normal-brain-celltype-merged-norm-junction-sd-mat.parquet
+│   ├── normal-brain-celltype-merged-psi-mat.parquet
+│   ├── normal-pedbrain-merged-norm-junction-ct-mat.parquet
+│   ├── normal-pedbrain-merged-norm-junction-sd-mat.parquet
+│   └── normal-pedbrain-merged-psi-mat.parquet
 ├── run_module.sh
 └── util
     └── rmats-processing-functions.R

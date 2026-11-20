@@ -9,7 +9,6 @@
 
 # Load libraries
 library(tidyverse)
-library(qs2)
 
 ### Set directory paths
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
@@ -29,7 +28,7 @@ source(file.path(analysis_dir, "util", "other-functions.R"))
 pbta_junction_file <- file.path(root_dir, "analyses",
                                 "02-pbta-junction-processing",
                                 "results",
-                                "pbta-merged-norm-batch-corrected-junction-cts.qs2")
+                                "pbta-merged-norm-batch-corrected-junction-cts.parquet")
 
 control_sj_file <- file.path(data_dir,
                              "SJ.merged.control-cohort.tsv.gz")
@@ -38,36 +37,36 @@ control_sj_file <- file.path(data_dir,
 gtex_junction_mat_file <- file.path(root_dir, "analyses",
                                     "01-ctrl-rmats-processing",
                                     "results",
-                                    "gtex-merged-norm-junction-ct-mat.qs2")
+                                    "gtex-merged-norm-junction-ct-mat.parquet")
 gtex_junction_sd_file <- file.path(root_dir, "analyses",
                                    "01-ctrl-rmats-processing",
                                    "results",
-                                   "gtex-merged-norm-junction-sd-mat.qs2")
+                                   "gtex-merged-norm-junction-sd-mat.parquet")
 
 # Evo-devo postnatal brain (collapsed to forebrain and hindbrain reference groups)
 evodevo_junction_mat_file <- file.path(root_dir, "analyses",
                                        "01-ctrl-rmats-processing",
                                        "results",
-                                       "evodevo-merged-postnatal-norm-junction-ct-mat.qs2")
+                                       "evodevo-merged-postnatal-norm-junction-ct-mat.parquet")
 evodevo_junction_sd_file <- file.path(root_dir, "analyses",
                                       "01-ctrl-rmats-processing",
                                       "results",
-                                      "evodevo-merged-postnatal-norm-junction-sd-mat.qs2")
+                                      "evodevo-merged-postnatal-norm-junction-sd-mat.parquet")
 
 # pediatric normal brain
 pedbrain_junction_mat_file <- file.path(root_dir, "analyses",
                                         "01-ctrl-rmats-processing",
                                         "results",
-                                        "normal-pedbrain-merged-norm-junction-ct-mat.qs2")
+                                        "normal-pedbrain-merged-norm-junction-ct-mat.parquet")
 pedbrain_junction_sd_file <- file.path(root_dir, "analyses",
                                        "01-ctrl-rmats-processing",
                                        "results",
-                                       "normal-pedbrain-merged-norm-junction-sd-mat.qs2")
+                                       "normal-pedbrain-merged-norm-junction-sd-mat.parquet")
 
 ## Wrangle data
 
 print("Loading PBTA junctions...")
-pbta_junction_df <- qs2::qs_read(pbta_junction_file)
+pbta_junction_df <- arrow::read_parquet(pbta_junction_file)
 print(glue::glue("Loaded {dplyr::n_distinct(pbta_junction_df$sample_id)} PBTA samples and ",
                  "{nrow(pbta_junction_df)} PBTA junction rows."))
 
@@ -80,7 +79,7 @@ novel_junction_sample_cutoff <- 0.25 * n_samples_surveyed
 
 # GTEx mean cpms
 print("Loading control matrices...")
-gtex_junction_mat <- qs2::qs_read(gtex_junction_mat_file) %>%
+gtex_junction_mat <- arrow::read_parquet(gtex_junction_mat_file) %>%
   # add "mean_" prefix to distinguish from cpm sd 
   rename_with(
     ~ paste0("mean_cpm_", .x),
@@ -88,7 +87,7 @@ gtex_junction_mat <- qs2::qs_read(gtex_junction_mat_file) %>%
   )
 
 # GTEx sd cpms
-gtex_sd_mat <- qs2::qs_read(gtex_junction_sd_file) %>%
+gtex_sd_mat <- arrow::read_parquet(gtex_junction_sd_file) %>%
   # add "sd_ prefix
   rename_with(
     ~ paste0("sd_cpm_", .x),
@@ -97,19 +96,19 @@ gtex_sd_mat <- qs2::qs_read(gtex_junction_sd_file) %>%
 
 # The Evo-Devo matrices are already collapsed across postnatal stages within
 # each brain region, so load their Forebrain/Hindbrain summaries directly.
-evodevo_junction_mat <- qs2::qs_read(evodevo_junction_mat_file) %>%
+evodevo_junction_mat <- arrow::read_parquet(evodevo_junction_mat_file) %>%
   rename_with(~ paste0("mean_cpm_", .x), -junction)
-evodevo_sd_mat <- qs2::qs_read(evodevo_junction_sd_file) %>%
+evodevo_sd_mat <- arrow::read_parquet(evodevo_junction_sd_file) %>%
   rename_with(~ paste0("sd_cpm_", .x), -junction)
 
 # Normal ped brain
-pedbrain_junction_mat <- qs2::qs_read(pedbrain_junction_mat_file) %>%
+pedbrain_junction_mat <- arrow::read_parquet(pedbrain_junction_mat_file) %>%
   rename_with(
     ~ paste0("mean_cpm_", .x),
     -junction
   )
 
-pedbrain_sd_mat <- qs2::qs_read(pedbrain_junction_sd_file) %>%
+pedbrain_sd_mat <- arrow::read_parquet(pedbrain_junction_sd_file) %>%
   rename_with(
     ~ paste0("sd_cpm_", .x),
     -junction
@@ -334,8 +333,9 @@ merged_enr_jc_df <- merged_enr_jc_df %>%
   bind_rows(tejs_na_ctrl)
  
 # Save the intermediate tumor-enriched calls for the next pipeline stage.
-qs2::qs_save(merged_enr_jc_df,
-             file.path(results_dir, "tumor-enriched-junctions.qs2"))
+arrow::write_parquet(merged_enr_jc_df,
+             file.path(results_dir, "tumor-enriched-junctions.parquet"),
+             compression = "zstd")
 
 # print session info
 sessionInfo()

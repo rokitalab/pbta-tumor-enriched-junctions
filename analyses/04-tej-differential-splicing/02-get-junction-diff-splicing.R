@@ -11,7 +11,6 @@
 # - Filter TESJs for those associated with differential splicing event
 
 library(tidyverse)
-library(qs2)
 library(stringr)
 library(data.table)
 
@@ -23,22 +22,22 @@ results_dir <- file.path(analysis_dir, "results")
 
 # Set file paths
 enr_jc_splice_events_file <- file.path(results_dir, 
-                                       "tumor-enriched-oncofetal-junction-splice-events.qs2")
+                                       "tumor-enriched-oncofetal-junction-splice-events.parquet")
 
 gtex_psi_file <- file.path(root_dir, "analyses",
                            "01-ctrl-rmats-processing",
                            "results",
-                           "gtex-merged-psi-mat.qs2")
+                           "gtex-merged-psi-mat.parquet")
 
 evodevo_psi_file <- file.path(root_dir, "analyses",
                               "01-ctrl-rmats-processing",
                               "results",
-                              "evodevo-merged-postnatal-collapsed-psi-mat.qs2")
+                              "evodevo-merged-postnatal-collapsed-psi-mat.parquet")
 
 pedbrain_psi_file <- file.path(root_dir, "analyses",
                                "01-ctrl-rmats-processing",
                                "results",
-                               "normal-pedbrain-merged-psi-mat.qs2")
+                               "normal-pedbrain-merged-psi-mat.parquet")
 
 enr_jcs_annotated_file <- file.path(root_dir, "analyses",
                                     "03-classify-tejs",
@@ -46,7 +45,7 @@ enr_jcs_annotated_file <- file.path(root_dir, "analyses",
                                     "tumor-enriched-oncofetal-splice-junctions-domain-expr-annotated.tsv.gz")
 
 # Wrangle data
-enr_jc_splice_event_df <- qs2::qs_read(enr_jc_splice_events_file)
+enr_jc_splice_event_df <- arrow::read_parquet(enr_jc_splice_events_file)
 
 # Retain the original tumor-enrichment classification in each module output.
 # The splice-event table is generated from rMATS records, so it does not
@@ -56,11 +55,11 @@ criteria_by_id <- enr_jcs_annotated_df %>%
   dplyr::transmute(id = glue::glue("{sample_id}-{junction}"), criteria) %>%
   distinct()
 
-gtex_psi_mat <- qs2::qs_read(gtex_psi_file)
+gtex_psi_mat <- arrow::read_parquet(gtex_psi_file)
 
-evodevo_psi_mat <- qs2::qs_read(evodevo_psi_file)
+evodevo_psi_mat <- arrow::read_parquet(evodevo_psi_file)
 
-pedbrain_psi_mat <- qs2::qs_read(pedbrain_psi_file)
+pedbrain_psi_mat <- arrow::read_parquet(pedbrain_psi_file)
 
 # calculate mean dPSIs between tumor and normals
 enr_jc_dpsi_df <- enr_jc_splice_event_df %>%
@@ -229,6 +228,7 @@ enr_jcs_annotated_filtered_df <- enr_jcs_annotated_df %>%
   dplyr::rename(Kids_First_Biospecimen_ID = sample_id)
 
 # write to output
-qs2::qs_save(enr_jcs_annotated_filtered_df,
+arrow::write_parquet(enr_jcs_annotated_filtered_df,
               file.path(results_dir,
-                        "tumor-enriched-oncofetal-diff-splice-junctions.qs2"))
+                        "tumor-enriched-oncofetal-diff-splice-junctions.parquet"),
+              compression = "zstd")

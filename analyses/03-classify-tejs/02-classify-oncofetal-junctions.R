@@ -5,7 +5,6 @@
 
 # Load packages used for data manipulation and serialized matrices.
 library(tidyverse)
-library(qs2)
 
 # Define analysis directories and input/output file paths.
 root_dir <- rprojroot::find_root(rprojroot::has_dir(".git"))
@@ -19,23 +18,23 @@ junction_annotation_file <- file.path(
   "junction-annot.tsv.gz"
 )
 
-tumor_enriched_file <- file.path(results_dir, "tumor-enriched-junctions.qs2")
+tumor_enriched_file <- file.path(results_dir, "tumor-enriched-junctions.parquet")
 prenatal_junction_mat_file <- file.path(root_dir, "analyses",
                                         "01-ctrl-rmats-processing", "results",
-                                        "evodevo-merged-prenatal-week-binned-norm-junction-ct-mat.qs2")
+                                        "evodevo-merged-prenatal-week-binned-norm-junction-ct-mat.parquet")
 postnatal_junction_mat_file <- file.path(root_dir, "analyses",
                                          "01-ctrl-rmats-processing", "results",
-                                         "evodevo-merged-postnatal-stage-norm-junction-ct-mat.qs2")
+                                         "evodevo-merged-postnatal-stage-norm-junction-ct-mat.parquet")
 postnatal_junction_sd_file <- file.path(root_dir, "analyses",
                                         "01-ctrl-rmats-processing", "results",
-                                        "evodevo-merged-postnatal-stage-norm-junction-sd-mat.qs2")
+                                        "evodevo-merged-postnatal-stage-norm-junction-sd-mat.parquet")
 
 print("Loading tumor-enriched junctions and Evo-Devo matrices...")
 # Load stage-01 calls and postnatal Evo-Devo CPM/SD matrices by brain region and stage.
-merged_enr_jc_df <- qs2::qs_read(tumor_enriched_file)
-evodevo_junction_mat <- qs2::qs_read(postnatal_junction_mat_file) %>%
+merged_enr_jc_df <- arrow::read_parquet(tumor_enriched_file)
+evodevo_junction_mat <- arrow::read_parquet(postnatal_junction_mat_file) %>%
   rename_with(~ paste0("mean_cpm_", .x), -junction)
-evodevo_sd_mat <- qs2::qs_read(postnatal_junction_sd_file) %>%
+evodevo_sd_mat <- arrow::read_parquet(postnatal_junction_sd_file) %>%
   rename_with(~ paste0("sd_cpm_", .x), -junction)
 
 # Restrict prenatal/postnatal comparisons to tumor-enriched junctions.
@@ -44,7 +43,7 @@ junctions_to_classify <- merged_enr_jc_df %>%
   dplyr::distinct(junction)
 
 # Load prenatal CPMs for the candidate junctions.
-prenatal_junction_mat <- qs2::qs_read(prenatal_junction_mat_file) %>%
+prenatal_junction_mat <- arrow::read_parquet(prenatal_junction_mat_file) %>%
   dplyr::filter(junction %in% junctions_to_classify$junction) %>%
   rename_with(~ paste0("prenatal_mean_cpm_", .x), -junction)
 
