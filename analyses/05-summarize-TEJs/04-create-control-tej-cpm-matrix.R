@@ -37,18 +37,6 @@ gtex_a5ss_file <- file.path(data_dir,
 gtex_read_file <- file.path(data_dir,
                             "gtex_input_read_counts.tsv")
 
-hist_file <- file.path(data_dir,
-                       "histologies.tsv")
-
-gtex_meta_file <- file.path(root_dir, "analyses",
-                            "01-ctrl-rmats-processing", 
-                            "input",
-                            "GTEx_Analysis_v8_Annotations_SubjectPhenotypesDS.txt")
-gtex_v10_rm_file <- file.path(root_dir, "analyses",
-                              "01-ctrl-rmats-processing", 
-                              "input",
-                              "gtex-v10-removed-samples.tsv")
-
 # Evo-devo
 evodevo_se_file <- file.path(data_dir,
                              "evodevo-rmats_merged_raw_SE.qs2")
@@ -60,9 +48,6 @@ evodevo_a5ss_file <- file.path(data_dir,
                                "evodevo-rmats_merged_raw_A5SS.qs2")
 evodevo_read_file <- file.path(data_dir,
                                "evodevo_input_read_counts.tsv")
-
-evodevo_hist_file <- file.path(data_dir,
-                       "evodevo-histologies.tsv")
 
 # Pediatric brain 
 pedbrain_se_file <- file.path(data_dir,
@@ -76,9 +61,6 @@ pedbrain_a5ss_file <- file.path(data_dir,
 pedbrain_read_file <- file.path(data_dir,
                                 "normal_ped_brain_input_read_counts.tsv")
 
-pedbrain_hist_file <- file.path(data_dir,
-                       "ped-normal-brain-histologies.tsv")
-
 # cell type
 celltype_se_file <- file.path(data_dir,
                               "brain_cell_type-rmats_merged_raw_SE.qs2")
@@ -91,8 +73,10 @@ celltype_a5ss_file <- file.path(data_dir,
 celltype_read_file <- file.path(data_dir,
                                 "brain_cell_type_input_read_counts.tsv")
 
-celltype_hist_file <- file.path(data_dir,
-                                "GSE73721-normal-histologies.tsv")
+ctrl_hist_file <- file.path(root_dir, "analyses",
+                            "00-create-cohort-histologies",
+                            "results",
+                            "control-cohort-histologies.tsv")
 
 recur_tej_file <- file.path(results_dir,
                              "recurrent-primary-tumor-enriched-oncofetal-splice-junctions.tsv.gz")
@@ -105,78 +89,14 @@ gtex_read_cts <- read_tsv(gtex_read_file) %>%
   dplyr::mutate(sample_id = str_remove(sample_id, "_[^_]+$"))
 
 
-### Prepare cohort histologies files 
-
-# GTEx
-gtex_meta_df <- read_tsv(gtex_meta_file)
-
-pts_under40 <- gtex_meta_df %>%
-  dplyr::filter(AGE %in% c("20-29",
-                           "30-39")) %>%
-  pull(SUBJID)
-
-# Load file containing samples removed in v10, and get IDs
-gtex_v10_rm_samples <- read_tsv(gtex_v10_rm_file) %>%
-  pull(SAMPID)
-
-# Load OPC hist and filter for GTEx RNA-seq
-gtex_brain_under40_hist <- read_tsv(hist_file) %>%
-  dplyr::filter(cohort == "GTEx",
-                experimental_strategy == "RNA-Seq",
-                grepl("Brain", gtex_subgroup)) %>%
-  dplyr::mutate(id = unlist(lapply(strsplit(Kids_First_Biospecimen_ID, "-"), function(x) x[2]))) %>%
-  dplyr::mutate(id = glue::glue("GTEX-{id}")) %>%
-  # filter for pts under 40yo, filter out samples removed in v10
-  dplyr::filter(id %in% pts_under40,
-                !Kids_First_Biospecimen_ID %in% gtex_v10_rm_samples) %>%
-  # only need BS ID, subgroup columns
-  dplyr::select(Kids_First_Biospecimen_ID, gtex_subgroup,
-                RNA_library) %>%
-  dplyr::rename(sample_id = Kids_First_Biospecimen_ID,
-                subgroup = gtex_subgroup) %>%
-  dplyr::mutate(cohort = "GTEx")
-
-# Evo-devo
-
-evodevo_hist <- read_tsv(evodevo_hist_file) %>%
-  # filter for brain samples, filter out older life stages
-  dplyr::filter(primary_site %in% c("Forebrain", "Hindbrain"),
-                !pathology_free_text_diagnosis %in% c("Middle Adult",
-                                                      "Elderly")) %>%
-  # define subgroups (region + stage)
-  dplyr::mutate(evodevo_subgroup = glue::glue("{primary_site}-{pathology_free_text_diagnosis}")) %>%
-  # only need BS ID, subgroup columns
-  dplyr::select(Kids_First_Biospecimen_ID, evodevo_subgroup,
-                RNA_library) %>%
-  dplyr::rename(sample_id = Kids_First_Biospecimen_ID,
-                subgroup = evodevo_subgroup) %>%
-  dplyr::mutate(cohort = "Evo-devo")
+# Load control cohort histologies (generated in 00-create-cohort-histologies)
+ctrl_hist <- read_tsv(ctrl_hist_file)
 
 evodevo_read_cts <- read_tsv(evodevo_read_file) %>%
   dplyr::mutate(sample_id = str_remove(sample_id, "_[^_]+$"))
 
-# ped brain
-
-pedbrain_hist <- read_tsv(pedbrain_hist_file) %>%
-  # filter out tumor-infiltrated pons
-  dplyr::filter(sample_id != "7316-7585") %>%
-  # only need sample ID, primary_site columns
-  dplyr::select(sample_id, primary_site, RNA_library) %>%
-  dplyr::rename(subgroup = primary_site) %>%
-  dplyr::mutate(cohort = "Pediatric brain")
-
 pedbrain_read_cts <- read_tsv(pedbrain_read_file) %>%
   dplyr::mutate(sample_id = str_remove(sample_id, "_[^_]+$"))
-
-# cell type 
-
-celltype_hist <- read_csv(celltype_hist_file) %>%
-  # only need run ID, cell type columns
-  distinct(Run, cell_type) %>%
-  dplyr::rename(sample_id = Run,
-                subgroup = cell_type) %>%
-  dplyr::mutate(cohort = "Pediatric brain cell type") %>%
-  dplyr::mutate(RNA_library = "stranded")
 
 celltype_read_cts <- read_tsv(celltype_read_file) %>%
   dplyr::mutate(sample_id = str_remove(sample_id, "_[^_]+$"))
@@ -211,6 +131,12 @@ read_cts <- gtex_read_cts %>%
             pedbrain_read_cts,
             celltype_read_cts)
 
+# map cohort list names to histologies `cohort` values
+hist_cohort_names <- c("GTEx" = "GTEx",
+                       "Evo-devo" = "Evo-devo",
+                       "Pedbrain" = "Pediatric brain",
+                       "Celltype" = "Pediatric brain cell type")
+
 cohort_jc_list <- list()
 
 for (cohort in names(cohort_list)){
@@ -221,23 +147,8 @@ for (cohort in names(cohort_list)){
   file_list <- cohort_list[[cohort]]
   
   # define cohort histologies
-  if (cohort == "GTEx"){
-    
-    hist <- gtex_brain_under40_hist
-    
-  } else if (cohort == "Evo-devo"){
-    
-    hist <- evodevo_hist
-    
-  } else if (cohort == "Pedbrain"){
-    
-    hist <- pedbrain_hist
-    
-  } else {
-    
-    hist <- celltype_hist
-    
-  }
+  hist <- ctrl_hist %>%
+    dplyr::filter(cohort == hist_cohort_names[[.env$cohort]])
   
   # create empty list to store junction counts
   jc_list <- list()
@@ -302,15 +213,6 @@ saveRDS(ctrl_tej_cpm_mat,
         file.path(results_dir,
                   "tumor-enriched-oncofetal-splice-junction-cpm-ctrls.rds"))
 
-
-# merge histologies 
-ctrl_hist <- gtex_brain_under40_hist %>%
-  bind_rows(evodevo_hist, pedbrain_hist, celltype_hist) %>%
-  dplyr::select(sample_id, cohort, everything())
-
-# write to output
-write_tsv(ctrl_hist,
-          file.path(results_dir, "control-cohort-histologies.tsv"))
 
 # print session info
 sessionInfo()

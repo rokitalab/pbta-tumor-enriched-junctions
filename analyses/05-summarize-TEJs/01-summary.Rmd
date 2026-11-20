@@ -16,7 +16,6 @@ Load required packages
 
 ```{r}
 suppressPackageStartupMessages({
-  library(qs2)
   library(tidyverse)
   library(data.table)
   library(rprojroot)
@@ -49,7 +48,7 @@ Set file paths
 tej_file <- file.path(root_dir, "analyses",
                       "04-tej-differential-splicing",
                       "results",
-                      "tumor-enriched-oncofetal-diff-splice-junctions.qs2")
+                      "tumor-enriched-oncofetal-diff-splice-junctions.parquet")
 
 hist_file <- file.path(root_dir, "analyses",
                        "00-create-cohort-histologies",
@@ -60,7 +59,7 @@ hist_file <- file.path(root_dir, "analyses",
 Wrangle data
 
 ```{r}
-tej_df <- qs2::qs_read(tej_file)
+tej_df <- arrow::read_parquet(tej_file)
 
 hist <- read_tsv(hist_file)
 ```
@@ -250,7 +249,7 @@ total_tej_n_plot <- hist_tej_ct %>%
 ggsave(file.path(plot_dir,
                  "total-tej-n-by-sample-hist.pdf"),
        total_tej_n_plot,
-       width = 5, height = 6)
+       width = 6, height = 6)
 
 total_tej_n_plot
 ```

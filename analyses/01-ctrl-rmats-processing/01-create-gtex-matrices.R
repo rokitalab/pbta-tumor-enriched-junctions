@@ -5,7 +5,8 @@
 ## Jan 2026
 
 # This script performs the following:
-# - loads GTEx rMATS files and filters for brain regions in participants <40 years old
+# - loads GTEx rMATS files and filters for GTEx samples in the control cohort histologies
+#   (brain regions, participants <40 years old, excluding samples removed in v10)
 # - pulls splice event junction and target coordinates and normalizes against rMATS input reads
 # - calculates mean junction/target normalized counts per GTEx subgroup
 
@@ -38,36 +39,23 @@ gtex_read_file <- file.path(data_dir,
 # GTEx metadata
 hist_file <- file.path(data_dir,
                        "histologies.tsv")
-gtex_meta_file <- file.path(input_dir, 
-                            "GTEx_Analysis_v8_Annotations_SubjectPhenotypesDS.txt")
-gtex_v10_rm_file <- file.path(input_dir,
-                              "gtex-v10-removed-samples.tsv")
 
-# Wrangle data
-gtex_meta_df <- read_tsv(gtex_meta_file)
+# Control cohort histologies; defines the samples included in each control cohort
+ctrl_hist_file <- file.path(root_dir, "analyses",
+                            "00-create-cohort-histologies",
+                            "results",
+                            "control-cohort-histologies.tsv")
 
-# load metadata file and filter for participants <40 years old
-pts_under40 <- gtex_meta_df %>%
-  dplyr::filter(AGE %in% c("20-29",
-                           "30-39")) %>%
-  pull(SUBJID)
+# Load control cohort histologies and get GTEx sample IDs
+gtex_ids <- read_tsv(ctrl_hist_file) %>%
+  dplyr::filter(cohort == "GTEx") %>%
+  pull(sample_id)
 
-# Load file containing samples removed in v10, and get IDs
-gtex_v10_rm_samples <- read_tsv(gtex_v10_rm_file) %>%
-  pull(SAMPID)
-
-# Load OPC hist and filter for GTEx RNA-seq
+# Load OPC hist and filter for GTEx control samples
 gtex_brain_under40_hist <- read_tsv(hist_file) %>%
-  dplyr::filter(cohort == "GTEx",
-                experimental_strategy == "RNA-Seq",
-                grepl("Brain", gtex_subgroup)) %>%
-  dplyr::mutate(id = unlist(lapply(strsplit(Kids_First_Biospecimen_ID, "-"), function(x) x[2]))) %>%
-  dplyr::mutate(id = glue::glue("GTEX-{id}")) %>%
-  # filter for pts under 40yo, filter out samples removed in v10
-  dplyr::filter(id %in% pts_under40,
-                !Kids_First_Biospecimen_ID %in% gtex_v10_rm_samples) %>%
+  dplyr::filter(Kids_First_Biospecimen_ID %in% gtex_ids) %>%
   # only need BS ID, subgroup columns
-  dplyr::select(Kids_First_Biospecimen_ID, id, gtex_subgroup)
+  dplyr::select(Kids_First_Biospecimen_ID, gtex_subgroup)
 
 # Load rMATS SE results
 se_df <- qs2::qs_read(gtex_se_file) %>%
@@ -208,9 +196,10 @@ merged_norm_junction_mat <- junction_mat_list[["se"]] %>%
   distinct(junction, .keep_all = TRUE)
   
 # Save merged junction output
-qs2::qs_save(merged_norm_junction_mat,
+arrow::write_parquet(merged_norm_junction_mat,
              file.path(results_dir,
-                       "gtex-merged-norm-junction-ct-mat.qs2"))
+                       "gtex-merged-norm-junction-ct-mat.parquet"),
+             compression = "zstd")
 
 # Merge junction sd matrices and filter for unique junction IDs
 merged_junction_sd_mat <- junction_sd_list[["se"]] %>%
@@ -220,9 +209,10 @@ merged_junction_sd_mat <- junction_sd_list[["se"]] %>%
   distinct(junction, .keep_all = TRUE)
 
 # Save merged junction output
-qs2::qs_save(merged_junction_sd_mat,
+arrow::write_parquet(merged_junction_sd_mat,
              file.path(results_dir,
-                       "gtex-merged-norm-junction-sd-mat.qs2"))
+                       "gtex-merged-norm-junction-sd-mat.parquet"),
+             compression = "zstd")
 
 # Merge PSI matrices 
 merged_psi_mat <- se_psi_mat %>%
@@ -235,9 +225,10 @@ merged_psi_mat <- se_psi_mat %>%
               dplyr::mutate(splicing_case = "A5SS")) %>%
   dplyr::select(splice_id, splicing_case, everything())
 
-qs2::qs_save(merged_psi_mat,
+arrow::write_parquet(merged_psi_mat,
              file.path(results_dir,
-                       "gtex-merged-psi-mat.qs2"))
+                       "gtex-merged-psi-mat.parquet"),
+             compression = "zstd")
 
 # Print session info
 sessionInfo()

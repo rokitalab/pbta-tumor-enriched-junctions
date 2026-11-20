@@ -37,18 +37,18 @@ cohort_hist_file <- file.path(
   "results",
   "cohort-histologies.tsv"
 )
-input_file <- file.path(results_dir, "all-pbta-splice-junction-cpm.qs2")
+input_file <- file.path(results_dir, "all-pbta-splice-junction-cpm.parquet")
 pbta_merged_file <- file.path(
   results_dir,
-  "pbta-merged-norm-junction-cts.qs2"
+  "pbta-merged-norm-junction-cts.parquet"
 )
 output_file <- file.path(
   results_dir,
-  "all-pbta-splice-junction-log2-cpm-combat-corrected.qs2"
+  "all-pbta-splice-junction-log2-cpm-combat-corrected.parquet"
 )
 batch_corrected_pbta_file <- file.path(
   results_dir,
-  "pbta-merged-norm-batch-corrected-junction-cts.qs2"
+  "pbta-merged-norm-batch-corrected-junction-cts.parquet"
 )
 
 ## Process 50,000 junctions in each chunk to limit peak memory use.
@@ -57,7 +57,7 @@ long_update_chunk_size <- 10000L
 
 ## Load the junction CPM matrix and cohort annotations
 message("Loading all-PBTA junction CPM matrix...")
-junction_cpm <- as.data.table(qs2::qs_read(input_file))
+junction_cpm <- as.data.table(arrow::read_parquet(input_file))
 
 if (!"junction" %in% names(junction_cpm)) {
   stop("The input matrix must contain a 'junction' column.")
@@ -320,7 +320,7 @@ for (i in seq_along(chunk_starts)) {
 }
 
 message("Saving ComBat-corrected log2 CPM matrix...")
-qs2::qs_save(junction_cpm, output_file)
+arrow::write_parquet(junction_cpm, output_file, compression = "zstd")
 rm(junction_cpm)
 gc()
 
@@ -329,7 +329,7 @@ gc()
 ## back to CPM here. Bound small negative values introduced by the adjustment
 ## at zero, as CPMs cannot be negative.
 message("Loading long-form PBTA junction CPM table for replacement...")
-pbta_merged <- as.data.table(qs2::qs_read(pbta_merged_file))
+pbta_merged <- as.data.table(arrow::read_parquet(pbta_merged_file))
 required_pbta_columns <- c("junction", "sample_id", "junction_cpm")
 if (!all(required_pbta_columns %in% names(pbta_merged))) {
   stop(
@@ -379,7 +379,7 @@ for (i in seq_along(correction_chunk_files)) {
 }
 
 message("Saving PBTA junction table with batch-corrected CPMs...")
-qs2::qs_save(pbta_merged, batch_corrected_pbta_file)
+arrow::write_parquet(pbta_merged, batch_corrected_pbta_file, compression = "zstd")
 
 unlink(correction_chunk_dir, recursive = TRUE)
 

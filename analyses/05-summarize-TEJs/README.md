@@ -21,7 +21,7 @@ bash run_module.sh
 * `01-summary.Rmd`: Identify primary & recurrent TEJs in PBTA, and generate summary plots 
 * `02-splice-site-annotation.Rmd`: Annotate all TEJs to transcript isoforms, exons, and introns when annotation exists
 * `03-create-recurrent-tej-cpm-matrix.R`: create PBTA TEJ CPM matrix
-* `04-create-control-tej-cpm-matrix.R`: create PBTA TEJ CPM matrix
+* `04-create-control-tej-cpm-matrix.R`: create control cohort TEJ CPM matrix, using control samples defined in `../00-create-cohort-histologies/results/control-cohort-histologies.tsv`
 * `05-tej-functional-summary.Rmd`: assess number of TEJs associated with protein pfam and extracellular domains. 
 * `06-generate-tej-psi-matrix.Rmd`: extract PSIs for all TEJ-associated splice events and save as matrix. 
 
@@ -69,7 +69,6 @@ bash run_module.sh
 │   └── total-tej-n-by-sample-hist.pdf
 ├── results
 │   ├── all-tumor-enriched-oncofetal-splice-junctions-annotated.tsv.gz
-│   ├── control-cohort-histologies.tsv
 │   ├── recurrent-primary-tej-associated-splice-events.tsv
 │   ├── recurrent-primary-tumor-enriched-oncofetal-splice-event-psis.rds
 │   ├── recurrent-primary-tumor-enriched-oncofetal-splice-junctions-annotated-domain-updated.tsv.gz
