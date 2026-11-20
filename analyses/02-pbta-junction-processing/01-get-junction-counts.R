@@ -225,9 +225,10 @@ system.time({
 merged_norm_junction_df <- bind_rows(norm_jc_chunk_list)
 
 # Save merged junction output
-qs2::qs_save(merged_norm_junction_df,
+arrow::write_parquet(merged_norm_junction_df,
              file.path(results_dir,
-                       "pbta-merged-norm-junction-cts.qs2"))
+                       "pbta-merged-norm-junction-cts.parquet"),
+             compression = "zstd")
 
 # create junction annotation df
 

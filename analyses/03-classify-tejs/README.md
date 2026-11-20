@@ -72,14 +72,14 @@ The oncofetal call is made per junction using Evo-Devo only, so every sample car
 
 ## Input files
 From other modules (`analyses/`):
-* `02-pbta-junction-processing/results/pbta-merged-norm-batch-corrected-junction-cts.qs2` batch-corrected PBTA junction CPMs.
+* `02-pbta-junction-processing/results/pbta-merged-norm-batch-corrected-junction-cts.parquet` batch-corrected PBTA junction CPMs.
 * `02-pbta-junction-processing/results/junction-annot.tsv.gz` PBTA splice-junction annotations.
-* `01-ctrl-rmats-processing/results/` mean and SD junction CPM matrices (`-ct-mat.qs2` / `-sd-mat.qs2`) for:
+* `01-ctrl-rmats-processing/results/` mean and SD junction CPM matrices (`-ct-mat.parquet` / `-sd-mat.parquet`) for:
   * GTEx (`gtex-merged-norm-junction-*`);
   * postnatal Evo-Devo collapsed to forebrain/hindbrain (`evodevo-merged-postnatal-norm-junction-*`);
   * normal pediatric brain (`normal-pedbrain-merged-norm-junction-*`);
   * postnatal Evo-Devo by region and stage (`evodevo-merged-postnatal-stage-norm-junction-*`); and
-  * prenatal Evo-Devo by region and week bin, mean only (`evodevo-merged-prenatal-week-binned-norm-junction-ct-mat.qs2`).
+  * prenatal Evo-Devo by region and week bin, mean only (`evodevo-merged-prenatal-week-binned-norm-junction-ct-mat.parquet`).
 
 From `data/` (see `download_data.sh`):
 * `SJ.merged.control-cohort.tsv.gz` normal brain STAR junction counts, used to exclude junctions observed in controls.
@@ -100,7 +100,7 @@ Columns of `tumor-enriched-oncofetal-splice-junctions.tsv.gz` include `junction`
 ├── 05-domain-expression-filtering.R
 ├── README.md
 ├── results
-│   ├── tumor-enriched-junctions.qs2
+│   ├── tumor-enriched-junctions.parquet
 │   ├── tumor-enriched-oncofetal-splice-junctions.bed
 │   ├── tumor-enriched-oncofetal-splice-junctions-cds.bed
 │   ├── tumor-enriched-oncofetal-splice-junctions.unipLocCytopl.bed

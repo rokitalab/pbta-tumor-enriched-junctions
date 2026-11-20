@@ -4,7 +4,7 @@
 ##
 ## Sep 2026
 
-# This script uses the junction identities in pbta-merged-norm-junction-cts.qs2
+# This script uses the junction identities in pbta-merged-norm-junction-cts.parquet
 # to select junctions from the four raw PBTA rMATS event files and calculate
 # per-sample CPMs. Unlike 03-create-recurrent-tej-cpm-matrix.R, it does not
 # restrict junctions to TEJs or apply a junction read-count cutoff.
@@ -43,11 +43,11 @@ hist_file <- file.path(
 )
 pbta_junction_file <- file.path(
   results_dir,
-  "pbta-merged-norm-junction-cts.qs2"
+  "pbta-merged-norm-junction-cts.parquet"
 )
 output_file <- file.path(
   results_dir,
-  "all-pbta-splice-junction-cpm.qs2"
+  "all-pbta-splice-junction-cpm.parquet"
 )
 control_junction_files <- list(
   "GTEx" = file.path(
@@ -55,14 +55,14 @@ control_junction_files <- list(
     "analyses",
     "01-ctrl-rmats-processing",
     "results",
-    "gtex-merged-norm-junction-ct-mat.qs2"
+    "gtex-merged-norm-junction-ct-mat.parquet"
   ),
   "normal pediatric brain" = file.path(
     root_dir,
     "analyses",
     "01-ctrl-rmats-processing",
     "results",
-    "normal-pedbrain-merged-norm-junction-ct-mat.qs2"
+    "normal-pedbrain-merged-norm-junction-ct-mat.parquet"
   )
 )
 control_cpm_cutoff <- 10
@@ -76,7 +76,7 @@ pbta_sample_ids <- read_tsv(hist_file, show_col_types = FALSE) %>%
   dplyr::pull(Kids_First_Biospecimen_ID)
 
 print("Loading PBTA normalized junction counts...")
-pbta_junctions <- qs2::qs_read(pbta_junction_file) %>%
+pbta_junctions <- arrow::read_parquet(pbta_junction_file, col_select = "junction") %>%
   dplyr::distinct(junction) %>%
   dplyr::pull(junction)
 
@@ -88,7 +88,7 @@ control_junctions_above_cutoff <- unlist(lapply(
   names(control_junction_files),
   function(cohort) {
     print(glue::glue("Loading {cohort} control junction CPM matrix..."))
-    control_mat <- as.data.table(qs2::qs_read(control_junction_files[[cohort]]))
+    control_mat <- as.data.table(arrow::read_parquet(control_junction_files[[cohort]]))
     control_sample_cols <- setdiff(names(control_mat), "junction")
     control_above_cutoff <- rep(FALSE, nrow(control_mat))
 
@@ -224,6 +224,6 @@ rm(merged_junction_dt, all_junction_cpm_chunks)
 gc()
 
 print("Saving all-junction CPM matrix...")
-qs2::qs_save(all_junction_cpm_mat, output_file)
+arrow::write_parquet(all_junction_cpm_mat, output_file, compression = "zstd")
 
 sessionInfo()

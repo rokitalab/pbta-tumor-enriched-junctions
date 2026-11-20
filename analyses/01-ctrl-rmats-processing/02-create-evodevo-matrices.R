@@ -353,7 +353,8 @@ merged_norm_postnatal_junction_mat <- junction_postnatal_mat_list[["se"]] %>%
 
 arrow::write_parquet(merged_norm_postnatal_junction_mat,
              file.path(results_dir,
-                       "evodevo-merged-postnatal-norm-junction-ct-mat.parquet"))
+                       "evodevo-merged-postnatal-norm-junction-ct-mat.parquet"),
+             compression = "zstd")
 
 # Merge and save mean junction CPM matrix for postnatal brain region/stage groups.
 merged_norm_postnatal_stage_junction_mat <- junction_postnatal_stage_mat_list[["se"]] %>%
@@ -364,7 +365,8 @@ merged_norm_postnatal_stage_junction_mat <- junction_postnatal_stage_mat_list[["
 
 arrow::write_parquet(merged_norm_postnatal_stage_junction_mat,
              file.path(results_dir,
-                       "evodevo-merged-postnatal-stage-norm-junction-ct-mat.parquet"))
+                       "evodevo-merged-postnatal-stage-norm-junction-ct-mat.parquet"),
+             compression = "zstd")
 
 # Merge and save median junction CPM matrix for prenatal region/developmental-stage groups.
 merged_norm_prenatal_week_junction_mat <- junction_prenatal_week_mat_list[["se"]] %>%
@@ -375,7 +377,8 @@ merged_norm_prenatal_week_junction_mat <- junction_prenatal_week_mat_list[["se"]
 
 arrow::write_parquet(merged_norm_prenatal_week_junction_mat,
              file.path(results_dir,
-                       "evodevo-merged-prenatal-week-binned-norm-junction-ct-mat.parquet"))
+                       "evodevo-merged-prenatal-week-binned-norm-junction-ct-mat.parquet"),
+             compression = "zstd")
 
 # Merge and save junction CPM SD matrix across postnatal samples within brain regions.
 merged_postnatal_junction_sd_mat <- junction_postnatal_sd_list[["se"]] %>%
@@ -386,7 +389,8 @@ merged_postnatal_junction_sd_mat <- junction_postnatal_sd_list[["se"]] %>%
 
 arrow::write_parquet(merged_postnatal_junction_sd_mat,
              file.path(results_dir,
-                       "evodevo-merged-postnatal-norm-junction-sd-mat.parquet"))
+                       "evodevo-merged-postnatal-norm-junction-sd-mat.parquet"),
+             compression = "zstd")
 
 # Merge and save junction CPM SD matrix for postnatal brain region/stage groups.
 merged_postnatal_stage_junction_sd_mat <- junction_postnatal_stage_sd_list[["se"]] %>%
@@ -397,7 +401,8 @@ merged_postnatal_stage_junction_sd_mat <- junction_postnatal_stage_sd_list[["se"
 
 arrow::write_parquet(merged_postnatal_stage_junction_sd_mat,
              file.path(results_dir,
-                       "evodevo-merged-postnatal-stage-norm-junction-sd-mat.parquet"))
+                       "evodevo-merged-postnatal-stage-norm-junction-sd-mat.parquet"),
+             compression = "zstd")
 
 # Merge and save junction CPM SD matrix for prenatal region/developmental-stage groups.
 merged_prenatal_week_junction_sd_mat <- junction_prenatal_week_sd_list[["se"]] %>%
@@ -408,7 +413,8 @@ merged_prenatal_week_junction_sd_mat <- junction_prenatal_week_sd_list[["se"]] %
 
 arrow::write_parquet(merged_prenatal_week_junction_sd_mat,
              file.path(results_dir,
-                       "evodevo-merged-prenatal-week-binned-norm-junction-sd-mat.parquet"))
+                       "evodevo-merged-prenatal-week-binned-norm-junction-sd-mat.parquet"),
+             compression = "zstd")
 
 # Merge and save PSI matrix across postnatal samples within brain regions.
 merged_postnatal_psi_mat <- se_postnatal_psi_mat %>%
@@ -423,7 +429,8 @@ merged_postnatal_psi_mat <- se_postnatal_psi_mat %>%
 
 arrow::write_parquet(merged_postnatal_psi_mat,
              file.path(results_dir,
-                       "evodevo-merged-postnatal-psi-mat.parquet"))
+                       "evodevo-merged-postnatal-psi-mat.parquet"),
+             compression = "zstd")
 
 # Merge and save mean PSI matrices collapsed across postnatal stages within
 # each broad brain region.
@@ -439,7 +446,8 @@ merged_collapsed_postnatal_psi_mat <- se_collapsed_postnatal_psi %>%
 
 arrow::write_parquet(merged_collapsed_postnatal_psi_mat,
              file.path(results_dir,
-                       "evodevo-merged-postnatal-collapsed-psi-mat.parquet"))
+                       "evodevo-merged-postnatal-collapsed-psi-mat.parquet"),
+             compression = "zstd")
 
 merged_prenatal_week_psi_mat <- se_prenatal_week_psi_mat %>%
   dplyr::mutate(splicing_case = "SE") %>%
@@ -453,7 +461,8 @@ merged_prenatal_week_psi_mat <- se_prenatal_week_psi_mat %>%
 
 arrow::write_parquet(merged_prenatal_week_psi_mat,
              file.path(results_dir,
-                       "evodevo-merged-prenatal-week-binned-psi-mat.parquet"))
+                       "evodevo-merged-prenatal-week-binned-psi-mat.parquet"),
+             compression = "zstd")
 
 # print session info
 sessionInfo()

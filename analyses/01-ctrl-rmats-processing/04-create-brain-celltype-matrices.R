@@ -196,7 +196,8 @@ merged_norm_junction_mat <- junction_mat_list[["se"]] %>%
 # Save merged junction output
 arrow::write_parquet(merged_norm_junction_mat,
              file.path(results_dir,
-                       "normal-brain-celltype-merged-norm-junction-ct-mat.parquet"))
+                       "normal-brain-celltype-merged-norm-junction-ct-mat.parquet"),
+             compression = "zstd")
 
 # Merge junction sd matrices and filter for unique junction IDs
 merged_junction_sd_mat <- junction_sd_list[["se"]] %>%
@@ -208,7 +209,8 @@ merged_junction_sd_mat <- junction_sd_list[["se"]] %>%
 # Save merged junction output
 arrow::write_parquet(merged_junction_sd_mat,
              file.path(results_dir,
-                       "normal-brain-celltype-merged-norm-junction-sd-mat.parquet"))
+                       "normal-brain-celltype-merged-norm-junction-sd-mat.parquet"),
+             compression = "zstd")
 
 # Merge PSI matrices 
 merged_psi_mat <- se_psi_mat %>%
@@ -223,7 +225,8 @@ merged_psi_mat <- se_psi_mat %>%
 
 arrow::write_parquet(merged_psi_mat,
              file.path(results_dir,
-                       "normal-brain-celltype-merged-psi-mat.parquet"))
+                       "normal-brain-celltype-merged-psi-mat.parquet"),
+             compression = "zstd")
 
 # print session info
 sessionInfo()
