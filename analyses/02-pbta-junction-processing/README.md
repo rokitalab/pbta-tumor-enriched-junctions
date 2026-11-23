@@ -24,7 +24,7 @@ bash run_module.sh
 * `data/pbta_input_read_counts.tsv` PBTA input-read counts used to normalize junction counts.
 * `analyses/00-create-cohort-histologies/input/pbta-rna-high-intron-samples.tsv` PBTA samples excluded because of high intronic read fraction.
 * `analyses/00-create-cohort-histologies/results/cohort-histologies.tsv` PBTA sample identifiers used to select samples for the CPM matrix.
-* `analyses/01-ctrl-rmats-processing/results/*-merged-norm-junction-ct-mat.qs2` normal control-cohort junction CPM matrices used to exclude expressed junctions.
+* `analyses/01-ctrl-rmats-processing/results/*-merged-norm-junction-ct-mat.parquet` normal control-cohort junction CPM matrices used to exclude expressed junctions.
 
 ## Directory structure
 ```
@@ -34,11 +34,11 @@ bash run_module.sh
 ├── 03-batch-correct-all-pbta-junction-cpm.R
 ├── README.md
 ├── results
-│   ├── all-pbta-splice-junction-cpm.qs2
-│   ├── all-pbta-splice-junction-log2-cpm-combat-corrected.qs2
+│   ├── all-pbta-splice-junction-cpm.parquet
+│   ├── all-pbta-splice-junction-log2-cpm-combat-corrected.parquet
 │   ├── junction-annot.tsv.gz
-│   ├── pbta-merged-norm-batch-corrected-junction-cts.qs2
-│   └── pbta-merged-norm-junction-cts.qs2
+│   ├── pbta-merged-norm-batch-corrected-junction-cts.parquet
+│   └── pbta-merged-norm-junction-cts.parquet
 ├── run_module.sh
 └── util
     ├── junction-cpm-matrix.functions.R

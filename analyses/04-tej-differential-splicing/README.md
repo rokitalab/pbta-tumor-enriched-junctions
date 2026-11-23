@@ -51,9 +51,9 @@ bash run_module.sh
 ├── 02-get-junction-diff-splicing.R
 ├── README.md
 ├── results
-│   ├── tumor-enriched-oncofetal-diff-splice-junctions-atrt.qs2
+│   ├── tumor-enriched-oncofetal-diff-splice-junctions.parquet
 │   ├── tumor-enriched-oncofetal-junction-diff-splice-event-annotation-atrt.tsv.gz
-│   └── tumor-enriched-oncofetal-junction-splice-events-atrt.qs2
+│   └── tumor-enriched-oncofetal-junction-splice-events.parquet
 ├── run_module.sh
 └── util
     └── rmats-processing-functions.R

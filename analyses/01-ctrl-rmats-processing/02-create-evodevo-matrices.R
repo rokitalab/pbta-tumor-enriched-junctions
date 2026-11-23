@@ -5,7 +5,8 @@
 ## Jan 2026
 
 # This script performs the following:
-# - loads Evo-Devo rMATS files and filters for brain regions (all ages)
+# - loads Evo-Devo rMATS files and filters for Evo-devo samples in the control cohort histologies
+#   (forebrain/hindbrain, excluding middle adult and elderly life stages)
 # - pulls splice event junction and target coordinates and normalizes against rMATS input reads
 # - calculates mean and SD matrices across postnatal samples within brain regions
 #   and separately by brain region and postnatal stage
@@ -42,12 +43,20 @@ read_file <- file.path(data_dir,
 hist_file <- file.path(data_dir,
                        "evodevo-histologies.tsv")
 
-# Load evodevo hist, filter for brain regions, and define sample groupings
+# Control cohort histologies; defines the samples included in each control cohort
+ctrl_hist_file <- file.path(root_dir, "analyses",
+                            "00-create-cohort-histologies",
+                            "results",
+                            "control-cohort-histologies.tsv")
+
+# Load control cohort histologies and get Evo-devo sample IDs
+evodevo_ids <- read_tsv(ctrl_hist_file) %>%
+  dplyr::filter(cohort == "Evo-devo") %>%
+  pull(sample_id)
+
+# Load evodevo hist, filter for control samples, and define sample groupings
 evodevo_hist <- read_tsv(hist_file) %>%
-  # filter for brain samples, filter out older life stages
-  dplyr::filter(primary_site %in% c("Forebrain", "Hindbrain"),
-                !pathology_free_text_diagnosis %in% c("Middle Adult",
-                                                      "Elderly")) %>%
+  dplyr::filter(Kids_First_Biospecimen_ID %in% evodevo_ids) %>%
   # Extract gestational age only for prenatal samples and assign developmental-stage bins.
   dplyr::mutate(
     weeks_post_conception = case_when(
@@ -342,9 +351,10 @@ merged_norm_postnatal_junction_mat <- junction_postnatal_mat_list[["se"]] %>%
             junction_postnatal_mat_list[["a5ss"]]) %>%
   distinct(junction, .keep_all = TRUE)
 
-qs2::qs_save(merged_norm_postnatal_junction_mat,
+arrow::write_parquet(merged_norm_postnatal_junction_mat,
              file.path(results_dir,
-                       "evodevo-merged-postnatal-norm-junction-ct-mat.qs2"))
+                       "evodevo-merged-postnatal-norm-junction-ct-mat.parquet"),
+             compression = "zstd")
 
 # Merge and save mean junction CPM matrix for postnatal brain region/stage groups.
 merged_norm_postnatal_stage_junction_mat <- junction_postnatal_stage_mat_list[["se"]] %>%
@@ -353,9 +363,10 @@ merged_norm_postnatal_stage_junction_mat <- junction_postnatal_stage_mat_list[["
             junction_postnatal_stage_mat_list[["a5ss"]]) %>%
   distinct(junction, .keep_all = TRUE)
 
-qs2::qs_save(merged_norm_postnatal_stage_junction_mat,
+arrow::write_parquet(merged_norm_postnatal_stage_junction_mat,
              file.path(results_dir,
-                       "evodevo-merged-postnatal-stage-norm-junction-ct-mat.qs2"))
+                       "evodevo-merged-postnatal-stage-norm-junction-ct-mat.parquet"),
+             compression = "zstd")
 
 # Merge and save median junction CPM matrix for prenatal region/developmental-stage groups.
 merged_norm_prenatal_week_junction_mat <- junction_prenatal_week_mat_list[["se"]] %>%
@@ -364,9 +375,10 @@ merged_norm_prenatal_week_junction_mat <- junction_prenatal_week_mat_list[["se"]
             junction_prenatal_week_mat_list[["a5ss"]]) %>%
   distinct(junction, .keep_all = TRUE)
 
-qs2::qs_save(merged_norm_prenatal_week_junction_mat,
+arrow::write_parquet(merged_norm_prenatal_week_junction_mat,
              file.path(results_dir,
-                       "evodevo-merged-prenatal-week-binned-norm-junction-ct-mat.qs2"))
+                       "evodevo-merged-prenatal-week-binned-norm-junction-ct-mat.parquet"),
+             compression = "zstd")
 
 # Merge and save junction CPM SD matrix across postnatal samples within brain regions.
 merged_postnatal_junction_sd_mat <- junction_postnatal_sd_list[["se"]] %>%
@@ -375,9 +387,10 @@ merged_postnatal_junction_sd_mat <- junction_postnatal_sd_list[["se"]] %>%
             junction_postnatal_sd_list[["a5ss"]]) %>%
   distinct(junction, .keep_all = TRUE)
 
-qs2::qs_save(merged_postnatal_junction_sd_mat,
+arrow::write_parquet(merged_postnatal_junction_sd_mat,
              file.path(results_dir,
-                       "evodevo-merged-postnatal-norm-junction-sd-mat.qs2"))
+                       "evodevo-merged-postnatal-norm-junction-sd-mat.parquet"),
+             compression = "zstd")
 
 # Merge and save junction CPM SD matrix for postnatal brain region/stage groups.
 merged_postnatal_stage_junction_sd_mat <- junction_postnatal_stage_sd_list[["se"]] %>%
@@ -386,9 +399,10 @@ merged_postnatal_stage_junction_sd_mat <- junction_postnatal_stage_sd_list[["se"
             junction_postnatal_stage_sd_list[["a5ss"]]) %>%
   distinct(junction, .keep_all = TRUE)
 
-qs2::qs_save(merged_postnatal_stage_junction_sd_mat,
+arrow::write_parquet(merged_postnatal_stage_junction_sd_mat,
              file.path(results_dir,
-                       "evodevo-merged-postnatal-stage-norm-junction-sd-mat.qs2"))
+                       "evodevo-merged-postnatal-stage-norm-junction-sd-mat.parquet"),
+             compression = "zstd")
 
 # Merge and save junction CPM SD matrix for prenatal region/developmental-stage groups.
 merged_prenatal_week_junction_sd_mat <- junction_prenatal_week_sd_list[["se"]] %>%
@@ -397,9 +411,10 @@ merged_prenatal_week_junction_sd_mat <- junction_prenatal_week_sd_list[["se"]] %
             junction_prenatal_week_sd_list[["a5ss"]]) %>%
   distinct(junction, .keep_all = TRUE)
 
-qs2::qs_save(merged_prenatal_week_junction_sd_mat,
+arrow::write_parquet(merged_prenatal_week_junction_sd_mat,
              file.path(results_dir,
-                       "evodevo-merged-prenatal-week-binned-norm-junction-sd-mat.qs2"))
+                       "evodevo-merged-prenatal-week-binned-norm-junction-sd-mat.parquet"),
+             compression = "zstd")
 
 # Merge and save PSI matrix across postnatal samples within brain regions.
 merged_postnatal_psi_mat <- se_postnatal_psi_mat %>%
@@ -412,9 +427,10 @@ merged_postnatal_psi_mat <- se_postnatal_psi_mat %>%
               dplyr::mutate(splicing_case = "A5SS")) %>%
   dplyr::select(splice_id, splicing_case, everything())
 
-qs2::qs_save(merged_postnatal_psi_mat,
+arrow::write_parquet(merged_postnatal_psi_mat,
              file.path(results_dir,
-                       "evodevo-merged-postnatal-psi-mat.qs2"))
+                       "evodevo-merged-postnatal-psi-mat.parquet"),
+             compression = "zstd")
 
 # Merge and save mean PSI matrices collapsed across postnatal stages within
 # each broad brain region.
@@ -428,9 +444,10 @@ merged_collapsed_postnatal_psi_mat <- se_collapsed_postnatal_psi %>%
               dplyr::mutate(splicing_case = "A5SS")) %>%
   dplyr::select(splice_id, splicing_case, everything())
 
-qs2::qs_save(merged_collapsed_postnatal_psi_mat,
+arrow::write_parquet(merged_collapsed_postnatal_psi_mat,
              file.path(results_dir,
-                       "evodevo-merged-postnatal-collapsed-psi-mat.qs2"))
+                       "evodevo-merged-postnatal-collapsed-psi-mat.parquet"),
+             compression = "zstd")
 
 merged_prenatal_week_psi_mat <- se_prenatal_week_psi_mat %>%
   dplyr::mutate(splicing_case = "SE") %>%
@@ -442,9 +459,10 @@ merged_prenatal_week_psi_mat <- se_prenatal_week_psi_mat %>%
               dplyr::mutate(splicing_case = "A5SS")) %>%
   dplyr::select(splice_id, splicing_case, everything())
 
-qs2::qs_save(merged_prenatal_week_psi_mat,
+arrow::write_parquet(merged_prenatal_week_psi_mat,
              file.path(results_dir,
-                       "evodevo-merged-prenatal-week-binned-psi-mat.qs2"))
+                       "evodevo-merged-prenatal-week-binned-psi-mat.parquet"),
+             compression = "zstd")
 
 # print session info
 sessionInfo()

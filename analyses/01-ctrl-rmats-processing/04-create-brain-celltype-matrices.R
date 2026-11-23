@@ -5,7 +5,7 @@
 ## Jan 2026
 
 # This script performs the following:
-# - loads brain cell type rMATS files 
+# - loads brain cell type rMATS files and filters for cell type samples in the control cohort histologies
 # - pulls splice event junction and target coordinates and normalizes against rMATS input reads
 # - calculates mean junction/target normalized counts per cell type
 
@@ -38,8 +38,20 @@ read_file <- file.path(data_dir,
 hist_file <- file.path(data_dir,
                        "GSE73721-normal-histologies.tsv")
 
-# Load hist
+# Control cohort histologies; defines the samples included in each control cohort
+ctrl_hist_file <- file.path(root_dir, "analyses",
+                            "00-create-cohort-histologies",
+                            "results",
+                            "control-cohort-histologies.tsv")
+
+# Load control cohort histologies and get Pediatric brain cell type sample IDs
+celltype_ids <- read_tsv(ctrl_hist_file) %>%
+  dplyr::filter(cohort == "Pediatric brain cell type") %>%
+  pull(sample_id)
+
+# Load hist and filter for control samples
 hist <- read_csv(hist_file) %>%
+  dplyr::filter(Run %in% celltype_ids) %>%
   # only need run ID, cell type columns
   distinct(Run, cell_type)
 
@@ -182,9 +194,10 @@ merged_norm_junction_mat <- junction_mat_list[["se"]] %>%
   distinct(junction, .keep_all = TRUE)
 
 # Save merged junction output
-qs2::qs_save(merged_norm_junction_mat,
+arrow::write_parquet(merged_norm_junction_mat,
              file.path(results_dir,
-                       "normal-brain-celltype-merged-norm-junction-ct-mat.qs2"))
+                       "normal-brain-celltype-merged-norm-junction-ct-mat.parquet"),
+             compression = "zstd")
 
 # Merge junction sd matrices and filter for unique junction IDs
 merged_junction_sd_mat <- junction_sd_list[["se"]] %>%
@@ -194,9 +207,10 @@ merged_junction_sd_mat <- junction_sd_list[["se"]] %>%
   distinct(junction, .keep_all = TRUE)
 
 # Save merged junction output
-qs2::qs_save(merged_junction_sd_mat,
+arrow::write_parquet(merged_junction_sd_mat,
              file.path(results_dir,
-                       "normal-brain-celltype-merged-norm-junction-sd-mat.qs2"))
+                       "normal-brain-celltype-merged-norm-junction-sd-mat.parquet"),
+             compression = "zstd")
 
 # Merge PSI matrices 
 merged_psi_mat <- se_psi_mat %>%
@@ -209,9 +223,10 @@ merged_psi_mat <- se_psi_mat %>%
               dplyr::mutate(splicing_case = "A5SS")) %>%
   dplyr::select(splice_id, splicing_case, everything())
 
-qs2::qs_save(merged_psi_mat,
+arrow::write_parquet(merged_psi_mat,
              file.path(results_dir,
-                       "normal-brain-celltype-merged-psi-mat.qs2"))
+                       "normal-brain-celltype-merged-psi-mat.parquet"),
+             compression = "zstd")
 
 # print session info
 sessionInfo()

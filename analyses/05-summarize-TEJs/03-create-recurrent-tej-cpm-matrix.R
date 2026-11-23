@@ -11,7 +11,6 @@ suppressPackageStartupMessages({
   library(data.table)
   library(readr)
   library(rprojroot)
-  library(qs2)
 })
 
 ## Set directory paths
@@ -32,19 +31,19 @@ recur_tej_file <- file.path(
 )
 all_cpm_file <- file.path(
   pbta_results_dir,
-  "all-pbta-splice-junction-cpm.qs2"
+  "all-pbta-splice-junction-cpm.parquet"
 )
 all_combat_log2_cpm_file <- file.path(
   pbta_results_dir,
-  "all-pbta-splice-junction-log2-cpm-combat-corrected.qs2"
+  "all-pbta-splice-junction-log2-cpm-combat-corrected.parquet"
 )
 recur_cpm_file <- file.path(
   results_dir,
-  "tumor-enriched-oncofetal-splice-junction-cpm.qs2"
+  "tumor-enriched-oncofetal-splice-junction-cpm.parquet"
 )
 recur_combat_cpm_file <- file.path(
   results_dir,
-  "tumor-enriched-oncofetal-splice-junction-cpm-combat-corrected.qs2"
+  "tumor-enriched-oncofetal-splice-junction-cpm-combat-corrected.parquet"
 )
 
 ## Load recurrent TEJ identities
@@ -61,7 +60,7 @@ if (!length(recurrent_junctions)) {
 subset_recurrent_junctions <- function(input_file, output_file,
                                        back_transform_log2 = FALSE) {
   message("Loading: ", input_file)
-  junction_mat <- data.table::as.data.table(qs2::qs_read(input_file))
+  junction_mat <- data.table::as.data.table(arrow::read_parquet(input_file))
 
   if (!"junction" %in% names(junction_mat)) {
     stop("The input matrix must contain a 'junction' column: ", input_file)
@@ -98,7 +97,7 @@ subset_recurrent_junctions <- function(input_file, output_file,
   }
 
   message("Saving: ", output_file)
-  qs2::qs_save(recurrent_mat, output_file)
+  arrow::write_parquet(recurrent_mat, output_file, compression = "zstd")
 }
 
 ## Subset uncorrected CPMs and ComBat-corrected CPMs.

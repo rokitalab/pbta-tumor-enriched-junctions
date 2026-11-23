@@ -125,9 +125,10 @@ merged_enr_jc_event_df <- event_list[["SE"]] %>%
             event_list[["A5SS"]])
 
 # write to output
-qs2::qs_save(merged_enr_jc_event_df,
+arrow::write_parquet(merged_enr_jc_event_df,
              file.path(results_dir,
-                       "tumor-enriched-oncofetal-junction-splice-events.qs2"))
+                       "tumor-enriched-oncofetal-junction-splice-events.parquet"),
+             compression = "zstd")
 
 # print session info
 sessionInfo()

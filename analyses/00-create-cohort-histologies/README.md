@@ -2,7 +2,7 @@
 
 Module authors: Ryan Corbett (@rjcorb)
 
-This module creates a cohort histologies file for the tumor-enriched splicing project, including all sample- and patient-level metadata to conduct downstream analyses. 
+This module creates a cohort histologies file for the tumor-enriched splicing project, including all sample- and patient-level metadata to conduct downstream analyses. It also creates a histologies file for the normal brain control cohorts (GTEx, Evo-devo, pediatric normal brain, and brain cell types). 
 
 ## Usage
 ### script to run analysis
@@ -15,12 +15,15 @@ bash run_module.sh
 * `run_module.sh` shell script to run analysis
 * `01-create-histologies.R` create cohort histologies file that includes data from OPC v15 histologies, somalier genetic ancestry prediction, and updated opc survival data from Mar 2026. 
 * `02-circos-plot.Rmd` generate cohort circos plot split by plot group 
+* `03-create-control-cohort-histologies.R` create control cohort histologies file, including GTEx brain samples from donors <40yo (excluding samples removed in GTEx v10), Evo-devo forebrain/hindbrain samples (excluding middle adult and elderly life stages), pediatric normal brain samples, and brain cell type (GSE73721) samples.
 
 ## Input files
 * `plot-mapping.tsv` curated cancer groups for plotting based on `broad_histology` and `cancer_group` field values. 
 * `somalier-ancestry-prediction-superpopulation.tsv` somalier genetic ancestry predicition results with BS_IDs appended. From [germline-preprocessing repo](https://github.com/rokitalab/germline-preprocessing/blob/f1fdeced5ad59a29bc0dc88fcba4f4366ab7fa8e/analyses/collapse-tumor-histologies/results/somalier-ancestry-prediction-superpopulation.tsv)
 * `openpedcan_histologies_0311.csv` opc histologies warehouse pull dated Mar 11 2026
 * `histologies-rare-cns.tsv` histologies file with rare subtyping information pulled from [OpenPedCan](https://github.com/rokitalab/OpenPedCan-Project-CNH/blob/dev/analyses/molecular-subtyping-integrate/results/histologies.tsv) 
+* `../01-ctrl-rmats-processing/input/GTEx_Analysis_v8_Annotations_SubjectPhenotypesDS.txt` and `../01-ctrl-rmats-processing/input/gtex-v10-removed-samples.tsv` GTEx donor phenotypes and samples removed in GTEx v10, used to filter GTEx control samples.
+* `data/evodevo-histologies.tsv`, `data/ped-normal-brain-histologies.tsv`, `data/GSE73721-normal-histologies.tsv` control cohort histologies.
 
 ## Directory structure
 ```
@@ -28,6 +31,7 @@ bash run_module.sh
 ├── 01-create-histologies.R
 ├── 02-circos-plot.nb.html
 ├── 02-circos-plot.Rmd
+├── 03-create-control-cohort-histologies.R
 ├── input
 │   ├── histologies-rare-cns.tsv
 │   ├── openpedcan_histologies0311.csv
@@ -39,6 +43,7 @@ bash run_module.sh
 ├── README.md
 ├── results
 │   ├── cohort-histologies.tsv
-│   └── cohort-somalier-genetic-ancestry-prediction.tsv
+│   ├── cohort-somalier-genetic-ancestry-prediction.tsv
+│   └── control-cohort-histologies.tsv
 └── run_module.sh
 ```
