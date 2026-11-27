@@ -11,6 +11,7 @@ suppressPackageStartupMessages({
   library(data.table)
   library(readr)
   library(rprojroot)
+  library(dplyr)
 })
 
 ## Set directory paths
@@ -60,8 +61,12 @@ if (!length(recurrent_junctions)) {
 subset_recurrent_junctions <- function(input_file, output_file,
                                        back_transform_log2 = FALSE) {
   message("Loading: ", input_file)
-  junction_mat <- data.table::as.data.table(arrow::read_parquet(input_file))
-
+  ## Filter while reading, so only the recurrent-TEJ rows ever reach memory
+  junction_mat <- arrow::open_dataset(input_file) %>%
+    dplyr::filter(junction %in% recurrent_junctions) %>%
+    dplyr::collect() %>%
+    data.table::as.data.table()
+  
   if (!"junction" %in% names(junction_mat)) {
     stop("The input matrix must contain a 'junction' column: ", input_file)
   }
